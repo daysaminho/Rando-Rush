@@ -247,6 +247,42 @@
       color: #fef08a;
     }
 
+    /* Solde de Gemmes (Infinies pour test) */
+    .gems-badge {
+      background: #cffafe;
+      border-color: #0891b2;
+    }
+
+    body.dark-mode .gems-badge {
+      background: #164e63;
+      border-color: #06b6d4;
+    }
+
+    .gems-badge .badge-label {
+      color: #0891b2;
+    }
+
+    body.dark-mode .gems-badge .badge-label {
+      color: #67e8f9;
+    }
+
+    .gems-badge .badge-value {
+      color: #0e7490;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    body.dark-mode .gems-badge .badge-value {
+      color: #a5f3fc;
+    }
+
+    .svg-icon.gem-icon {
+      fill: #06b6d4;
+      stroke: #0f172a;
+      stroke-width: 2.2;
+    }
+
     .hud-actions {
       display: flex;
       gap: 6px;
@@ -805,8 +841,8 @@
     /* Onglets de la boutique */
     .shop-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
+      grid-template-columns: 1.1fr 1fr 1fr 1fr;
+      gap: 5px;
       width: 100%;
       margin-bottom: 12px;
     }
@@ -816,9 +852,9 @@
       color: var(--text-main);
       border: var(--panel-border);
       border-radius: 12px;
-      padding: 8px 4px;
+      padding: 8px 2px;
       font-family: var(--font-ui);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
       cursor: pointer;
@@ -1005,6 +1041,205 @@
       transform: none;
       box-shadow: var(--hard-shadow-xs);
     }
+
+    /* Solde Double dans la Boutique (Étoiles + Gemmes) */
+    .shop-currencies-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .shop-gems-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #cffafe;
+      border: var(--panel-border);
+      box-shadow: var(--hard-shadow-xs);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0e7490;
+    }
+    body.dark-mode .shop-gems-badge {
+      background: #164e63;
+      color: #a5f3fc;
+    }
+
+    /* Double Bouton Achat (Étoiles OU Gemmes) */
+    .btn-buy-dual-wrap {
+      display: flex;
+      gap: 4px;
+    }
+
+    .btn-item-buy-gem {
+      background: #cffafe;
+      color: #0e7490;
+    }
+
+    /* CARTE DE BUNDLE PREMIUM */
+    .bundle-card {
+      background: var(--bg-main);
+      border: var(--panel-border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--hard-shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+      position: relative;
+    }
+
+    .bundle-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .bundle-badge-discount {
+      background: var(--player-defender-bg);
+      color: #ffffff;
+      border: 2px solid #0f172a;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      box-shadow: var(--hard-shadow-xs);
+      white-space: nowrap;
+    }
+
+    .bundle-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .bundle-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-main);
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    .bundle-preview-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      background: var(--bg-panel);
+      border: var(--panel-border);
+      border-radius: 14px;
+      padding: 8px;
+    }
+
+    .bundle-preview-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .bundle-slot-label {
+      font-size: 9px;
+      font-weight: 900;
+      text-transform: uppercase;
+      opacity: 0.7;
+      color: var(--text-main);
+    }
+
+    .bundle-slot-name {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80px;
+    }
+
+    .btn-bundle-buy {
+      width: 100%;
+      background: #22c55e;
+      color: #ffffff;
+      border: var(--panel-border);
+      box-shadow: var(--hard-shadow);
+      border-radius: 14px;
+      padding: 11px 16px;
+      font-size: 15px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+    .btn-bundle-buy:active {
+      transform: translateY(4px);
+      box-shadow: var(--hard-shadow-active);
+    }
+    .btn-bundle-buy.owned {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .btn-bundle-buy.equipped {
+      background: #16a34a;
+      color: #ffffff;
+      cursor: default;
+    }
+
+    .bundle-single-items-title {
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      opacity: 0.7;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .bundle-single-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    .btn-single-piece {
+      background: var(--bg-panel);
+      border: var(--panel-border);
+      border-radius: 10px;
+      padding: 6px 4px;
+      font-size: 10px;
+      font-weight: 800;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      box-shadow: var(--hard-shadow-xs);
+      color: var(--text-main);
+      text-align: center;
+      transition: all 0.1s ease;
+    }
+    .btn-single-piece.owned {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .btn-single-piece.equipped {
+      background: #86efac;
+      color: #065f46;
+      border-color: #065f46;
+    }
+    .btn-single-piece:active {
+      transform: translateY(2px);
+    }
   </style>
 </head>
 <body>
@@ -1025,6 +1260,15 @@
           Étoiles
         </span>
         <span class="badge-value" id="hud-stars">0</span>
+      </div>
+
+      <!-- Solde de Gemmes (Infinies pour test) -->
+      <div class="badge-card gems-badge" id="hud-gems-card" title="Gemmes rares (Infinies pour test)">
+        <span class="badge-label">
+          <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+          Gemmes
+        </span>
+        <span class="badge-value" id="hud-gems">99.9K</span>
       </div>
 
       <!-- Actions -->
@@ -1236,9 +1480,15 @@
         <div class="shop-header">
           <div class="shop-title-group">
             <h2 class="shop-h1">BOUTIQUE</h2>
-            <div class="shop-stars-badge" title="Votre solde d'étoiles">
-              <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              <span id="shop-stars-count">0</span>
+            <div class="shop-currencies-wrap">
+              <div class="shop-stars-badge" title="Votre solde d'étoiles">
+                <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <span id="shop-stars-count">0</span>
+              </div>
+              <div class="shop-gems-badge" title="Votre solde de gemmes (Infinies pour test)">
+                <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+                <span id="shop-gems-count">99 999</span>
+              </div>
             </div>
           </div>
           <button class="btn-chunky btn-shop-close" id="btn-close-shop">FERMER</button>
@@ -1246,9 +1496,10 @@
 
         <!-- Onglets -->
         <div class="shop-tabs">
-          <button class="shop-tab-btn active" data-tab="bull">Taureau</button>
-          <button class="shop-tab-btn" data-tab="team">Équipe</button>
-          <button class="shop-tab-btn" data-tab="pitch">Terrain</button>
+          <button class="shop-tab-btn active" data-tab="bundles">BUNDLES</button>
+          <button class="shop-tab-btn" data-tab="bull">Taureaux</button>
+          <button class="shop-tab-btn" data-tab="team">Passeurs</button>
+          <button class="shop-tab-btn" data-tab="pitch">Terrains</button>
         </div>
 
         <!-- Liste des 10 articles scrollable -->
@@ -1317,14 +1568,59 @@
       return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
 
-    // --- REGISTRE CENTRAL DES SKINS (SKINS_CONFIG - 30 SKINS PROCÉDURAUX) ---
+    // --- REGISTRE CENTRAL DES SKINS (SKINS_CONFIG - 30 SKINS + 3 BUNDLES HAUT DE GAMME) ---
     const SKINS_CONFIG = {
+      bundles: [
+        {
+          id: 'bundle_royal',
+          name: 'Dynastie Royale',
+          sub: 'Luxe & Or Ciselé',
+          tagline: 'Édition Haute Horlogerie',
+          badgeText: '-33% (1 OFFERT)',
+          bundlePrice: 100,
+          originalPrice: 150,
+          items: {
+            pitch: 'pitch_royal',
+            bull: 'bull_royal',
+            team: 'team_royal'
+          }
+        },
+        {
+          id: 'bundle_synthwave',
+          name: 'Matrix Synthwave',
+          sub: 'Néo-Arcade Cyber 1984',
+          tagline: 'Néons Fuchsia & Glitch Rétro',
+          badgeText: '-33% (1 OFFERT)',
+          bundlePrice: 100,
+          originalPrice: 150,
+          items: {
+            pitch: 'pitch_synthwave',
+            bull: 'bull_synthwave',
+            team: 'team_synthwave'
+          }
+        },
+        {
+          id: 'bundle_biohazard',
+          name: 'Bio-Hazard',
+          sub: 'Laboratoire & Plasma Vert',
+          tagline: 'Acier Trempé & Réacteur Nucléaire',
+          badgeText: '-33% (1 OFFERT)',
+          bundlePrice: 100,
+          originalPrice: 150,
+          items: {
+            pitch: 'pitch_biohazard',
+            bull: 'bull_biohazard',
+            team: 'team_biohazard'
+          }
+        }
+      ],
       bull: [
         {
           id: 'bull_red',
           name: 'Classique Corail',
           category: 'bull',
           price: 0,
+          gemPrice: 0,
           bodyColor: '#fb7185',
           hornColor: '#fbbf24',
           sub: 'Gratuit • Chasseur Officiel'
@@ -1334,6 +1630,7 @@
           name: 'Taureau Bronze',
           category: 'bull',
           price: 30,
+          gemPrice: 3,
           bodyColor: '#b45309',
           hornColor: '#d97706',
           sub: 'Cuivre Bruni'
@@ -1343,6 +1640,7 @@
           name: 'Taureau Doré',
           category: 'bull',
           price: 60,
+          gemPrice: 4,
           bodyColor: '#facc15',
           hornColor: '#f59e0b',
           sub: 'Or Mercato Prestige'
@@ -1352,6 +1650,7 @@
           name: 'Taureau Furtif',
           category: 'bull',
           price: 120,
+          gemPrice: 5,
           bodyColor: '#1e293b',
           hornColor: '#64748b',
           sub: 'Opérations Nocturnes'
@@ -1361,6 +1660,7 @@
           name: 'Taureau Cyborg',
           category: 'bull',
           price: 220,
+          gemPrice: 6,
           bodyColor: '#0284c7',
           hornColor: '#38bdf8',
           sub: 'Châssis Renforcé'
@@ -1370,6 +1670,7 @@
           name: 'Taureau Toxique',
           category: 'bull',
           price: 380,
+          gemPrice: 7,
           bodyColor: '#84cc16',
           hornColor: '#4d7c0f',
           sub: 'Venin Vert Fluo'
@@ -1379,6 +1680,7 @@
           name: 'Taureau Spectre',
           category: 'bull',
           price: 600,
+          gemPrice: 8,
           bodyColor: '#93c5fd',
           hornColor: '#67e8f9',
           sub: 'Oscillation Spectrale',
@@ -1389,6 +1691,7 @@
           name: 'Taureau Magma',
           category: 'bull',
           price: 1000,
+          gemPrice: 10,
           bodyColor: '#ea580c',
           hornColor: '#fef08a',
           sub: 'Lave en Fusion',
@@ -1399,6 +1702,7 @@
           name: 'Taureau Trou Noir',
           category: 'bull',
           price: 1800,
+          gemPrice: 12,
           bodyColor: '#000000',
           hornColor: '#a855f7',
           sub: 'Singularité Gravitationnelle',
@@ -1409,10 +1713,50 @@
           name: 'Le Démiurge Solaire',
           category: 'bull',
           price: 4000,
+          gemPrice: 15,
           bodyColor: '#eab308',
           hornColor: '#fbbf24',
           sub: 'Couronne & 8 Rayons',
           isAnimated: true
+        },
+        {
+          id: 'bull_royal',
+          name: 'Minotaure Midas',
+          category: 'bull',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_royal',
+          bodyColor: '#0f172a',
+          hornColor: '#fbbf24',
+          sub: 'Or Brossé & Sillage Midas',
+          isAnimated: true,
+          isBundlePiece: true
+        },
+        {
+          id: 'bull_synthwave',
+          name: 'Glitch Runner',
+          category: 'bull',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_synthwave',
+          bodyColor: '#06b6d4',
+          hornColor: '#f43f5e',
+          sub: 'Hologramme Cyan & Glitch 84',
+          isAnimated: true,
+          isBundlePiece: true
+        },
+        {
+          id: 'bull_biohazard',
+          name: 'Béhémoth Mutant',
+          category: 'bull',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_biohazard',
+          bodyColor: '#334155',
+          hornColor: '#22c55e',
+          sub: 'Acier & Plasma Vert Toxique',
+          isAnimated: true,
+          isBundlePiece: true
         }
       ],
       team: [
@@ -1421,6 +1765,7 @@
           name: 'Bleu Ciel',
           category: 'team',
           price: 0,
+          gemPrice: 0,
           primaryColor: '#38bdf8',
           accentColor: '#bae6fd',
           numberColor: '#ffffff',
@@ -1431,6 +1776,7 @@
           name: 'Rouge Cardinal',
           category: 'team',
           price: 30,
+          gemPrice: 3,
           primaryColor: '#dc2626',
           accentColor: '#fecaca',
           numberColor: '#ffffff',
@@ -1441,6 +1787,7 @@
           name: 'Seleção',
           category: 'team',
           price: 70,
+          gemPrice: 4,
           primaryColor: '#fde047',
           accentColor: '#16a34a',
           numberColor: '#0f172a',
@@ -1451,6 +1798,7 @@
           name: 'Galactique',
           category: 'team',
           price: 140,
+          gemPrice: 5,
           primaryColor: '#ffffff',
           accentColor: '#facc15',
           numberColor: '#0f172a',
@@ -1461,6 +1809,7 @@
           name: 'Arbitres Rayés',
           category: 'team',
           price: 240,
+          gemPrice: 6,
           primaryColor: '#334155',
           accentColor: '#f8fafc',
           numberColor: '#ffffff',
@@ -1471,6 +1820,7 @@
           name: 'Bubblegum',
           category: 'team',
           price: 400,
+          gemPrice: 7,
           primaryColor: '#f472b6',
           accentColor: '#38bdf8',
           numberColor: '#ffffff',
@@ -1481,6 +1831,7 @@
           name: 'Marinière',
           category: 'team',
           price: 650,
+          gemPrice: 8,
           primaryColor: '#1e3a8a',
           accentColor: '#ffffff',
           numberColor: '#fde047',
@@ -1491,6 +1842,7 @@
           name: 'Circuit Imprimé',
           category: 'team',
           price: 1100,
+          gemPrice: 10,
           primaryColor: '#0f172a',
           accentColor: '#34d399',
           numberColor: '#38bdf8',
@@ -1502,6 +1854,7 @@
           name: 'Prisme Chromatique',
           category: 'team',
           price: 1900,
+          gemPrice: 12,
           primaryColor: '#8b5cf6',
           accentColor: '#ec4899',
           numberColor: '#ffffff',
@@ -1513,11 +1866,54 @@
           name: 'Les Intouchables Diamant',
           category: 'team',
           price: 4500,
+          gemPrice: 15,
           primaryColor: '#67e8f9',
           accentColor: '#e0e7ff',
           numberColor: '#0f172a',
           sub: 'Reflet Balayant',
           isAnimated: true
+        },
+        {
+          id: 'team_royal',
+          name: 'Garde Impériale',
+          category: 'team',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_royal',
+          primaryColor: '#0f172a',
+          accentColor: '#fbbf24',
+          numberColor: '#facc15',
+          sub: 'Armure Noire & Liséré Doré',
+          isAnimated: true,
+          isBundlePiece: true
+        },
+        {
+          id: 'team_synthwave',
+          name: 'Neon Riders',
+          category: 'team',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_synthwave',
+          primaryColor: '#06b6d4',
+          accentColor: '#ec4899',
+          numberColor: '#ffffff',
+          sub: 'Dégradé Synthwave & Visière',
+          isAnimated: true,
+          isBundlePiece: true
+        },
+        {
+          id: 'team_biohazard',
+          name: 'Hazmat Squad',
+          category: 'team',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_biohazard',
+          primaryColor: '#eab308',
+          accentColor: '#0f172a',
+          numberColor: '#22c55e',
+          sub: 'Combinaison Jaune & Logo Nucléaire',
+          isAnimated: true,
+          isBundlePiece: true
         }
       ],
       pitch: [
@@ -1526,6 +1922,7 @@
           name: 'Pelouse Classique',
           category: 'pitch',
           price: 0,
+          gemPrice: 0,
           lightBg: '#4ade80',
           darkBg: '#166534',
           lightLines: '#bbf7d0',
@@ -1539,6 +1936,7 @@
           name: 'Terre Battue',
           category: 'pitch',
           price: 40,
+          gemPrice: 3,
           lightBg: '#ea580c',
           darkBg: '#9a3412',
           lightLines: '#fed7aa',
@@ -1552,6 +1950,7 @@
           name: 'Plage de Sable',
           category: 'pitch',
           price: 90,
+          gemPrice: 4,
           lightBg: '#fde68a',
           darkBg: '#b45309',
           lightLines: '#f59e0b',
@@ -1565,6 +1964,7 @@
           name: 'City Stade Bitume',
           category: 'pitch',
           price: 160,
+          gemPrice: 5,
           lightBg: '#64748b',
           darkBg: '#334155',
           lightLines: '#f8fafc',
@@ -1578,6 +1978,7 @@
           name: 'Pelouse Hivernale',
           category: 'pitch',
           price: 260,
+          gemPrice: 6,
           lightBg: '#e2e8f0',
           darkBg: '#334155',
           lightLines: '#f43f5e',
@@ -1591,6 +1992,7 @@
           name: 'Damier Professionnel',
           category: 'pitch',
           price: 420,
+          gemPrice: 7,
           lightBg: '#22c55e',
           darkBg: '#15803d',
           lightLines: '#86efac',
@@ -1604,6 +2006,7 @@
           name: 'Terrain de Nuit',
           category: 'pitch',
           price: 700,
+          gemPrice: 8,
           lightBg: '#1e1b4b',
           darkBg: '#0f0d2e',
           lightLines: '#818cf8',
@@ -1617,6 +2020,7 @@
           name: 'Matrice Cyber',
           category: 'pitch',
           price: 1200,
+          gemPrice: 10,
           lightBg: '#0f172a',
           darkBg: '#020617',
           lightLines: '#38bdf8',
@@ -1631,6 +2035,7 @@
           name: "L'Arène Magmatique",
           category: 'pitch',
           price: 2000,
+          gemPrice: 12,
           lightBg: '#450a0a',
           darkBg: '#2a0606',
           lightLines: '#f97316',
@@ -1645,6 +2050,7 @@
           name: 'Le Vide Cosmique',
           category: 'pitch',
           price: 5000,
+          gemPrice: 15,
           lightBg: '#050713',
           darkBg: '#02030a',
           lightLines: '#818cf8',
@@ -1653,6 +2059,57 @@
           darkBorder: '#0f0e26',
           sub: 'Défilement Spatial Infini',
           isAnimated: true
+        },
+        {
+          id: 'pitch_royal',
+          name: 'Sanctuaire Doré',
+          category: 'pitch',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_royal',
+          lightBg: '#18181b',
+          darkBg: '#09090b',
+          lightLines: '#fbbf24',
+          darkLines: '#f59e0b',
+          lightBorder: '#713f12',
+          darkBorder: '#451a03',
+          sub: 'Engrenages d’Or Concentriques',
+          isAnimated: true,
+          isBundlePiece: true
+        },
+        {
+          id: 'pitch_synthwave',
+          name: 'Grille Synthwave',
+          category: 'pitch',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_synthwave',
+          lightBg: '#050510',
+          darkBg: '#020208',
+          lightLines: '#f43f5e',
+          darkLines: '#e11d48',
+          lightBorder: '#06b6d4',
+          darkBorder: '#0891b2',
+          sub: 'Perspective & Scanlines CRT',
+          isAnimated: true,
+          isBundlePiece: true
+        },
+        {
+          id: 'pitch_biohazard',
+          name: 'Réacteur Nucléaire',
+          category: 'pitch',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_biohazard',
+          lightBg: '#1e293b',
+          darkBg: '#0f172a',
+          lightLines: '#22c55e',
+          darkLines: '#16a34a',
+          lightBorder: '#15803d',
+          darkBorder: '#14532d',
+          sub: 'Dalles Acier & Cuve Plasma',
+          isAnimated: true,
+          isBundlePiece: true
         }
       ]
     };
@@ -1697,10 +2154,27 @@
     // Migration immédiate de l'inventaire en cas d'anciens identifiants
     playerInventory = playerInventory.map(id => ID_ALIASES[id] || id);
 
+    // --- GESTION DES GEMMES (INFINIES POUR LE TEST DU JOUEUR) ---
+    let playerGems = 99999;
+    try {
+      const storedGems = parseInt(localStorage.getItem('rondo_gems') || '99999', 10);
+      playerGems = isNaN(storedGems) || storedGems < 500 ? 99999 : storedGems;
+    } catch(e) {
+      playerGems = 99999;
+    }
+
     function savePlayerData() {
       localStorage.setItem('rondo_stars', playerStars.toString());
+      localStorage.setItem('rondo_gems', playerGems.toString());
       localStorage.setItem('rondo_inventory', JSON.stringify(playerInventory));
       localStorage.setItem('rondo_equipped', JSON.stringify(playerEquipped));
+    }
+
+    function updateGemsDisplay() {
+      const hudGemsEl = document.getElementById('hud-gems');
+      if (hudGemsEl) hudGemsEl.textContent = formatNumber(playerGems);
+      const shopGemsEl = document.getElementById('shop-gems-count');
+      if (shopGemsEl) shopGemsEl.textContent = formatNumber(playerGems);
     }
 
     function updateStarsDisplay() {
@@ -1708,6 +2182,7 @@
       document.getElementById('shop-stars-count').textContent = formatNumber(playerStars);
       const overTotalEl = document.getElementById('over-total-stars');
       if (overTotalEl) overTotalEl.textContent = formatNumber(playerStars);
+      updateGemsDisplay();
     }
 
     // --- COMMANDE DE TEST : DÉBLOCAGE COMPLET DES 30 SKINS ---
@@ -2572,6 +3047,93 @@
         ctx.restore();
       }
 
+      // D.1 pitch_royal (Sanctuaire Doré) : Engrenages d'or ciselé et cercles concentriques rotatifs
+      if (pitchCosmetic.id === 'pitch_royal') {
+        ctx.save();
+        ctx.fillStyle = isDarkMode ? '#09090b' : '#18181b';
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(time * 0.0006);
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.32)';
+        ctx.lineWidth = 1.8;
+        for (let g = 0; g < 3; g++) {
+          const gr = rondoRadius * (0.42 + g * 0.28);
+          ctx.beginPath();
+          ctx.arc(0, 0, gr, 0, Math.PI * 2);
+          ctx.stroke();
+          for (let a = 0; a < 8; a++) {
+            const ang = (a * Math.PI) / 4;
+            ctx.beginPath();
+            ctx.moveTo(Math.cos(ang) * (gr - 6), Math.sin(ang) * (gr - 6));
+            ctx.lineTo(Math.cos(ang) * (gr + 6), Math.sin(ang) * (gr + 6));
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+        ctx.restore();
+      }
+
+      // D.2 pitch_synthwave (Grille Synthwave) : Perspective 80s fuchsia & scanlines CRT
+      if (pitchCosmetic.id === 'pitch_synthwave') {
+        ctx.save();
+        ctx.fillStyle = '#050510';
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.strokeStyle = 'rgba(244, 63, 94, 0.3)';
+        ctx.lineWidth = 1.5;
+        const horizonY = centerY - rondoRadius * 0.85;
+        for (let x = 0; x <= width; x += 32) {
+          ctx.beginPath();
+          ctx.moveTo(width / 2 + (x - width / 2) * 0.18, horizonY);
+          ctx.lineTo(x, height);
+          ctx.stroke();
+        }
+        for (let y = horizonY; y <= height; y += 22) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+        const scanY = (time * 0.12) % height;
+        ctx.fillStyle = 'rgba(6, 182, 212, 0.08)';
+        ctx.fillRect(0, scanY - 8, width, 16);
+        ctx.restore();
+      }
+
+      // D.3 pitch_biohazard (Réacteur Nucléaire) : Dalles acier & réacteur plasma vert bouillonnant
+      if (pitchCosmetic.id === 'pitch_biohazard') {
+        ctx.save();
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, width, height);
+
+        const toxicPulse = (Math.sin(time * 0.005) + 1) * 0.5;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 42 + toxicPulse * 8, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(time * 0.001);
+        ctx.fillStyle = '#22c55e';
+        for (let b = 0; b < 3; b++) {
+          ctx.beginPath();
+          ctx.rotate((Math.PI * 2) / 3);
+          ctx.arc(0, -18, 11, -Math.PI / 3, Math.PI / 3);
+          ctx.lineTo(0, 0);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(0, 0, 7, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+        ctx.restore();
+        ctx.restore();
+      }
+
       // Grand cercle du rondo
       ctx.beginPath();
       ctx.arc(centerX, centerY, rondoRadius, 0, Math.PI * 2);
@@ -2834,6 +3396,54 @@
         ctx.restore();
       }
 
+      // B.4 team_royal (Garde Impériale) : Plastron d'armure or en V
+      if (teamCosmetic.id === 'team_royal') {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, drawY, p.radius - 2, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.beginPath();
+        ctx.moveTo(p.x - 12, drawY - 8);
+        ctx.lineTo(p.x, drawY + 4);
+        ctx.lineTo(p.x + 12, drawY - 8);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // B.5 team_synthwave (Neon Riders) : Visière rétro fuchsia
+      if (teamCosmetic.id === 'team_synthwave') {
+        ctx.save();
+        ctx.fillStyle = '#f43f5e';
+        ctx.fillRect(p.x - 10, drawY - 6, 20, 5);
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(p.x - 10, drawY - 6, 20, 5);
+        ctx.restore();
+      }
+
+      // B.6 team_biohazard (Hazmat Squad) : Symbole radioactif sur la poitrine
+      if (teamCosmetic.id === 'team_biohazard') {
+        ctx.save();
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(p.x, drawY - 3, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        for (let a = 0; a < 3; a++) {
+          ctx.save();
+          ctx.translate(p.x, drawY - 3);
+          ctx.rotate((a * Math.PI * 2) / 3);
+          ctx.beginPath();
+          ctx.arc(0, -6, 3, -Math.PI / 3, Math.PI / 3);
+          ctx.lineTo(0, 0);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+
       // Col ou liseré
       if (teamCosmetic.accentColor && teamCosmetic.id !== 'team_circuit' && teamCosmetic.id !== 'team_prism') {
         ctx.beginPath();
@@ -2935,6 +3545,44 @@
           ctx.strokeStyle = strokeColor;
           ctx.stroke();
         }
+        ctx.restore();
+      }
+
+      // A.5 bull_royal (Minotaure Midas) : Halo doré rotatif en pointillé
+      if (bullCosmetic.id === 'bull_royal') {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(0, 0, bull.radius + 6, 0, Math.PI * 2);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([6, 6]);
+        ctx.lineDashOffset = -(time * 0.02);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // A.6 bull_synthwave (Glitch Runner) : Décalage glitch néon
+      if (bullCosmetic.id === 'bull_synthwave') {
+        if (Math.sin(time * 0.02) > 0.75) {
+          ctx.save();
+          ctx.translate((Math.random() - 0.5) * 6, (Math.random() - 0.5) * 2);
+          ctx.beginPath();
+          ctx.arc(0, 0, bull.radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(244, 63, 94, 0.45)';
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // A.7 bull_biohazard (Béhémoth Mutant) : Pulsation toxique radioactive
+      if (bullCosmetic.id === 'bull_biohazard') {
+        const toxPulse = (Math.sin(time * 0.006) + 1) * 0.5;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(0, 0, bull.radius + 4 + toxPulse * 3, 0, Math.PI * 2);
+        ctx.strokeStyle = '#22c55e';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
         ctx.restore();
       }
 
@@ -3100,29 +3748,130 @@
     }
 
     // --- INTERFACE DE LA BOUTIQUE COSMÉTIQUE ÉTENDUE ---
-    let currentShopTab = 'bull';
+    let currentShopTab = 'bundles';
 
     function renderShopItems() {
       const listEl = document.getElementById('shop-items-list');
       listEl.innerHTML = '';
 
+      // 1. ONGLET BUNDLES HAUT DE GAMME
+      if (currentShopTab === 'bundles') {
+        const bundles = SKINS_CONFIG.bundles || [];
+
+        bundles.forEach(bundle => {
+          const pitchItem = SKINS_CONFIG.pitch.find(p => p.id === bundle.items.pitch);
+          const bullItem = SKINS_CONFIG.bull.find(b => b.id === bundle.items.bull);
+          const teamItem = SKINS_CONFIG.team.find(t => t.id === bundle.items.team);
+
+          const ownsPitch = playerInventory.includes(pitchItem.id);
+          const ownsBull = playerInventory.includes(bullItem.id);
+          const ownsTeam = playerInventory.includes(teamItem.id);
+          const ownsAll = ownsPitch && ownsBull && ownsTeam;
+          const isAllEquipped = (playerEquipped.pitch === pitchItem.id && playerEquipped.bull === bullItem.id && playerEquipped.team === teamItem.id);
+
+          const card = document.createElement('div');
+          card.className = 'bundle-card';
+
+          let mainCtaHtml = '';
+          if (isAllEquipped) {
+            mainCtaHtml = `<button class="btn-bundle-buy equipped">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke-width: 3;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>PACK ENTIÈREMENT ÉQUIPÉ</span>
+            </button>`;
+          } else if (ownsAll) {
+            mainCtaHtml = `<button class="btn-bundle-buy owned" onclick="equipBundle('${bundle.id}')">
+              <span>TOUT ÉQUIPER LE PACK</span>
+            </button>`;
+          } else {
+            mainCtaHtml = `<button class="btn-bundle-buy" onclick="buyBundle('${bundle.id}', ${bundle.bundlePrice})">
+              <span>DÉBLOQUER LE PACK • ${bundle.bundlePrice}</span>
+              <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 15px; height: 15px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+              <span style="font-size: 12px; text-decoration: line-through; opacity: 0.8; margin-left: 4px;">${bundle.originalPrice}</span>
+            </button>`;
+          }
+
+          // Statuts individuels des 3 pièces
+          function getPieceBtn(category, item) {
+            const isEq = playerEquipped[category] === item.id;
+            const isOw = playerInventory.includes(item.id);
+            if (isEq) {
+              return `<button class="btn-single-piece equipped" disabled><span>${item.name}</span><strong>Équipé</strong></button>`;
+            } else if (isOw) {
+              return `<button class="btn-single-piece owned" onclick="equipCosmetic('${category}', '${item.id}')"><span>${item.name}</span><strong>Équiper</strong></button>`;
+            } else {
+              return `<button class="btn-single-piece" onclick="buyCosmeticWithGems('${category}', '${item.id}', 50)"><span>${item.name}</span><strong>50 💎</strong></button>`;
+            }
+          }
+
+          card.innerHTML = `
+            <div class="bundle-header">
+              <div>
+                <div class="bundle-title">${bundle.name}</div>
+                <div class="bundle-sub">${bundle.sub} • ${bundle.tagline}</div>
+              </div>
+              <span class="bundle-badge-discount">${bundle.badgeText}</span>
+            </div>
+
+            <div class="bundle-preview-row">
+              <div class="bundle-preview-slot">
+                <div class="cosmetic-preview" style="background: ${pitchItem.lightBg}; border-color: ${pitchItem.lightBorder};">
+                  <div style="width: 14px; height: 14px; border-radius: 50%; border: 2px solid ${pitchItem.lightLines};"></div>
+                </div>
+                <span class="bundle-slot-label">Terrain</span>
+                <span class="bundle-slot-name" title="${pitchItem.name}">${pitchItem.name}</span>
+              </div>
+              <div class="bundle-preview-slot">
+                <div class="cosmetic-preview" style="background: ${bullItem.bodyColor};">
+                  <span style="font-size: 11px; font-weight: 800; color: ${bullItem.hornColor};">▲▲</span>
+                </div>
+                <span class="bundle-slot-label">Taureau</span>
+                <span class="bundle-slot-name" title="${bullItem.name}">${bullItem.name}</span>
+              </div>
+              <div class="bundle-preview-slot">
+                <div class="cosmetic-preview" style="background: ${teamItem.primaryColor};">
+                  <span style="font-size: 11px; font-weight: 800; color: ${teamItem.numberColor};">10</span>
+                </div>
+                <span class="bundle-slot-label">Passeurs</span>
+                <span class="bundle-slot-name" title="${teamItem.name}">${teamItem.name}</span>
+              </div>
+            </div>
+
+            ${mainCtaHtml}
+
+            <div class="bundle-single-items-title">Ou acheter individuellement (50 Gemmes / pièce) :</div>
+            <div class="bundle-single-row">
+              ${getPieceBtn('pitch', pitchItem)}
+              ${getPieceBtn('bull', bullItem)}
+              ${getPieceBtn('team', teamItem)}
+            </div>
+          `;
+
+          listEl.appendChild(card);
+        });
+        return;
+      }
+
+      // 2. ONGLETS INDIVIDUELS (TAUREAU, ÉQUIPE, TERRAIN)
       const items = COSMETICS[currentShopTab] || [];
 
       items.forEach(item => {
         const isOwned = playerInventory.includes(item.id);
         const isEquipped = (playerEquipped[currentShopTab] === item.id);
-        const canAfford = (playerStars >= item.price);
+        const canAffordStars = (item.price !== null && playerStars >= item.price);
+        const canAffordGems = (playerGems >= (item.gemPrice || 50));
 
         const card = document.createElement('div');
         card.className = 'shop-item-card';
 
-        // Badge ANIMÉ si applicable
-        let animatedBadgeHtml = '';
-        if (item.isAnimated) {
-          animatedBadgeHtml = `<span class="animated-skin-badge">ANIMÉ</span>`;
+        // Badge ANIMÉ ou BUNDLE
+        let badgeHtml = '';
+        if (item.isBundlePiece) {
+          badgeHtml = `<span class="animated-skin-badge" style="background: #0891b2; color: #ffffff;">BUNDLE</span>`;
+        } else if (item.isAnimated) {
+          badgeHtml = `<span class="animated-skin-badge">ANIMÉ</span>`;
         }
 
-        // Pastille visuelle circulaire représentative du skin
+        // Pastille visuelle circulaire
         let previewHtml = '';
         if (currentShopTab === 'bull') {
           previewHtml = `<div class="cosmetic-preview" style="background: ${item.bodyColor};">
@@ -3138,7 +3887,7 @@
           </div>`;
         }
 
-        // Bouton d'action dynamique (Verrouillé insuffisant, Verrouillé achetable, Débloqué, Équipé)
+        // Boutons d'action
         let actionBtnHtml = '';
         if (isEquipped) {
           actionBtnHtml = `<button class="btn-item-action btn-item-equipped">
@@ -3150,26 +3899,47 @@
             <span>ÉQUIPER</span>
           </button>`;
         } else {
-          if (!canAfford) {
-            actionBtnHtml = `<button class="btn-item-action btn-item-buy disabled" disabled title="Solde insuffisant (${formatNumber(item.price)} étoiles requises)">
-              <span>${formatNumber(item.price)}</span>
-              <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          if (item.isBundlePiece) {
+            // Achat pièce de bundle exclusif en gemmes
+            actionBtnHtml = `<button class="btn-item-action btn-item-buy-gem" onclick="buyCosmeticWithGems('${currentShopTab}', '${item.id}', ${item.gemPrice || 50})">
+              <span>${item.gemPrice || 50}</span>
+              <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
             </button>`;
           } else {
-            actionBtnHtml = `<button class="btn-item-action btn-item-buy" onclick="buyCosmetic('${currentShopTab}', '${item.id}', ${item.price})">
-              <span>${formatNumber(item.price)}</span>
-              <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            </button>`;
+            // Double achat : Étoiles OU Gemmes
+            const starBtn = canAffordStars
+              ? `<button class="btn-item-action btn-item-buy" onclick="buyCosmetic('${currentShopTab}', '${item.id}', ${item.price})">
+                  <span>${formatNumber(item.price)}</span>
+                  <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>`
+              : `<button class="btn-item-action btn-item-buy disabled" disabled>
+                  <span>${formatNumber(item.price)}</span>
+                  <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>`;
+
+            const gemBtn = (item.gemPrice && item.gemPrice > 0)
+              ? `<button class="btn-item-action btn-item-buy-gem" onclick="buyCosmeticWithGems('${currentShopTab}', '${item.id}', ${item.gemPrice})" title="Acheter en Gemmes">
+                  <span>${item.gemPrice}</span>
+                  <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+                </button>`
+              : '';
+
+            actionBtnHtml = `<div class="btn-buy-dual-wrap">${starBtn}${gemBtn}</div>`;
           }
         }
 
         // Prix affiché sous le libellé si non possédé
-        const priceSubText = (!isOwned && item.price > 0)
-          ? ` • ${formatNumber(item.price)} étoiles`
-          : '';
+        let priceSubText = '';
+        if (!isOwned) {
+          if (item.isBundlePiece) {
+            priceSubText = ` • ${item.gemPrice || 50} gemmes`;
+          } else if (item.price > 0) {
+            priceSubText = ` • ${formatNumber(item.price)} étoiles ou ${item.gemPrice} gemmes`;
+          }
+        }
 
         card.innerHTML = `
-          ${animatedBadgeHtml}
+          ${badgeHtml}
           <div class="shop-item-info">
             ${previewHtml}
             <div class="cosmetic-text-wrap">
@@ -3184,7 +3954,48 @@
       });
     }
 
-    // Achat d'un cosmétique
+    // Achat d'un bundle complet (3 en 1)
+    window.buyBundle = function(bundleId, price) {
+      const bundle = SKINS_CONFIG.bundles.find(b => b.id === bundleId);
+      if (!bundle) return;
+      if (playerGems < price) {
+        audio.playFail();
+        return;
+      }
+
+      audio.init();
+      audio.playPurchase();
+      playerGems -= price;
+
+      ['pitch', 'bull', 'team'].forEach(cat => {
+        const itemId = bundle.items[cat];
+        if (!playerInventory.includes(itemId)) playerInventory.push(itemId);
+        playerEquipped[cat] = itemId;
+      });
+
+      savePlayerData();
+      updateGemsDisplay();
+      applyEquippedPitchSkin();
+      renderShopItems();
+    };
+
+    // Équiper l'ensemble d'un bundle
+    window.equipBundle = function(bundleId) {
+      const bundle = SKINS_CONFIG.bundles.find(b => b.id === bundleId);
+      if (!bundle) return;
+      audio.init();
+      audio.playFlick();
+
+      playerEquipped.pitch = bundle.items.pitch;
+      playerEquipped.bull = bundle.items.bull;
+      playerEquipped.team = bundle.items.team;
+
+      savePlayerData();
+      applyEquippedPitchSkin();
+      renderShopItems();
+    };
+
+    // Achat d'un cosmétique avec Étoiles
     window.buyCosmetic = function(category, itemId, price) {
       if (playerStars < price) {
         audio.playFail();
@@ -3199,6 +4010,25 @@
 
       savePlayerData();
       updateStarsDisplay();
+      if (category === 'pitch') applyEquippedPitchSkin();
+      renderShopItems();
+    };
+
+    // Achat d'un cosmétique avec Gemmes
+    window.buyCosmeticWithGems = function(category, itemId, gemPrice) {
+      if (playerGems < gemPrice) {
+        audio.playFail();
+        return;
+      }
+
+      audio.init();
+      audio.playPurchase();
+      playerGems -= gemPrice;
+      if (!playerInventory.includes(itemId)) playerInventory.push(itemId);
+      playerEquipped[category] = itemId;
+
+      savePlayerData();
+      updateGemsDisplay();
       if (category === 'pitch') applyEquippedPitchSkin();
       renderShopItems();
     };
@@ -3227,6 +4057,10 @@
     btnOpenShop.addEventListener('click', () => {
       audio.init();
       audio.playFlick();
+      currentShopTab = 'bundles';
+      document.querySelectorAll('.shop-tab-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-tab') === 'bundles');
+      });
       updateStarsDisplay();
       renderShopItems();
       shopOverlay.classList.remove('hidden');
