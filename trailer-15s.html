@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rondo Rush - Promo 15s (Format 9:16)</title>
+  <title>Rondo Rush - Promo 15s (Fidélité 100% au jeu réel)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
@@ -12,14 +12,7 @@
       --font-ui: 'Varela Round', system-ui, sans-serif;
       --bg-dark: #090d16;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: var(--font-ui);
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-ui); }
     body {
       background: var(--bg-dark);
       color: #f8fafc;
@@ -30,7 +23,6 @@
       justify-content: center;
       padding: 16px;
     }
-
     .preview-stage {
       position: relative;
       width: 360px;
@@ -41,14 +33,12 @@
       background: #000;
       overflow: hidden;
     }
-
     canvas {
       display: block;
       width: 100%;
       height: 100%;
       background: #4ade80;
     }
-
     .control-panel {
       margin-top: 14px;
       display: flex;
@@ -58,7 +48,6 @@
       width: 100%;
       max-width: 360px;
     }
-
     .progress-bar-container {
       width: 100%;
       height: 12px;
@@ -67,14 +56,12 @@
       border: 2px solid #0f172a;
       overflow: hidden;
     }
-
     .progress-bar-fill {
       width: 0%;
       height: 100%;
       background: #4ade80;
       transition: width 0.05s linear;
     }
-
     .status-text {
       font-size: 13px;
       font-weight: 700;
@@ -96,7 +83,7 @@
   </div>
 
   <script>
-    const TOTAL_DURATION = 15.0; // 15.0s pile selon le brief
+    const TOTAL_DURATION = 15.0;
     const canvas = document.getElementById('trailerCanvas');
     const ctx = canvas.getContext('2d');
     const progressFill = document.getElementById('progressFill');
@@ -105,226 +92,34 @@
     const W = canvas.width;   // 720
     const H = canvas.height;  // 1280
 
-    // --- SYNTHÉTISEUR AUDIO PHONK / ÉLECTRONIQUE (CUT ON BEAT) ---
-    class PhonkAudioEngine {
-      constructor() {
-        this.ctx = null;
-        this.dest = null;
-        this.audioStream = null;
-        this.bpm = 132;
-        this.beatInterval = 60 / this.bpm; // ~0.454s par beat
-        this.nextBeatTime = 0;
-        this.beatCount = 0;
-      }
-
-      init() {
-        if (!this.ctx) {
-          const AudioCtx = window.AudioContext || window.webkitAudioContext;
-          this.ctx = new AudioCtx();
-          this.dest = this.ctx.createMediaStreamDestination();
-          this.audioStream = this.dest.stream;
-        }
-        if (this.ctx.state === 'suspended') {
-          this.ctx.resume();
-        }
-      }
-
-      // Kick lourd 808
-      playKick(time) {
-        if (!this.ctx) return;
-        const t = time || this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-
-        osc.frequency.setValueAtTime(140, t);
-        osc.frequency.exponentialRampToValueAtTime(38, t + 0.14);
-
-        g.gain.setValueAtTime(0.7, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
-
-        osc.connect(g);
-        g.connect(this.ctx.destination);
-        g.connect(this.dest);
-
-        osc.start(t);
-        osc.stop(t + 0.22);
-      }
-
-      // Snare / Clap tranchant
-      playSnare(time) {
-        if (!this.ctx) return;
-        const t = time || this.ctx.currentTime;
-        const bufferSize = this.ctx.sampleRate * 0.12;
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
-        }
-
-        const noise = this.ctx.createBufferSource();
-        noise.buffer = buffer;
-
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'highpass';
-        filter.frequency.setValueAtTime(1200, t);
-
-        const g = this.ctx.createGain();
-        g.gain.setValueAtTime(0.4, t);
-        g.gain.exponentialRampToValueAtTime(0.01, t + 0.12);
-
-        noise.connect(filter);
-        filter.connect(g);
-        g.connect(this.ctx.destination);
-        g.connect(this.dest);
-
-        noise.start(t);
-      }
-
-      // Basse Phonk 808
-      playBassNote(freq, duration, time) {
-        if (!this.ctx) return;
-        const t = time || this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq, t);
-
-        g.gain.setValueAtTime(0.35, t);
-        g.gain.exponentialRampToValueAtTime(0.01, t + duration);
-
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(380, t);
-
-        osc.connect(filter);
-        filter.connect(g);
-        g.connect(this.ctx.destination);
-        g.connect(this.dest);
-
-        osc.start(t);
-        osc.stop(t + duration);
-      }
-
-      // Bruitage "Pop" satisfaisant pour bouton
-      playPop() {
-        if (!this.ctx) return;
-        const t = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(420, t);
-        osc.frequency.exponentialRampToValueAtTime(840, t + 0.08);
-
-        g.gain.setValueAtTime(0.5, t);
-        g.gain.exponentialRampToValueAtTime(0.01, t + 0.08);
-
-        osc.connect(g);
-        g.connect(this.ctx.destination);
-        g.connect(this.dest);
-
-        osc.start(t);
-        osc.stop(t + 0.08);
-      }
-
-      // Swoosh de passe rapide
-      playSwoosh() {
-        if (!this.ctx) return;
-        const t = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(300, t);
-        osc.frequency.exponentialRampToValueAtTime(620, t + 0.1);
-
-        g.gain.setValueAtTime(0.3, t);
-        g.gain.exponentialRampToValueAtTime(0.01, t + 0.12);
-
-        osc.connect(g);
-        g.connect(this.ctx.destination);
-        g.connect(this.dest);
-
-        osc.start(t);
-        osc.stop(t + 0.12);
-      }
-
-      // Son validation de combo
-      playComboValidation() {
-        if (!this.ctx) return;
-        [523, 659, 784, 1046].forEach((f, idx) => {
-          setTimeout(() => {
-            if (!this.ctx) return;
-            const t = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const g = this.ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, t);
-            g.gain.setValueAtTime(0.25, t);
-            g.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
-            osc.connect(g);
-            g.connect(this.ctx.destination);
-            g.connect(this.dest);
-            osc.start(t);
-            osc.stop(t + 0.15);
-          }, idx * 60);
-        });
-      }
-
-      // Mise à jour de la rythmique Phonk en continu
-      tick(gameTime) {
-        if (!this.ctx) return;
-        const cur = this.ctx.currentTime;
-        if (this.nextBeatTime === 0) {
-          this.nextBeatTime = cur;
-        }
-
-        while (this.nextBeatTime < cur + 0.1) {
-          const beatInBar = this.beatCount % 4;
-
-          // Kick sur les temps 0 et 2
-          if (beatInBar === 0 || beatInBar === 2) {
-            this.playKick(this.nextBeatTime);
-          }
-          // Snare sur les temps 1 et 3
-          if (beatInBar === 1 || beatInBar === 3) {
-            this.playSnare(this.nextBeatTime);
-          }
-
-          // Ligne de basse Phonk (gamme mineure énergique)
-          const bassNotes = [55, 55, 65.4, 49]; // A1, A1, C2, G1
-          const note = bassNotes[Math.floor(this.beatCount / 2) % bassNotes.length];
-          this.playBassNote(note, this.beatInterval * 0.9, this.nextBeatTime);
-
-          this.nextBeatTime += this.beatInterval;
-          this.beatCount++;
-        }
-      }
-    }
-
-    const audio = new PhonkAudioEngine();
-
-    // Entités du rondo (5 joueurs, 1 taureau, 1 ballon)
+    // Constantes et géométrie du terrain réel Rondo Rush
     const centerX = W / 2;
-    const centerY = H / 2 + 10;
+    const centerY = H / 2 + 35;
     const rondoRadius = 240;
 
+    // Entités 100% fidèles au jeu réel
     let players = [];
     for (let i = 0; i < 5; i++) {
       const angle = (i * 2 * Math.PI) / 5 - Math.PI / 2;
       players.push({
-        idx: i,
+        id: i,
         angle: angle,
         x: centerX + Math.cos(angle) * rondoRadius,
-        y: centerY + Math.sin(angle) * rondoRadius
+        y: centerY + Math.sin(angle) * rondoRadius,
+        radius: 40,
+        bounceY: 0,
+        eyeX: 0,
+        eyeY: 0
       });
     }
 
     let bull = {
       x: centerX,
       y: centerY,
-      speed: 260
+      radius: 48,
+      isAngry: false,
+      eyeX: 0,
+      eyeY: 0
     };
 
     let ball = {
@@ -336,570 +131,997 @@
       fromY: players[0].y,
       toX: players[0].x,
       toY: players[0].y,
-      progress: 1.0
+      progress: 1.0,
+      radius: 18
     };
 
-    let aimVector = {
-      visible: false,
-      fromX: 0, fromY: 0,
-      toX: 0, toY: 0
-    };
-
+    let flatPuffs = [];
+    let nostrilPuffs = [];
     let screenShake = 0;
     let score = 0;
+    let isAiming = false;
+    let aimStart = { x: 0, y: 0 };
+    let aimEnd = { x: 0, y: 0 };
 
-    // Timeline des passes rapides [00:03 - 00:08]
-    const GAMEPLAY_PASSES = [
-      { t: 3.3, aim: 3.1, from: 0, to: 2 },
-      { t: 3.9, aim: 3.7, from: 2, to: 4 },
-      { t: 4.5, aim: 4.3, from: 4, to: 1 },
-      { t: 5.1, aim: 4.9, from: 1, to: 3 },
-      { t: 5.7, aim: 5.5, from: 3, to: 0 },
-      { t: 6.3, aim: 6.1, from: 0, to: 2 },
-      { t: 6.9, aim: 6.7, from: 2, to: 4 },
-      { t: 7.5, aim: 7.3, from: 4, to: 1 }
+    // --- MOTEUR AUDIO PHONK & SOUND DESIGN DU VRAI JEU ---
+    class PhonkAudio {
+      constructor() {
+        this.ctx = null;
+        this.dest = null;
+        this.audioStream = null;
+        this.bpm = 132;
+        this.beatSec = 60 / this.bpm;
+        this.nextBeat = 0;
+        this.beatCount = 0;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+          this.dest = this.ctx.createMediaStreamDestination();
+          this.audioStream = this.dest.stream;
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      }
+
+      playKick(t) {
+        if (!this.ctx) return;
+        const now = t || this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(36, now + 0.16);
+        g.gain.setValueAtTime(0.75, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        osc.connect(g);
+        g.connect(this.ctx.destination);
+        g.connect(this.dest);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      }
+
+      playSnare(t) {
+        if (!this.ctx) return;
+        const now = t || this.ctx.currentTime;
+        const bufSize = this.ctx.sampleRate * 0.12;
+        const buffer = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufSize * 0.22));
+        }
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.setValueAtTime(1200, now);
+        const g = this.ctx.createGain();
+        g.gain.setValueAtTime(0.45, now);
+        g.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+        noise.connect(filter);
+        filter.connect(g);
+        g.connect(this.ctx.destination);
+        g.connect(this.dest);
+        noise.start(now);
+      }
+
+      playBass(freq, dur, t) {
+        if (!this.ctx) return;
+        const now = t || this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, now);
+        g.gain.setValueAtTime(0.35, now);
+        g.gain.exponentialRampToValueAtTime(0.01, now + dur);
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(420, now);
+        osc.connect(filter);
+        filter.connect(g);
+        g.connect(this.ctx.destination);
+        g.connect(this.dest);
+        osc.start(now);
+        osc.stop(now + dur);
+      }
+
+      // Clik pop satisfaisant pour bouton
+      playPop() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+        g.gain.setValueAtTime(0.5, now);
+        g.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+        osc.connect(g);
+        g.connect(this.ctx.destination);
+        g.connect(this.dest);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      }
+
+      // Passe du vrai jeu
+      playPass(streak = 1) {
+        if (!this.ctx) return;
+        const freqs = [330, 392, 440, 523, 587, 659, 784, 880];
+        const f = freqs[(streak - 1) % freqs.length];
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(f, now);
+        g.gain.setValueAtTime(0.4, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+        osc.connect(g);
+        g.connect(this.ctx.destination);
+        g.connect(this.dest);
+        osc.start(now);
+        osc.stop(now + 0.16);
+      }
+
+      // Achat / validation boutique
+      playPurchase() {
+        if (!this.ctx) return;
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => {
+          setTimeout(() => {
+            if (!this.ctx) return;
+            const now = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const g = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now);
+            g.gain.setValueAtTime(0.28, now);
+            g.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+            osc.connect(g);
+            g.connect(this.ctx.destination);
+            g.connect(this.dest);
+            osc.start(now);
+            osc.stop(now + 0.14);
+          }, idx * 60);
+        });
+      }
+
+      tick() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        if (this.nextBeat === 0) this.nextBeat = now;
+        while (this.nextBeat < now + 0.1) {
+          const beatInBar = this.beatCount % 4;
+          if (beatInBar === 0 || beatInBar === 2) this.playKick(this.nextBeat);
+          if (beatInBar === 1 || beatInBar === 3) this.playSnare(this.nextBeat);
+
+          const bassNotes = [55, 55, 65.4, 49];
+          const note = bassNotes[Math.floor(this.beatCount / 2) % bassNotes.length];
+          this.playBass(note, this.beatSec * 0.9, this.nextBeat);
+
+          this.nextBeat += this.beatSec;
+          this.beatCount++;
+        }
+      }
+    }
+
+    const audio = new PhonkAudio();
+
+    // Timeline des passes rapides du brief [00:03 - 00:08]
+    const PASSES = [
+      { t: 3.4, aim: 3.2, from: 0, to: 2 },
+      { t: 4.0, aim: 3.8, from: 2, to: 4 },
+      { t: 4.6, aim: 4.4, from: 4, to: 1 },
+      { t: 5.2, aim: 5.0, from: 1, to: 3 },
+      { t: 5.8, aim: 5.6, from: 3, to: 0 },
+      { t: 6.4, aim: 6.2, from: 0, to: 2 },
+      { t: 7.0, aim: 6.8, from: 2, to: 4 },
+      { t: 7.6, aim: 7.4, from: 4, to: 1 }
     ];
+    let passIdx = 0;
 
-    let passedIndex = 0;
-
-    // --- MOTEUR DE DESSIN ---
+    // =========================================================================
+    // RENDU GRAPHIQUE 100% CONFORME AU VRAI JEU RONDO RUSH
+    // =========================================================================
     function render(t) {
       ctx.save();
 
-      // Application du screen shake
+      // Screen shake
       if (screenShake > 0) {
-        const shakeX = (Math.random() - 0.5) * screenShake;
-        const shakeY = (Math.random() - 0.5) * screenShake;
-        ctx.translate(shakeX, shakeY);
-        screenShake = Math.max(0, screenShake - 0.8);
+        ctx.translate((Math.random() - 0.5) * screenShake, (Math.random() - 0.5) * screenShake);
+        screenShake = Math.max(0, screenShake - 1.2);
       }
 
       ctx.clearRect(0, 0, W, H);
 
-      if (t < 3.0) {
-        // [00:00 - 00:03] LE HOOK (L'invitation)
-        renderScene1_Hook(t);
-      } else if (t < 8.0) {
-        // [00:03 - 00:08] LE GAMEPLAY (La tension)
-        renderScene2_Gameplay(t);
-      } else if (t < 12.0) {
-        // [00:08 - 00:12] LA RÉCOMPENSE (La progression)
-        renderScene3_Shop(t);
-      } else {
-        // [00:12 - 00:15] LE CALL TO ACTION (L'installation)
-        renderScene4_CTA(t);
-      }
-
-      ctx.restore();
-    }
-
-    // =========================================================================
-    // SCÈNE 1 : LE HOOK [00:00 - 00:03]
-    // =========================================================================
-    function renderScene1_Hook(t) {
-      // Fond vert officiel
+      // Fond officiel du terrain Rondo Rush
       ctx.fillStyle = '#4ade80';
       ctx.fillRect(0, 0, W, H);
 
-      // Motif terrain rondo en arrière-plan
-      ctx.strokeStyle = '#bbf7d0';
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY + 80, 240, 0, Math.PI * 2);
-      ctx.stroke();
+      // Dessin du vrai terrain
+      renderPitchReal();
 
-      // Carte centrale du menu d'accueil
-      const cardY = 220;
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      roundRect(ctx, 45, cardY, W - 90, 680, 28);
-      ctx.fill();
-      ctx.stroke();
-
-      // Taureau icône
-      drawBullHead(W / 2, cardY + 110, 65);
-
-      // Titre Rondo Rush
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '900 52px "Varela Round"';
-      ctx.fillText('RONDO RUSH', W / 2, cardY + 230);
-
-      // Sous-titre
-      ctx.font = '800 18px "Varela Round"';
-      ctx.fillStyle = '#16a34a';
-      ctx.fillText('PLAYFUL FLAT EDITION', W / 2, cardY + 265);
-
-      // Badges record & étoiles
-      roundRect(ctx, 80, cardY + 300, 240, 50, 16);
-      ctx.fillStyle = '#f8fafc';
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#64748b';
-      ctx.font = '800 14px "Varela Round"';
-      ctx.fillText('RECORD : 42', 200, cardY + 332);
-
-      roundRect(ctx, W - 320, cardY + 300, 240, 50, 16);
-      ctx.fillStyle = '#f8fafc';
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#f59e0b';
-      ctx.fillText('ÉTOILES : 150', W - 200, cardY + 332);
-
-      // Bouton vert "JOUER !" avec physique d'enfoncement (CSS hard-shadow)
-      const btnPress = t >= 1.6 && t < 2.8;
-      const btnY = cardY + 390 + (btnPress ? 8 : 0);
-      const shadowH = btnPress ? 0 : 8;
-
-      // Ombre solide
-      if (shadowH > 0) {
-        ctx.fillStyle = '#0f172a';
-        roundRect(ctx, 90, btnY + shadowH, W - 180, 85, 22);
-        ctx.fill();
-      }
-
-      // Corps du bouton
-      ctx.fillStyle = '#4ade80';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      roundRect(ctx, 90, btnY, W - 180, 85, 22);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '900 36px "Varela Round"';
-      ctx.fillText('JOUER !', W / 2, btnY + 54);
-
-      // Bouton Boutique secondaire
-      ctx.fillStyle = '#fbbf24';
-      roundRect(ctx, 90, cardY + 510, W - 180, 70, 20);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '900 24px "Varela Round"';
-      ctx.fillText('BOUTIQUE', W / 2, cardY + 554);
-
-      ctx.restore();
-
-      // Doigt / Pouce virtuel qui vient appuyer
-      let fingerY = 1200;
-      if (t >= 0.8 && t < 1.6) {
-        const p = (t - 0.8) / 0.8;
-        fingerY = 1200 - (1200 - (btnY + 65)) * p;
-      } else if (t >= 1.6 && t < 2.8) {
-        fingerY = btnY + 65;
-      } else if (t >= 2.8) {
-        fingerY = 1200;
-      }
-      drawVirtualFinger(W / 2 + 30, fingerY, btnPress);
-
-      // Éclair pop sonore déclenché à 1.6s
-      if (t >= 1.58 && t < 1.65 && !window.hookPopped) {
-        audio.playPop();
-        window.hookPopped = true;
-      }
-
-      // Gros texte animé : "TESTE TES RÉFLEXES !"
-      const bannerScale = 1.0 + Math.sin(t * 12) * 0.05;
-      ctx.save();
-      ctx.translate(W / 2, 120);
-      ctx.scale(bannerScale, bannerScale);
-
-      ctx.fillStyle = '#fbbf24';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      roundRect(ctx, -260, -42, 520, 84, 22);
-      ctx.fill();
-      ctx.stroke();
-
-      // Texte + Éclair
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '900 28px "Varela Round"';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('TESTE TES RÉFLEXES !', 0, 0);
-
-      // Éclair Playful Flat
-      drawLightningBolt(215, 0, 26);
-      drawLightningBolt(-215, 0, 26);
-
-      ctx.restore();
-    }
-
-    // =========================================================================
-    // SCÈNE 2 : LE GAMEPLAY [00:03 - 00:08]
-    // =========================================================================
-    function renderScene2_Gameplay(t) {
-      ctx.fillStyle = '#4ade80';
-      ctx.fillRect(0, 0, W, H);
-
-      // Cercle de terrain
-      ctx.strokeStyle = '#bbf7d0';
-      ctx.lineWidth = 6;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, rondoRadius, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // HUD supérieur
-      ctx.save();
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 5;
-      roundRect(ctx, 50, 60, 200, 72, 18);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#64748b';
-      ctx.font = '800 14px "Varela Round"';
-      ctx.fillText('PASSES', 80, 86);
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '900 32px "Varela Round"';
-      ctx.fillText(score.toString(), 80, 118);
-
-      roundRect(ctx, W - 250, 60, 200, 72, 18);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#f59e0b';
-      ctx.font = '800 14px "Varela Round"';
-      ctx.fillText('VITESSE', W - 220, 86);
-      ctx.fillStyle = '#dc2626';
-      ctx.font = '900 28px "Varela Round"';
-      ctx.fillText('EXTRÊME', W - 220, 118);
-      ctx.restore();
-
-      // Gros texte : "LE TAUREAU NE S'ARRÊTE JAMAIS 🐂"
-      ctx.save();
-      ctx.fillStyle = '#ef4444';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      roundRect(ctx, W / 2 - 270, 150, 540, 60, 18);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 22px "Varela Round"';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText("LE TAUREAU NE S'ARRÊTE JAMAIS !", W / 2, 180);
-      ctx.restore();
-
-      // Traitement des passes rapides
-      if (passedIndex < GAMEPLAY_PASSES.length) {
-        const ev = GAMEPLAY_PASSES[passedIndex];
-        // Vecteur de visée cyan
-        if (t >= ev.aim && t < ev.t) {
-          aimVector.visible = true;
-          aimVector.fromX = players[ev.from].x;
-          aimVector.fromY = players[ev.from].y;
-          aimVector.toX = players[ev.to].x;
-          aimVector.toY = players[ev.to].y;
-        } else {
-          aimVector.visible = false;
-        }
-
-        if (t >= ev.t && !ball.inFlight) {
-          ball.fromX = players[ev.from].x;
-          ball.fromY = players[ev.from].y;
-          ball.toX = players[ev.to].x;
-          ball.toY = players[ev.to].y;
-          ball.carrierIdx = ev.to;
-          ball.progress = 0;
-          ball.inFlight = true;
-          audio.playSwoosh();
-        }
-      }
-
-      // Ballon en vol
-      if (ball.inFlight) {
-        ball.progress += 0.08;
-        if (ball.progress >= 1.0) {
-          ball.progress = 1.0;
-          ball.inFlight = false;
-          ball.x = ball.toX;
-          ball.y = ball.toY;
-          score += 3; // Augmentation rapide du score
-          screenShake = 14; // Screen shake léger à chaque réception !
-          audio.playComboValidation();
-          passedIndex++;
-        } else {
-          ball.x = ball.fromX + (ball.toX - ball.fromX) * ball.progress;
-          ball.y = ball.fromY + (ball.toY - ball.fromY) * ball.progress;
-        }
-      }
-
-      // Taureau qui charge de plus en plus vite
-      const targetX = ball.inFlight ? ball.x : players[ball.carrierIdx].x;
-      const targetY = ball.inFlight ? ball.y : players[ball.carrierIdx].y;
-      const bSpeed = 0.08 + (t - 3.0) * 0.02;
-      bull.x += (targetX - bull.x) * bSpeed;
-      bull.y += (targetY - bull.y) * bSpeed;
-
-      // Affichage du vecteur de visée cyan rapide
-      if (aimVector.visible) {
-        ctx.save();
-        ctx.strokeStyle = '#06b6d4';
-        ctx.lineWidth = 8;
-        ctx.setLineDash([14, 12]);
-        ctx.beginPath();
-        ctx.moveTo(aimVector.fromX, aimVector.fromY);
-        ctx.lineTo(aimVector.toX, aimVector.toY);
-        ctx.stroke();
-
-        // Tête de flèche
-        ctx.fillStyle = '#06b6d4';
-        ctx.beginPath();
-        ctx.arc(aimVector.toX, aimVector.toY, 16, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      // Dessin des 5 joueurs
+      // Dessin des vrais joueurs Rondo Rush
       players.forEach((p, idx) => {
         const isCarrier = (idx === ball.carrierIdx && !ball.inFlight);
-        drawPlayerNode(p.x, p.y, isCarrier);
+        renderPlayerReal(p, isCarrier, t);
       });
 
-      // Dessin du taureau rouge furieux
-      drawAngryChargingBull(bull.x, bull.y, t);
+      // Dessin du vrai Taureau Rondo Rush (ou Taureau Magma en scène 4)
+      const isMagma = t >= 10.2;
+      renderBullReal(bull.x, bull.y, bull.isAngry, isMagma, t);
 
-      // Dessin du ballon
-      drawBall(ball.x, ball.y);
-    }
-
-    // =========================================================================
-    // SCÈNE 3 : LA RÉCOMPENSE [00:08 - 00:12]
-    // =========================================================================
-    function renderScene3_Shop(t) {
-      // Effet de balayage transition à 8.0s
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(0, 0, W, H);
-
-      // En-tête Boutique
-      ctx.save();
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#fbbf24';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      ctx.font = '900 40px "Varela Round"';
-      ctx.strokeText('BOUTIQUE OFFICIELLE', W / 2, 110);
-      ctx.fillText('BOUTIQUE OFFICIELLE', W / 2, 110);
-
-      // Solde d'étoiles
-      roundRect(ctx, W / 2 - 130, 140, 260, 48, 16);
-      ctx.fillStyle = '#1e293b';
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#f59e0b';
-      ctx.font = '900 20px "Varela Round"';
-      ctx.fillText('SOLDE : 450 ÉTOILES', W / 2, 172);
-      ctx.restore();
-
-      // Onglets
-      const tabs = ['TAUREAUX', 'MAILLOTS', 'TERRAINS'];
-      tabs.forEach((tab, i) => {
-        const x = 50 + i * 215;
-        ctx.save();
-        ctx.fillStyle = (i === 0) ? '#fbbf24' : '#1e293b';
-        ctx.strokeStyle = '#0f172a';
-        ctx.lineWidth = 4;
-        roundRect(ctx, x, 210, 200, 50, 14);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = (i === 0) ? '#0f172a' : '#94a3b8';
-        ctx.font = '900 16px "Varela Round"';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(tab, x + 100, 235);
-        ctx.restore();
-      });
-
-      // Défilement de la liste des taureaux
-      const scrollOffset = Math.min((t - 8.0) * 140, 180);
-      const skins = [
-        { name: 'CYBORG LASER', color: '#0284c7', price: 'DÉBLOQUÉ', equipped: false },
-        { name: 'TAUREAU TOXIQUE', color: '#16a34a', price: 'DÉBLOQUÉ', equipped: false },
-        { name: 'TAUREAU MAGMA', color: '#ea580c', price: '150 ÉTOILES', equipped: false, isTarget: true },
-        { name: 'TAUREAU DORÉ', color: '#f59e0b', price: '300 ÉTOILES', equipped: false }
-      ];
-
-      // À 10.2s : achat et équipement du Taureau Magma
-      const isPurchased = t >= 10.2;
-      if (t >= 10.18 && t < 10.25 && !window.magmaBought) {
-        audio.playComboValidation();
-        window.magmaBought = true;
+      // Trajectoire de visée cyan du vrai jeu
+      if (isAiming) {
+        renderAimArrowReal(aimStart.x, aimStart.y, aimEnd.x, aimEnd.y);
       }
 
-      skins.forEach((s, idx) => {
-        const row = idx;
-        const cardY = 280 + row * 160 - scrollOffset;
+      // Dessin du vrai ballon
+      renderBallReal(ball.x, ball.y);
 
-        if (cardY < 180 || cardY > 1050) return;
+      // Particules Playful Flat
+      renderPuffs();
 
-        ctx.save();
-        ctx.fillStyle = '#1e293b';
-        ctx.strokeStyle = (s.isTarget && isPurchased) ? '#4ade80' : '#0f172a';
-        ctx.lineWidth = (s.isTarget && isPurchased) ? 6 : 4;
-        roundRect(ctx, 50, cardY, W - 100, 140, 20);
-        ctx.fill();
-        ctx.stroke();
+      // HUD supérieur officiel du vrai jeu
+      renderHUDReal(t);
 
-        // Miniature
-        ctx.fillStyle = s.color;
-        roundRect(ctx, 70, cardY + 15, 110, 110, 16);
-        ctx.fill();
-        ctx.stroke();
-        drawBullHead(125, cardY + 70, 36);
+      // --- DÉCOUPAGE CHORÉGRAPHIÉ DU BRIEF ---
+      if (t < 3.0) {
+        // [00:00 - 00:03] LE HOOK : Menu d'accueil officiel + Doigt appuie sur "JOUER !" + "Test tes réflexes ! ⚡"
+        renderOverlayHook(t);
+      } else if (t < 8.0) {
+        // [00:03 - 00:08] LE GAMEPLAY : Passes ultra-rapides + Screen Shake + "Le Taureau ne s'arrête JAMAIS 🐂"
+        renderBannerGameplay(t);
+      } else if (t < 12.0) {
+        // [00:08 - 00:12] LA RÉCOMPENSE : Vraie Boutique + Défilement + Achat Taureau Magma + "Débloque des skins épiques ✨"
+        renderOverlayShop(t);
+      } else {
+        // [00:12 - 00:15] LE CALL TO ACTION : Game Over officiel + Doigt appuie sur "INSTALLER L'APPLICATION" + Sticker final
+        renderOverlayCTA(t);
+      }
 
-        // Titre
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '900 22px "Varela Round"';
-        ctx.textAlign = 'left';
-        ctx.fillText(s.name, 205, cardY + 55);
-
-        // Bouton Acheter / Équipé
-        let label = s.price;
-        let btnCol = '#fbbf24';
-        if (s.isTarget && isPurchased) {
-          label = 'ÉQUIPÉ !';
-          btnCol = '#4ade80';
-        }
-
-        ctx.fillStyle = btnCol;
-        roundRect(ctx, 205, cardY + 75, 200, 44, 12);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = '#0f172a';
-        ctx.font = '900 16px "Varela Round"';
-        ctx.textAlign = 'center';
-        ctx.fillText(label, 305, cardY + 103);
-
-        ctx.restore();
-      });
-
-      // Texte animé en bas : "DÉBLOQUE DES SKINS ÉPIQUES ✨"
-      ctx.save();
-      ctx.fillStyle = '#4ade80';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      roundRect(ctx, 50, H - 180, W - 100, 80, 22);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '900 26px "Varela Round"';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('DÉBLOQUE DES SKINS ÉPIQUES !', W / 2, H - 140);
       ctx.restore();
     }
 
-    // =========================================================================
-    // SCÈNE 4 : LE CALL TO ACTION [00:12 - 00:15]
-    // =========================================================================
-    function renderScene4_CTA(t) {
-      ctx.fillStyle = '#0f172a';
-      ctx.fillRect(0, 0, W, H);
+    // --- 1. PELOUSE & LIGNES DU VRAI JEU ---
+    function renderPitchReal() {
+      // Grand cercle
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, rondoRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = '#bbf7d0';
+      ctx.lineWidth = 5;
+      ctx.stroke();
 
-      // Écran de Game Over avec score énorme
+      // Point central
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+      ctx.fillStyle = '#bbf7d0';
+      ctx.fill();
+
+      // Cercle technique central
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 36, 0, Math.PI * 2);
+      ctx.strokeStyle = '#bbf7d0';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+
+    // --- 2. PASSEURS REELS PLAYFUL FLAT DU JEU ---
+    function renderPlayerReal(p, isCarrier, t) {
+      const drawY = p.y + p.bounceY;
+
+      // Ombre solide noire décalée
+      ctx.beginPath();
+      ctx.arc(p.x, drawY + 6, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      // Halo blanc si porteur
+      if (isCarrier) {
+        ctx.beginPath();
+        ctx.arc(p.x, drawY, p.radius + 10, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 6;
+        ctx.stroke();
+      }
+
+      // Corps / Maillot bleu cyan officiel
+      ctx.beginPath();
+      ctx.arc(p.x, drawY, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fill();
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 5;
+      ctx.stroke();
+
+      // Col / Liseré
+      ctx.beginPath();
+      ctx.arc(p.x, drawY - p.radius * 0.4, p.radius * 0.45, 0, Math.PI);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Yeux cartoon qui regardent vers le ballon
+      const dxB = ball.x - p.x;
+      const dyB = ball.y - p.y;
+      const distB = Math.hypot(dxB, dyB) || 1;
+      const eyeOffsetX = (dxB / distB) * 4;
+      const eyeOffsetY = (dyB / distB) * 4;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(p.x - 9 + eyeOffsetX, drawY - 4 + eyeOffsetY, 6, 0, Math.PI * 2);
+      ctx.arc(p.x + 9 + eyeOffsetX, drawY - 4 + eyeOffsetY, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = '#0f172a';
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(p.x - 9 + eyeOffsetX * 1.3, drawY - 4 + eyeOffsetY * 1.3, 3, 0, Math.PI * 2);
+      ctx.arc(p.x + 9 + eyeOffsetX * 1.3, drawY - 4 + eyeOffsetY * 1.3, 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Numéro de maillot
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 20px "Varela Round"';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText((p.id + 1).toString(), p.x, drawY + 12);
+    }
+
+    // --- 3. LE TAUREAU REEL PLAYFUL FLAT DU JEU ---
+    function renderBullReal(x, y, isAngry, isMagma, t) {
       ctx.save();
-      ctx.fillStyle = '#1e293b';
+      ctx.translate(x, y);
+
+      // Ombre solide
+      ctx.beginPath();
+      ctx.arc(0, 8, bull.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      // Corps (Corail classique, Rouge furieux ou Magma en fusion)
+      let bodyColor = '#fb7185';
+      let hornColor = '#f59e0b';
+      if (isAngry) {
+        bodyColor = '#dc2626';
+        hornColor = '#ef4444';
+      }
+      if (isMagma) {
+        bodyColor = '#ea580c';
+        hornColor = '#fbbf24';
+      }
+
+      ctx.beginPath();
+      ctx.arc(0, 0, bull.radius, 0, Math.PI * 2);
+      ctx.fillStyle = bodyColor;
+      ctx.fill();
       ctx.strokeStyle = '#0f172a';
       ctx.lineWidth = 6;
-      roundRect(ctx, 45, 120, W - 90, 580, 28);
+      ctx.stroke();
+
+      // Cornes courbes fidèles au vrai jeu
+      ctx.fillStyle = hornColor;
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4;
+      // Corne gauche
+      ctx.beginPath();
+      ctx.moveTo(-bull.radius * 0.5, -bull.radius * 0.3);
+      ctx.quadraticCurveTo(-bull.radius * 1.25, -bull.radius * 0.8, -bull.radius * 0.7, -bull.radius * 1.35);
+      ctx.quadraticCurveTo(-bull.radius * 0.45, -bull.radius * 0.85, -bull.radius * 0.2, -bull.radius * 0.6);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      // Corne droite
+      ctx.beginPath();
+      ctx.moveTo(bull.radius * 0.5, -bull.radius * 0.3);
+      ctx.quadraticCurveTo(bull.radius * 1.25, -bull.radius * 0.8, bull.radius * 0.7, -bull.radius * 1.35);
+      ctx.quadraticCurveTo(bull.radius * 0.45, -bull.radius * 0.85, bull.radius * 0.2, -bull.radius * 0.6);
+      ctx.closePath();
       ctx.fill();
       ctx.stroke();
 
-      // Titre Game Over
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ef4444';
-      ctx.font = '900 48px "Varela Round"';
-      ctx.fillText('FIN DE PARTIE', W / 2, 210);
+      // Yeux cartoon féroces
+      const dxB = ball.x - x;
+      const dyB = ball.y - y;
+      const distB = Math.hypot(dxB, dyB) || 1;
+      const eyeOX = (dxB / distB) * 5;
+      const eyeOY = (dyB / distB) * 5;
 
-      // Score énorme
+      ctx.fillStyle = isAngry || isMagma ? '#fef08a' : '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-16 + eyeOX, -6 + eyeOY, 9, 0, Math.PI * 2);
+      ctx.arc(16 + eyeOX, -6 + eyeOY, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#0f172a';
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(-16 + eyeOX * 1.3, -6 + eyeOY * 1.3, 4, 0, Math.PI * 2);
+      ctx.arc(16 + eyeOX * 1.3, -6 + eyeOY * 1.3, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Naseaux & Anneau nasal doré
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(0, 26, 14, 0.2 * Math.PI, 0.8 * Math.PI);
+      ctx.stroke();
+
+      // Fumée naseaux animée
+      if (Math.random() < 0.35) {
+        nostrilPuffs.push({
+          x: x - 18, y: y + 26,
+          vx: -Math.random() * 2 - 1, vy: Math.random() * 2 - 1,
+          size: 6, life: 1.0
+        });
+        nostrilPuffs.push({
+          x: x + 18, y: y + 26,
+          vx: Math.random() * 2 + 1, vy: Math.random() * 2 - 1,
+          size: 6, life: 1.0
+        });
+      }
+
+      ctx.restore();
+    }
+
+    // --- 4. LE BALLON REEL ---
+    function renderBallReal(x, y) {
+      ctx.save();
+      ctx.translate(x, y);
+
+      ctx.beginPath();
+      ctx.arc(0, 4, ball.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, ball.radius, 0, Math.PI * 2);
       ctx.fillStyle = '#ffffff';
-      ctx.font = '800 22px "Varela Round"';
-      ctx.fillText('SCORE FINAL', W / 2, 265);
+      ctx.fill();
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4;
+      ctx.stroke();
 
+      // Pentagone central du ballon de foot
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const a = (i * 2 * Math.PI) / 5 - Math.PI / 2;
+        const px = Math.cos(a) * 6;
+        const py = Math.sin(a) * 6;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // --- 5. TRAJECTOIRE DE VISÉE REELLE ---
+    function renderAimArrowReal(fromX, fromY, toX, toY) {
+      const dx = toX - fromX;
+      const dy = toY - fromY;
+      const dist = Math.hypot(dx, dy);
+      const angle = Math.atan2(dy, dx);
+      const dotCount = 7;
+
+      ctx.save();
+      for (let i = 1; i <= dotCount; i++) {
+        const t = i / (dotCount + 1);
+        const px = fromX + Math.cos(angle) * (dist * t);
+        const py = fromY + Math.sin(angle) * (dist * t);
+
+        ctx.beginPath();
+        ctx.arc(px, py + 3, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fill();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#0f172a';
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // --- 6. HUD SUPÉRIEUR OFFICIEL ---
+    function renderHUDReal(t) {
+      ctx.save();
+      // Badge Passes
+      drawHUDCard(40, 50, 180, 68, 'PASSES', score.toString(), '#0f172a');
+      // Badge Étoiles
+      drawHUDCard(W / 2 - 90, 50, 180, 68, 'ÉTOILES', (450 + score * 2).toString(), '#f59e0b');
+      // Badge Record
+      drawHUDCard(W - 220, 50, 180, 68, 'RECORD', '42', '#0f172a');
+      ctx.restore();
+    }
+
+    function drawHUDCard(x, y, w, h, label, val, valColor) {
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4;
+      roundRect(ctx, x, y, w, h, 16);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '800 13px "Varela Round"';
+      ctx.textAlign = 'left';
+      ctx.fillText(label, x + 20, y + 26);
+
+      ctx.fillStyle = valColor;
+      ctx.font = '900 28px "Varela Round"';
+      ctx.fillText(val, x + 20, y + 54);
+    }
+
+    // --- 7. OVERLAY HOOK [00:00 - 00:03] : VRAIE CARTE D'ACCUEIL ---
+    function renderOverlayHook(t) {
+      // Ombre d'assombrissement
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.45)';
+      ctx.fillRect(0, 0, W, H);
+
+      const cardW = 540;
+      const cardH = 780;
+      const cardX = (W - cardW) / 2;
+      const cardY = 190;
+
+      // Boîte modale officielle Playful Flat
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 6;
+      roundRect(ctx, cardX, cardY, cardW, cardH, 28);
+      ctx.fill();
+      ctx.stroke();
+
+      // Pill "Playful Flat Edition"
       ctx.fillStyle = '#fbbf24';
-      ctx.font = '900 78px "Varela Round"';
-      ctx.fillText('38', W / 2, 345);
+      roundRect(ctx, cardX + 160, cardY + 24, 220, 36, 18);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 15px "Varela Round"';
+      ctx.textAlign = 'center';
+      ctx.fillText('Playful Flat Edition', cardX + 270, cardY + 48);
+
+      // Titre & Sous-titre
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 48px "Varela Round"';
+      ctx.fillText('RONDO RUSH', W / 2, cardY + 115);
+      ctx.fillStyle = '#64748b';
+      ctx.font = '800 18px "Varela Round"';
+      ctx.fillText('Jeu de passes en mode réflexe', W / 2, cardY + 150);
+
+      // 3 Blocs explicatifs officiels
+      drawHowToRow(cardX + 30, cardY + 180, cardW - 60, '#38bdf8', 'Touche le porteur et glisse pour viser.');
+      drawHowToRow(cardX + 30, cardY + 265, cardW - 60, '#fbbf24', 'Gagne des étoiles pour débloquer des skins !');
+      drawHowToRow(cardX + 30, cardY + 350, cardW - 60, '#fb7185', 'Attention au Taureau ! Il accélère toujours.');
+
+      // Bouton vert officiel "JOUER !" avec physique CSS
+      const isPress = t >= 1.4 && t < 2.6;
+      const btnPlayY = cardY + 460 + (isPress ? 6 : 0);
+      const btnShadow = isPress ? 0 : 6;
+
+      if (btnShadow > 0) {
+        ctx.fillStyle = '#0f172a';
+        roundRect(ctx, cardX + 40, btnPlayY + btnShadow, cardW - 80, 80, 20);
+        ctx.fill();
+      }
 
       ctx.fillStyle = '#4ade80';
-      ctx.font = '900 24px "Varela Round"';
-      ctx.fillText('NOUVEAU RECORD !', W / 2, 400);
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 5;
+      roundRect(ctx, cardX + 40, btnPlayY, cardW - 80, 80, 20);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 32px "Varela Round"';
+      ctx.fillText('JOUER !', W / 2, btnPlayY + 50);
+
+      // Bouton Boutique
+      ctx.fillStyle = '#ffffff';
+      roundRect(ctx, cardX + 40, cardY + 565, cardW - 80, 70, 18);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 22px "Varela Round"';
+      ctx.fillText('BOUTIQUE', W / 2, cardY + 608);
+
+      // Bouton Installer l'application
+      roundRect(ctx, cardX + 40, cardY + 655, cardW - 80, 70, 18);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillText("INSTALLER L'APPLICATION", W / 2, cardY + 698);
+
+      ctx.restore();
+
+      // Gros curseur / doigt virtuel qui appuie sur JOUER !
+      let fingerY = 1200;
+      if (t >= 0.7 && t < 1.4) {
+        const p = (t - 0.7) / 0.7;
+        fingerY = 1200 - (1200 - (btnPlayY + 55)) * p;
+      } else if (t >= 1.4 && t < 2.6) {
+        fingerY = btnPlayY + 55;
+      } else if (t >= 2.6) {
+        fingerY = 1200;
+      }
+      drawFinger(W / 2 + 50, fingerY, isPress);
+
+      if (t >= 1.38 && t < 1.45 && !window.hookPop) {
+        audio.playPop();
+        window.hookPop = true;
+      }
+
+      // Texte Gros & Animé : "Test tes réflexes ! ⚡"
+      renderTopBanner('Test tes réflexes ! ⚡', '#fbbf24', t);
+    }
+
+    function drawHowToRow(x, y, w, iconColor, text) {
+      ctx.fillStyle = '#f8fafc';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 3;
+      roundRect(ctx, x, y, w, 70, 16);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = iconColor;
+      roundRect(ctx, x + 12, y + 12, 46, 46, 12);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '800 15px "Varela Round"';
+      ctx.textAlign = 'left';
+      ctx.fillText(text, x + 72, y + 40);
+    }
+
+    // --- 8. GAMEPLAY BANNER [00:03 - 00:08] ---
+    function renderBannerGameplay(t) {
+      renderTopBanner("Le Taureau ne s'arrête JAMAIS 🐂", '#ef4444', t, '#ffffff');
+
+      // Décompte de départ à 3.0s si visible
+      if (t >= 3.0 && t < 3.3) {
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 6;
+        ctx.font = '900 80px "Varela Round"';
+        ctx.textAlign = 'center';
+        ctx.strokeText('GO !', W / 2, H / 2 - 40);
+        ctx.fillText('GO !', W / 2, H / 2 - 40);
+      }
+    }
+
+    // --- 9. OVERLAY SHOP [00:08 - 00:12] : VRAIE BOUTIQUE RONDO RUSH ---
+    function renderOverlayShop(t) {
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+      ctx.fillRect(0, 0, W, H);
+
+      const modalW = 600;
+      const modalH = 880;
+      const modalX = (W - modalW) / 2;
+      const modalY = 150;
+
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 6;
+      roundRect(ctx, modalX, modalY, modalW, modalH, 28);
+      ctx.fill();
+      ctx.stroke();
+
+      // En-tête Boutique
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 36px "Varela Round"';
+      ctx.textAlign = 'center';
+      ctx.fillText('BOUTIQUE', W / 2, modalY + 60);
+
+      // Solde étoiles
+      roundRect(ctx, W / 2 - 130, modalY + 80, 260, 44, 16);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 18px "Varela Round"';
+      ctx.fillText('Solde : 450 étoiles', W / 2, modalY + 108);
+
+      // Onglets officiels
+      const tabs = ['TAUREAUX', 'MAILLOTS', 'TERRAINS'];
+      tabs.forEach((tb, i) => {
+        const tbX = modalX + 30 + i * 185;
+        ctx.fillStyle = (i === 0) ? '#4ade80' : '#f8fafc';
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 4;
+        roundRect(ctx, tbX, modalY + 145, 170, 48, 14);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '900 15px "Varela Round"';
+        ctx.fillText(tb, tbX + 85, modalY + 175);
+      });
+
+      // Défilement des vraies cartes de skins
+      const scrollY = Math.min((t - 8.0) * 120, 160);
+      const isEquipped = t >= 10.2;
+
+      const shopSkins = [
+        { name: 'Taureau Classique', col: '#fb7185', price: 'Équipé', isMagma: false },
+        { name: 'Taureau Magma', col: '#ea580c', price: isEquipped ? 'ÉQUIPÉ !' : '150 étoiles', isMagma: true },
+        { name: 'Taureau Cyber Bot', col: '#0284c7', price: '250 étoiles', isMagma: false },
+        { name: 'Taureau Doré', col: '#f59e0b', price: '500 étoiles', isMagma: false }
+      ];
+
+      shopSkins.forEach((sk, idx) => {
+        const cardItemY = modalY + 215 + idx * 165 - scrollY;
+        if (cardItemY < modalY + 130 || cardItemY > modalY + modalH - 120) return;
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.strokeStyle = (sk.isMagma && isEquipped) ? '#4ade80' : '#0f172a';
+        ctx.lineWidth = (sk.isMagma && isEquipped) ? 6 : 4;
+        roundRect(ctx, modalX + 30, cardItemY, modalW - 60, 145, 20);
+        ctx.fill();
+        ctx.stroke();
+
+        // Miniature avec vrai taureau
+        ctx.fillStyle = sk.col;
+        roundRect(ctx, modalX + 50, cardItemY + 18, 110, 110, 16);
+        ctx.fill();
+        ctx.stroke();
+        renderBullReal(modalX + 105, cardItemY + 73, false, sk.isMagma, t);
+
+        // Nom
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '900 22px "Varela Round"';
+        ctx.textAlign = 'left';
+        ctx.fillText(sk.name, modalX + 185, cardItemY + 55);
+
+        // Bouton Acheter / Équipé
+        const btnCol = (sk.isMagma && isEquipped) ? '#4ade80' : '#fbbf24';
+        ctx.fillStyle = btnCol;
+        roundRect(ctx, modalX + 185, cardItemY + 75, 220, 48, 14);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '900 17px "Varela Round"';
+        ctx.textAlign = 'center';
+        ctx.fillText(sk.price, modalX + 295, cardItemY + 105);
+      });
+
+      ctx.restore();
+
+      // Doigt qui appuie sur "Taureau Magma"
+      const magmaBtnY = modalY + 215 + 165 - scrollY + 95;
+      let fingerShopY = 1200;
+      const isShopPress = t >= 10.1 && t < 10.7;
+
+      if (t >= 9.4 && t < 10.1) {
+        const p = (t - 9.4) / 0.7;
+        fingerShopY = 1200 - (1200 - magmaBtnY) * p;
+      } else if (t >= 10.1 && t < 10.7) {
+        fingerShopY = magmaBtnY;
+      } else if (t >= 10.7) {
+        fingerShopY = 1200;
+      }
+      drawFinger(modalX + 295 + 40, fingerShopY, isShopPress);
+
+      if (t >= 10.18 && t < 10.25 && !window.magmaAudio) {
+        audio.playPurchase();
+        window.magmaAudio = true;
+      }
+
+      // Texte animé : "Débloque des skins épiques ✨"
+      renderTopBanner('Débloque des skins épiques ✨', '#4ade80', t);
+    }
+
+    // --- 10. OVERLAY CTA [00:12 - 00:15] : GAME OVER + INSTALLER L'APPLICATION ---
+    function renderOverlayCTA(t) {
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+      ctx.fillRect(0, 0, W, H);
+
+      const modalW = 540;
+      const modalH = 680;
+      const modalX = (W - modalW) / 2;
+      const modalY = 140;
+
+      ctx.save();
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 6;
+      roundRect(ctx, modalX, modalY, modalW, modalH, 28);
+      ctx.fill();
+      ctx.stroke();
+
+      // Pill Game Over
+      ctx.fillStyle = '#ef4444';
+      roundRect(ctx, modalX + 180, modalY + 24, 180, 36, 18);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 15px "Varela Round"';
+      ctx.textAlign = 'center';
+      ctx.fillText('Fin de partie', modalX + 270, modalY + 48);
+
+      // Gros score
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 44px "Varela Round"';
+      ctx.fillText('FIN DE PARTIE', W / 2, modalY + 115);
+
+      ctx.font = '800 20px "Varela Round"';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('Le Taureau a intercepté le ballon !', W / 2, modalY + 155);
+
+      // Score 28 passes
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = '900 76px "Varela Round"';
+      ctx.fillText('28', W / 2, modalY + 245);
+
+      ctx.fillStyle = '#16a34a';
+      ctx.font = '900 22px "Varela Round"';
+      ctx.fillText('28 passes = +28 étoiles', W / 2, modalY + 295);
 
       // Bouton INSTALLER L'APPLICATION ciblé
-      const btnInstallPress = t >= 13.5;
-      const bY = 480 + (btnInstallPress ? 6 : 0);
-      const bShadow = btnInstallPress ? 0 : 6;
+      const isInstallPress = t >= 13.4;
+      const btnInstY = modalY + 360 + (isInstallPress ? 6 : 0);
+      const bShadow = isInstallPress ? 0 : 6;
 
       if (bShadow > 0) {
-        ctx.fillStyle = '#020617';
-        roundRect(ctx, 80, bY + bShadow, W - 160, 80, 20);
+        ctx.fillStyle = '#0f172a';
+        roundRect(ctx, modalX + 40, btnInstY + bShadow, modalW - 80, 78, 20);
         ctx.fill();
       }
 
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = '#0f172a';
       ctx.lineWidth = 5;
-      roundRect(ctx, 80, bY, W - 160, 80, 20);
+      roundRect(ctx, modalX + 40, btnInstY, modalW - 80, 78, 20);
       ctx.fill();
       ctx.stroke();
 
       ctx.fillStyle = '#0f172a';
       ctx.font = '900 22px "Varela Round"';
-      ctx.fillText("INSTALLER L'APPLICATION", W / 2, bY + 48);
+      ctx.fillText("INSTALLER L'APPLICATION", W / 2, btnInstY + 47);
+
+      // Bouton Rejouer
+      ctx.fillStyle = '#4ade80';
+      roundRect(ctx, modalX + 40, modalY + 465, modalW - 80, 78, 20);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 26px "Varela Round"';
+      ctx.fillText('REJOUER', W / 2, modalY + 512);
 
       ctx.restore();
 
-      // Doigt qui clique sur "INSTALLER L'APPLICATION"
-      let ctaFingerY = 1200;
-      if (t >= 12.6 && t < 13.5) {
-        const p = (t - 12.6) / 0.9;
-        ctaFingerY = 1200 - (1200 - (bY + 50)) * p;
-      } else if (t >= 13.5) {
-        ctaFingerY = bY + 50;
+      // Doigt qui appuie sur "INSTALLER L'APPLICATION"
+      let fingerInstY = 1200;
+      if (t >= 12.6 && t < 13.4) {
+        const p = (t - 12.6) / 0.8;
+        fingerInstY = 1200 - (1200 - (btnInstY + 45)) * p;
+      } else if (t >= 13.4) {
+        fingerInstY = btnInstY + 45;
       }
-      drawVirtualFinger(W / 2 + 30, ctaFingerY, btnInstallPress);
+      drawFinger(W / 2 + 50, fingerInstY, isInstallPress);
 
-      if (t >= 13.48 && t < 13.55 && !window.installPopped) {
+      if (t >= 13.38 && t < 13.45 && !window.installPop) {
         audio.playPop();
-        window.installPopped = true;
+        window.installPop = true;
       }
 
-      // STICKER FINAL & CALL TO ACTION
+      // STICKER FINAL CALL TO ACTION DU BRIEF
+      const stickerY = H - 380;
       ctx.save();
       ctx.fillStyle = '#fbbf24';
       ctx.strokeStyle = '#0f172a';
       ctx.lineWidth = 6;
-      roundRect(ctx, 40, H - 360, W - 80, 180, 24);
+      roundRect(ctx, 40, stickerY, W - 80, 200, 24);
       ctx.fill();
       ctx.stroke();
 
       ctx.fillStyle = '#0f172a';
       ctx.font = '900 28px "Varela Round"';
       ctx.textAlign = 'center';
-      ctx.fillText('JOUE GRATUITEMENT DANS', W / 2, H - 305);
-      ctx.fillText('TON NAVIGATEUR !', W / 2, H - 265);
-
-      ctx.font = '800 18px "Varela Round"';
-      ctx.fillStyle = '#1e293b';
-      ctx.fillText('IPHONE & ANDROID - SANS TÉLÉCHARGEMENT', W / 2, H - 215);
+      ctx.fillText('Joue gratuitement dans', W / 2, stickerY + 55);
+      ctx.fillText('ton navigateur ! 🎮', W / 2, stickerY + 98);
 
       // URL en bas
-      ctx.fillStyle = '#4ade80';
-      ctx.font = '900 30px "Varela Round"';
-      ctx.fillText('rando-rush.onrender.com', W / 2, H - 100);
+      ctx.fillStyle = '#ffffff';
+      roundRect(ctx, 70, stickerY + 125, W - 140, 52, 14);
+      ctx.fill();
+      ctx.stroke();
 
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '800 18px "Varela Round"';
-      ctx.fillText('LIEN EN BIO', W / 2, H - 60);
+      ctx.fillStyle = '#16a34a';
+      ctx.font = '900 24px "Varela Round"';
+      ctx.fillText('rando-rush.onrender.com', W / 2, stickerY + 158);
 
       ctx.restore();
     }
 
-    // --- UTILITAIRES GRAPHIQUES ---
+    // --- BANNIÈRE HAUTE DYNAMIQUE ---
+    function renderTopBanner(text, bgColor, t, textColor = '#0f172a') {
+      const pulse = 1.0 + Math.sin(t * 10) * 0.04;
+      ctx.save();
+      ctx.translate(W / 2, 135);
+      ctx.scale(pulse, pulse);
+
+      ctx.fillStyle = bgColor;
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 6;
+      roundRect(ctx, -270, -38, 540, 76, 20);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = textColor;
+      ctx.font = '900 25px "Varela Round"';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 0, 0);
+
+      ctx.restore();
+    }
+
+    // Doigt virtuel stylisé Playful Flat
+    function drawFinger(x, y, isPress) {
+      ctx.save();
+      ctx.translate(x, y);
+      const sc = isPress ? 0.9 : 1.0;
+      ctx.scale(sc, sc);
+
+      // Ombre du pouce
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      roundRect(ctx, -24, 8, 48, 120, 24);
+      ctx.fill();
+
+      // Pouce
+      ctx.fillStyle = '#fbcfe8';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 5;
+      roundRect(ctx, -24, 0, 48, 120, 24);
+      ctx.fill();
+      ctx.stroke();
+
+      // Ongle
+      ctx.fillStyle = '#ffffff';
+      roundRect(ctx, -14, 12, 28, 22, 8);
+      ctx.fill();
+
+      // Ondulation d'impact si pressé
+      if (isPress) {
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.arc(0, 18, 42, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function renderPuffs() {
+      for (let i = nostrilPuffs.length - 1; i >= 0; i--) {
+        const p = nostrilPuffs[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.04;
+        if (p.life <= 0) {
+          nostrilPuffs.splice(i, 1);
+          continue;
+        }
+        ctx.save();
+        ctx.globalAlpha = p.life * 0.7;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
 
     function roundRect(ctx, x, y, width, height, radius) {
       ctx.beginPath();
@@ -915,229 +1137,58 @@
       ctx.closePath();
     }
 
-    function drawLightningBolt(x, y, size) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.fillStyle = '#fef08a';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(0, -size);
-      ctx.lineTo(-size * 0.4, -size * 0.1);
-      ctx.lineTo(0, -size * 0.1);
-      ctx.lineTo(-size * 0.2, size);
-      ctx.lineTo(size * 0.5, 0);
-      ctx.lineTo(size * 0.1, 0);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
+    // --- MISE À JOUR PHYSIQUE ET PASSES RAPIDES ---
+    function update(dt, t) {
+      // Passes du gameplay [00:03 - 00:08]
+      if (passIdx < PASSES.length) {
+        const pEv = PASSES[passIdx];
+        if (t >= pEv.aim && t < pEv.t) {
+          isAiming = true;
+          aimStart = { x: players[pEv.from].x, y: players[pEv.from].y };
+          aimEnd = { x: players[pEv.to].x, y: players[pEv.to].y };
+        } else {
+          isAiming = false;
+        }
 
-    function drawVirtualFinger(x, y, pressed) {
-      ctx.save();
-      ctx.translate(x, y);
-      const sc = pressed ? 0.92 : 1.0;
-      ctx.scale(sc, sc);
-
-      // Pouce stylisé flat
-      ctx.fillStyle = '#fbcfe8';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      roundRect(ctx, -26, 0, 52, 110, 26);
-      ctx.fill();
-      ctx.stroke();
-
-      // Ondulation de tap
-      if (pressed) {
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.arc(0, 20, 48, 0, Math.PI * 2);
-        ctx.stroke();
+        if (t >= pEv.t && !ball.inFlight) {
+          ball.fromX = players[pEv.from].x;
+          ball.fromY = players[pEv.from].y;
+          ball.toX = players[pEv.to].x;
+          ball.toY = players[pEv.to].y;
+          ball.carrierIdx = pEv.to;
+          ball.progress = 0;
+          ball.inFlight = true;
+          audio.playPass(score + 1);
+        }
       }
 
-      ctx.restore();
-    }
-
-    function drawBullHead(x, y, r) {
-      ctx.save();
-      ctx.translate(x, y);
-
-      // Cornes
-      ctx.fillStyle = '#f59e0b';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 4;
-      // Corne G
-      ctx.beginPath();
-      ctx.moveTo(-r * 0.5, -r * 0.2);
-      ctx.quadraticCurveTo(-r * 1.1, -r * 0.9, -r * 0.6, -r * 1.3);
-      ctx.quadraticCurveTo(-r * 0.4, -r * 0.8, -r * 0.2, -r * 0.6);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-      // Corne D
-      ctx.beginPath();
-      ctx.moveTo(r * 0.5, -r * 0.2);
-      ctx.quadraticCurveTo(r * 1.1, -r * 0.9, r * 0.6, -r * 1.3);
-      ctx.quadraticCurveTo(r * 0.4, -r * 0.8, r * 0.2, -r * 0.6);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      // Tête
-      ctx.fillStyle = '#fb7185';
-      ctx.beginPath();
-      ctx.arc(0, 0, r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      // Yeux
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(-r * 0.35, -r * 0.1, r * 0.22, 0, Math.PI * 2);
-      ctx.arc(r * 0.35, -r * 0.1, r * 0.22, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#0f172a';
-      ctx.beginPath();
-      ctx.arc(-r * 0.3, -r * 0.1, r * 0.1, 0, Math.PI * 2);
-      ctx.arc(r * 0.3, -r * 0.1, r * 0.1, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Anneau doré
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.arc(0, r * 0.55, r * 0.28, 0.2 * Math.PI, 0.8 * Math.PI);
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    function drawAngryChargingBull(x, y, t) {
-      ctx.save();
-      ctx.translate(x, y);
-
-      // Ombre
-      ctx.fillStyle = 'rgba(0,0,0,0.35)';
-      ctx.beginPath();
-      ctx.ellipse(0, 48, 42, 14, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Corps Taureau Rouge
-      ctx.fillStyle = '#dc2626';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      ctx.beginPath();
-      ctx.arc(0, 0, 48, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      // Cornes en feu
-      ctx.fillStyle = '#ef4444';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(-32, -22);
-      ctx.quadraticCurveTo(-58, -55, -34, -75);
-      ctx.quadraticCurveTo(-26, -50, -14, -38);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(32, -22);
-      ctx.quadraticCurveTo(58, -55, 34, -75);
-      ctx.quadraticCurveTo(26, -50, 14, -38);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      // Yeux jaunes furieux
-      ctx.fillStyle = '#fef08a';
-      ctx.beginPath();
-      ctx.arc(-18, -6, 11, 0, Math.PI * 2);
-      ctx.arc(18, -6, 11, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#0f172a';
-      ctx.beginPath();
-      ctx.arc(-16, -6, 5, 0, Math.PI * 2);
-      ctx.arc(16, -6, 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Anneau
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.arc(0, 28, 14, 0.2 * Math.PI, 0.8 * Math.PI);
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    function drawPlayerNode(x, y, isCarrier) {
-      ctx.save();
-      ctx.translate(x, y);
-
-      ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      ctx.beginPath();
-      ctx.ellipse(0, 36, 28, 10, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (isCarrier) {
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 6;
-        ctx.beginPath();
-        ctx.arc(0, 0, 48, 0, Math.PI * 2);
-        ctx.stroke();
+      if (ball.inFlight) {
+        ball.progress += 0.085;
+        if (ball.progress >= 1.0) {
+          ball.progress = 1.0;
+          ball.inFlight = false;
+          ball.x = ball.toX;
+          ball.y = ball.toY;
+          score += 4;
+          screenShake = 16;
+          passIdx++;
+        } else {
+          ball.x = ball.fromX + (ball.toX - ball.fromX) * ball.progress;
+          ball.y = ball.fromY + (ball.toY - ball.fromY) * ball.progress;
+        }
       }
 
-      ctx.fillStyle = '#38bdf8';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 6;
-      ctx.beginPath();
-      ctx.arc(0, 0, 36, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 20px "Varela Round"';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('10', 0, 2);
-
-      ctx.restore();
+      // Taureau qui accélère
+      if (t >= 3.0 && t < 8.0) {
+        const target = ball.inFlight ? ball : players[ball.carrierIdx];
+        const spd = 0.09 + (t - 3.0) * 0.02;
+        bull.x += (target.x - bull.x) * spd;
+        bull.y += (target.y - bull.y) * spd;
+        bull.isAngry = (t >= 5.0);
+      }
     }
 
-    function drawBall(x, y) {
-      ctx.save();
-      ctx.translate(x, y);
-
-      ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      ctx.beginPath();
-      ctx.ellipse(0, 16, 14, 5, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#0f172a';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.arc(0, 0, 16, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#0f172a';
-      ctx.beginPath();
-      ctx.arc(0, 0, 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-    }
-
-    // --- PIPELINE D'ENREGISTREMENT 15 SECONDES ---
+    // --- PIPELINE D'ENREGISTREMENT ---
     let currentPlayTime = 0;
     let mediaRecorder = null;
     let recordedChunks = [];
@@ -1145,7 +1196,7 @@
     async function startRecording() {
       audio.init();
       currentPlayTime = 0;
-      passedIndex = 0;
+      passIdx = 0;
       score = 0;
 
       const videoStream = canvas.captureStream(60);
@@ -1156,9 +1207,7 @@
       const combinedStream = new MediaStream(combinedTracks);
 
       let mimeType = 'video/webm;codecs=vp9,opus';
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = 'video/webm';
-      }
+      if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
 
       recordedChunks = [];
       mediaRecorder = new MediaRecorder(combinedStream, {
@@ -1192,8 +1241,8 @@
         lastTime = now;
 
         currentPlayTime += dt;
-        audio.tick(currentPlayTime);
-
+        audio.tick();
+        update(dt, currentPlayTime);
         render(currentPlayTime);
 
         const progressPercent = Math.min((currentPlayTime / TOTAL_DURATION) * 100, 100);
@@ -1215,7 +1264,7 @@
     if (window.location.search.includes('auto=1')) {
       setTimeout(() => {
         startRecording();
-      }, 600);
+      }, 500);
     }
   </script>
 </body>
