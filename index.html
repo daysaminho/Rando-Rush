@@ -511,6 +511,35 @@
       }
     }
 
+    /* LIEN NOTES DE VERSION (PATCH NOTE) */
+    .btn-patchnote-link {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 800;
+      opacity: 0.75;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .btn-patchnote-link:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    .btn-patchnote-link:active {
+      transform: translateY(1px);
+    }
+
     /* GAME OVER SPECIFIC MODAL */
     .over-reason-pill {
       background: var(--player-defender-bg);
@@ -1106,6 +1135,67 @@
             <span>INSTALLER L'APPLICATION</span>
           </button>
         </div>
+
+        <!-- Bouton Notes de Version / Nouveautés -->
+        <button class="btn-patchnote-link" id="btn-open-patchnote" title="Voir les nouveautés de la mise à jour">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px; stroke-width: 2.6;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span>Nouveautés v1.2</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Overlay Notes de Version / Patch Note (Playful Flat) -->
+    <div class="overlay hidden" id="patchnote-modal-overlay" style="z-index: 86;">
+      <div class="modal-box" style="max-width: 390px;">
+        <span class="modal-title-pill">Mise à jour v1.2</span>
+        <h2 class="modal-h1" style="font-size: 22px; margin-bottom: 4px;">NOTES DE VERSION</h2>
+        <p class="modal-desc" style="margin-bottom: 12px;">Fluidité et prise en main</p>
+
+        <div class="how-to-card" style="font-size: 13px; line-height: 1.45; text-align: left; gap: 10px; margin-bottom: 14px;">
+          <div class="how-row" style="align-items: flex-start;">
+            <div class="how-icon-chip yellow" style="min-width: 32px; height: 32px;">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke-width: 2.8;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            </div>
+            <div class="how-text">
+              <strong>Première passe libre :</strong><br>
+              Possession illimitée au coup d'envoi. Le Taureau patiente au centre pour vous laisser ajuster votre visée sans chrono d'urgence.
+            </div>
+          </div>
+
+          <div class="how-row" style="align-items: flex-start;">
+            <div class="how-icon-chip blue" style="min-width: 32px; height: 32px;">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke-width: 2.8;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+            <div class="how-text">
+              <strong>Guidage visuel animé :</strong><br>
+              Trajectoire pointillée d'orientation et infobulle explicative sur le porteur initial. Le guidage s'estompe dès le premier tir.
+            </div>
+          </div>
+
+          <div class="how-row" style="align-items: flex-start;">
+            <div class="how-icon-chip coral" style="min-width: 32px; height: 32px;">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke-width: 2.8;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <div class="how-text">
+              <strong>Réactivité instantanée :</strong><br>
+              Ligne de visée activée immédiatement dès le début du glisser pour un contrôle précis et sans zone morte.
+            </div>
+          </div>
+
+          <div class="how-row" style="align-items: flex-start;">
+            <div class="how-icon-chip blue" style="min-width: 32px; height: 32px; background: #86efac;">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 15px; height: 15px; stroke-width: 2.8;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+            </div>
+            <div class="how-text">
+              <strong>Progression équilibrée :</strong><br>
+              Démarrage adapté sur les premières passes pour installer le tempo avant l'accélération compétitive.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-chunky btn-action-large" id="btn-close-patchnote" style="font-size: 16px; padding: 12px 20px; background: var(--btn-play-bg); width: 100%;">
+          COMPRIS
+        </button>
       </div>
     </div>
 
@@ -2982,6 +3072,7 @@
       startOverlay.classList.add('hidden');
       gameoverOverlay.classList.add('hidden');
       shopOverlay.classList.add('hidden');
+      if (patchnoteModal) patchnoteModal.classList.add('hidden');
       countdownOverlay.classList.remove('hidden');
 
       setCountdownNumber('3', false);
@@ -3179,6 +3270,38 @@
       });
     }
 
+    // --- GESTION DU PATCH NOTE / NOTES DE VERSION (PLAYFUL FLAT) ---
+    const CURRENT_PATCH_VERSION = '1.2.0';
+    const patchnoteModal = document.getElementById('patchnote-modal-overlay');
+    const btnClosePatchnote = document.getElementById('btn-close-patchnote');
+    const btnOpenPatchnote = document.getElementById('btn-open-patchnote');
+
+    function checkPatchNote() {
+      const lastSeenPatch = localStorage.getItem('rondo_last_seen_patch');
+      if (lastSeenPatch !== CURRENT_PATCH_VERSION) {
+        if (patchnoteModal) {
+          patchnoteModal.classList.remove('hidden');
+        }
+      }
+    }
+
+    if (btnClosePatchnote && patchnoteModal) {
+      btnClosePatchnote.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        localStorage.setItem('rondo_last_seen_patch', CURRENT_PATCH_VERSION);
+        patchnoteModal.classList.add('hidden');
+      });
+    }
+
+    if (btnOpenPatchnote && patchnoteModal) {
+      btnOpenPatchnote.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        patchnoteModal.classList.remove('hidden');
+      });
+    }
+
     // --- BOUTONS D'ACTION PRINCIPAUX ---
     btnPlay.addEventListener('click', () => {
       audio.init();
@@ -3203,6 +3326,7 @@
     // Lancement
     resize();
     initGame();
+    checkPatchNote();
     requestAnimationFrame(loop);
   </script>
 </body>
