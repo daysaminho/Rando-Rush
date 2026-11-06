@@ -532,28 +532,41 @@
       gap: 4px;
     }
 
-    /* Floating feedback text */
-    .float-text {
+    /* Floating feedback text (Toast en bas du jeu) */
+    .float-bottom-text {
       position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
       pointer-events: none;
       font-family: var(--font-ui);
-      font-size: 22px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--text-main);
       background: var(--btn-accent-bg);
       border: var(--panel-border);
-      box-shadow: var(--hard-shadow-sm);
-      border-radius: 12px;
-      padding: 4px 10px;
-      z-index: 30;
-      transform: translate(-50%, -50%);
-      animation: floatPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      box-shadow: var(--hard-shadow-xs);
+      border-radius: 999px;
+      padding: 6px 16px;
+      z-index: 35;
+      animation: floatBottomPop 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      white-space: nowrap;
     }
 
-    @keyframes floatPop {
-      0% { opacity: 0; transform: translate(-50%, 0%) scale(0.6); }
-      30% { opacity: 1; transform: translate(-50%, -20%) scale(1.15); }
-      100% { opacity: 0; transform: translate(-50%, -60%) scale(1); }
+    .float-bottom-text.cross {
+      background: #fbbf24;
+      color: #0f172a;
+      border: 3px solid #0f172a;
+      box-shadow: var(--hard-shadow-sm);
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes floatBottomPop {
+      0% { opacity: 0; transform: translateX(-50%) translateY(14px) scale(0.8); }
+      20% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.08); }
+      75% { opacity: 1; transform: translateX(-50%) translateY(-2px) scale(1); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-14px) scale(0.95); }
     }
 
     .over-buttons-group {
@@ -1779,12 +1792,16 @@
     let carrierMaxTime = 1.35;
 
     let flatPuffs = [];
+    let lastCircleDir = 0; // -1 (anti-horaire), +1 (horaire), 0 (mixte/transversale)
+    let consecutiveCirclePasses = 0;
 
     function initGame() {
       score = 0;
       hudScore.textContent = '0';
       carrierMaxTime = 1.4;
       carrierTimeLeft = carrierMaxTime;
+      lastCircleDir = 0;
+      consecutiveCirclePasses = 0;
 
       players = [];
       for (let i = 0; i < PLAYER_COUNT; i++) {
@@ -1896,14 +1913,13 @@
       gameoverOverlay.classList.remove('hidden');
     }
 
-    function createFloatText(x, y, text) {
+    function createFloatBottomText(text, isCross = false) {
+      document.querySelectorAll('.float-bottom-text').forEach(el => el.remove());
       const el = document.createElement('div');
-      el.className = 'float-text';
+      el.className = 'float-bottom-text' + (isCross ? ' cross' : '');
       el.textContent = text;
-      el.style.left = `${x}px`;
-      el.style.top = `${y}px`;
       container.appendChild(el);
-      setTimeout(() => el.remove(), 600);
+      setTimeout(() => el.remove(), 650);
     }
 
     // --- GESTES TACTILES & SOURIS ---
@@ -2009,17 +2025,30 @@
           return;
         }
 
-        const toCarrierX = carrier.x - bull.x;
-        const toCarrierY = carrier.y - bull.y;
-        const distToCarrier = Math.hypot(toCarrierX, toCarrierY);
+        let targetX = carrier.x;
+        let targetY = carrier.y;
 
+        // Anti-tournette : si 2+ passes consécutives dans le même sens circulaire,
+        // le taureau anticipe en coupant la course du prochain voisin !
+        if (consecutiveCirclePasses >= 2 && lastCircleDir !== 0) {
+          const nextNeighborIdx = (currentCarrierIdx + lastCircleDir + PLAYER_COUNT) % PLAYER_COUNT;
+          const nextNeighbor = players[nextNeighborIdx];
+          targetX = carrier.x * 0.6 + nextNeighbor.x * 0.4;
+          targetY = carrier.y * 0.6 + nextNeighbor.y * 0.4;
+        }
+
+        const toTargetX = targetX - bull.x;
+        const toTargetY = targetY - bull.y;
+        const distToTarget = Math.hypot(toTargetX, toTargetY);
+
+        const distToCarrier = Math.hypot(carrier.x - bull.x, carrier.y - bull.y);
         if (distToCarrier < bull.radius + carrier.radius * 0.8) {
           triggerGameOver('Tacle du Taureau !');
           return;
         }
 
-        bull.vx = (toCarrierX / distToCarrier) * bull.speed;
-        bull.vy = (toCarrierY / distToCarrier) * bull.speed;
+        bull.vx = (toTargetX / distToTarget) * bull.speed;
+        bull.vy = (toTargetY / distToTarget) * bull.speed;
         bull.x += bull.vx;
         bull.y += bull.vy;
         bull.angle = Math.atan2(bull.vy, bull.vx);
@@ -2036,8 +2065,15 @@
         const distToBall = Math.hypot(toBallX, toBallY);
 
         const chaseSpeed = bull.speed * 1.15;
-        bull.vx = (toBallX / distToBall) * chaseSpeed;
-        bull.vy = (toBallY / distToBall) * chaseSpeed;
+        const targetVx = (toBallX / distToBall) * chaseSpeed;
+        const targetVy = (toBallY / distToBall) * chaseSpeed;
+
+        // Inertie de virage : le taureau ne pivote pas instantanément à 180°
+        // S'il fonçait sur le joueur A et que la transversale part à l'opposé,
+        // son élan le fait déraper, laissant le centre libre !
+        const turnInertia = 0.22;
+        bull.vx = bull.vx * (1 - turnInertia) + targetVx * turnInertia;
+        bull.vy = bull.vy * (1 - turnInertia) + targetVy * turnInertia;
         bull.x += bull.vx;
         bull.y += bull.vy;
         bull.angle = Math.atan2(bull.vy, bull.vx);
@@ -2064,18 +2100,41 @@
           const distToP = Math.hypot(ball.x - p.x, ball.y - p.y);
 
           if (distToP < p.radius + ball.radius + 8) {
+            const previousCarrierIdx = currentCarrierIdx;
             currentCarrierIdx = i;
             ball.inFlight = false;
             p.bounceY = 6;
 
-            score++;
+            // Détection passe voisine (diff = 1) vs transversale (diff >= 2)
+            const diff = Math.abs(currentCarrierIdx - previousCarrierIdx);
+            const distInCircle = Math.min(diff, PLAYER_COUNT - diff);
+            const isCross = (distInCircle >= 2);
+            const pointsGained = isCross ? 2 : 1;
+
+            score += pointsGained;
             hudScore.textContent = score;
 
             hudScore.classList.add('pop');
             setTimeout(() => hudScore.classList.remove('pop'), 150);
 
             audio.playPass(score);
-            createFloatText(p.x, p.y, `+1`);
+
+            // Toast feedback positionné en bas de l'écran
+            if (isCross) {
+              createFloatBottomText('TRANSVERSALE ! +2', true);
+            } else {
+              createFloatBottomText('+1', false);
+            }
+
+            // Tracking pour anti-tournette
+            const forwardStep = (currentCarrierIdx - previousCarrierIdx + PLAYER_COUNT) % PLAYER_COUNT;
+            const dir = (forwardStep === 1) ? 1 : ((forwardStep === PLAYER_COUNT - 1) ? -1 : 0);
+            if (dir !== 0 && dir === lastCircleDir) {
+              consecutiveCirclePasses++;
+            } else {
+              lastCircleDir = dir;
+              consecutiveCirclePasses = (dir !== 0) ? 1 : 0;
+            }
 
             bull.speed = bull.baseSpeed + Math.min(score * 0.08, 3.2);
             carrierMaxTime = Math.max(0.65, 1.4 - score * 0.02);
