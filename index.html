@@ -596,13 +596,24 @@
     /* ==============================================================
        MODALE BOUTIQUE COSMÉTIQUE ÉTENDUE (Playful Flat)
        ============================================================== */
+    #shop-overlay {
+      z-index: 80;
+      padding: max(16px, env(safe-area-inset-top)) 12px 12px 12px;
+      background: rgba(15, 23, 42, 0.75);
+    }
+
+    body.dark-mode #shop-overlay {
+      background: rgba(2, 6, 23, 0.85);
+    }
+
     .shop-modal {
       width: 100%;
       max-width: 440px;
-      max-height: 90vh;
+      max-height: 88vh;
       display: flex;
       flex-direction: column;
       padding: 16px 14px;
+      margin: auto;
     }
 
     .shop-header {
@@ -2725,7 +2736,7 @@
 
         // Prix affiché sous le libellé si non possédé
         const priceSubText = (!isOwned && item.price > 0)
-          ? ` • ${formatNumber(item.price)} ⭐`
+          ? ` • ${formatNumber(item.price)} étoiles`
           : '';
 
         card.innerHTML = `
