@@ -1,5 +1,8 @@
 *.webm
 *.mp4
+*.wav
 generate-video.mjs
 generate-15s.mjs
+generate-phonk-audio.mjs
+record-real-game.mjs
 node_modules/

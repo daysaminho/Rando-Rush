@@ -253,6 +253,56 @@
       pointer-events: auto;
     }
 
+    /* PILULE PREMIÈRE PASSE LIBRE */
+    .free-pass-pill {
+      position: absolute;
+      top: max(env(safe-area-inset-top, 0px), 54px);
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 56px;
+      background: var(--btn-accent-bg);
+      color: #0f172a;
+      border: 3px solid #0f172a;
+      box-shadow: var(--hard-shadow-xs);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+      z-index: 55;
+      animation: freePassPulse 1.8s infinite ease-in-out;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      white-space: nowrap;
+    }
+
+    body.dark-mode .free-pass-pill {
+      background: #fbbf24;
+      color: #020617;
+      border-color: #020617;
+      box-shadow: var(--hard-shadow-xs);
+    }
+
+    .free-pass-pill.hidden {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.85);
+      pointer-events: none;
+    }
+
+    @keyframes freePassPulse {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.06); }
+    }
+
+    @media (min-width: 600px) {
+      .free-pass-pill {
+        top: 68px;
+        margin-top: 0;
+      }
+    }
+
     /* PLAYFUL FLAT CHUNKY BUTTONS */
     .btn-chunky {
       display: inline-flex;
@@ -990,6 +1040,15 @@
       </div>
     </div>
 
+    <!-- Indicateur Première Passe Libre -->
+    <div id="hud-free-pass-pill" class="free-pass-pill hidden">
+      <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke-width: 3;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 14 14"></polyline>
+      </svg>
+      <span>Première passe libre</span>
+    </div>
+
     <!-- Canvas principal -->
     <canvas id="rondoCanvas"></canvas>
 
@@ -1722,6 +1781,7 @@
 
     const hudScore = document.getElementById('hud-score');
     const hudBest = document.getElementById('hud-best');
+    const hudFreePassPill = document.getElementById('hud-free-pass-pill');
     const startOverlay = document.getElementById('start-overlay');
     const gameoverOverlay = document.getElementById('gameover-overlay');
     const shopOverlay = document.getElementById('shop-overlay');
@@ -1863,10 +1923,11 @@
     function initGame() {
       score = 0;
       hudScore.textContent = '0';
-      carrierMaxTime = 1.4;
+      carrierMaxTime = 2.8;
       carrierTimeLeft = carrierMaxTime;
       lastCircleDir = 0;
       consecutiveCirclePasses = 0;
+      if (hudFreePassPill) hudFreePassPill.classList.add('hidden');
 
       players = [];
       for (let i = 0; i < PLAYER_COUNT; i++) {
@@ -1934,6 +1995,7 @@
     function triggerGameOver(reason) {
       if (currentState === STATE.GAMEOVER) return;
       currentState = STATE.GAMEOVER;
+      if (hudFreePassPill) hudFreePassPill.classList.add('hidden');
       audio.playFail();
 
       for (let i = 0; i < 10; i++) {
@@ -2030,7 +2092,11 @@
       const dy = dragCurrent.y - dragStart.y;
       const dragDist = Math.hypot(dx, dy);
 
-      if (dragDist < 14) return;
+      if (dragDist < 8) return;
+
+      if (score === 0 && hudFreePassPill) {
+        hudFreePassPill.classList.add('hidden');
+      }
 
       const angle = Math.atan2(dy, dx);
       const powerRatio = Math.min(dragDist / 120, 1.8);
@@ -2084,39 +2150,57 @@
         ball.x = carrier.x;
         ball.y = carrier.y;
 
-        carrierTimeLeft -= dt;
-        if (carrierTimeLeft <= 0) {
-          triggerGameOver('Pressé par le Taureau !');
-          return;
+        if (score === 0) {
+          // Première passe libre : possession illimitée, le Taureau attend calmement au centre
+          carrierTimeLeft = carrierMaxTime;
+          const toCenterX = centerX - bull.x;
+          const toCenterY = centerY - bull.y;
+          const distC = Math.hypot(toCenterX, toCenterY);
+          if (distC > 12) {
+            bull.vx = (toCenterX / distC) * (bull.baseSpeed * 0.4);
+            bull.vy = (toCenterY / distC) * (bull.baseSpeed * 0.4);
+            bull.x += bull.vx;
+            bull.y += bull.vy;
+            bull.angle = Math.atan2(bull.vy, bull.vx);
+          } else {
+            bull.vx = 0;
+            bull.vy = 0;
+          }
+        } else {
+          carrierTimeLeft -= dt;
+          if (carrierTimeLeft <= 0) {
+            triggerGameOver('Pressé par le Taureau !');
+            return;
+          }
+
+          let targetX = carrier.x;
+          let targetY = carrier.y;
+
+          // Anti-tournette : si 2+ passes consécutives dans le même sens circulaire,
+          // le taureau anticipe en coupant la course du prochain voisin !
+          if (consecutiveCirclePasses >= 2 && lastCircleDir !== 0) {
+            const nextNeighborIdx = (currentCarrierIdx + lastCircleDir + PLAYER_COUNT) % PLAYER_COUNT;
+            const nextNeighbor = players[nextNeighborIdx];
+            targetX = carrier.x * 0.6 + nextNeighbor.x * 0.4;
+            targetY = carrier.y * 0.6 + nextNeighbor.y * 0.4;
+          }
+
+          const toTargetX = targetX - bull.x;
+          const toTargetY = targetY - bull.y;
+          const distToTarget = Math.hypot(toTargetX, toTargetY);
+
+          const distToCarrier = Math.hypot(carrier.x - bull.x, carrier.y - bull.y);
+          if (distToCarrier < bull.radius + carrier.radius * 0.8) {
+            triggerGameOver('Tacle du Taureau !');
+            return;
+          }
+
+          bull.vx = (toTargetX / distToTarget) * bull.speed;
+          bull.vy = (toTargetY / distToTarget) * bull.speed;
+          bull.x += bull.vx;
+          bull.y += bull.vy;
+          bull.angle = Math.atan2(bull.vy, bull.vx);
         }
-
-        let targetX = carrier.x;
-        let targetY = carrier.y;
-
-        // Anti-tournette : si 2+ passes consécutives dans le même sens circulaire,
-        // le taureau anticipe en coupant la course du prochain voisin !
-        if (consecutiveCirclePasses >= 2 && lastCircleDir !== 0) {
-          const nextNeighborIdx = (currentCarrierIdx + lastCircleDir + PLAYER_COUNT) % PLAYER_COUNT;
-          const nextNeighbor = players[nextNeighborIdx];
-          targetX = carrier.x * 0.6 + nextNeighbor.x * 0.4;
-          targetY = carrier.y * 0.6 + nextNeighbor.y * 0.4;
-        }
-
-        const toTargetX = targetX - bull.x;
-        const toTargetY = targetY - bull.y;
-        const distToTarget = Math.hypot(toTargetX, toTargetY);
-
-        const distToCarrier = Math.hypot(carrier.x - bull.x, carrier.y - bull.y);
-        if (distToCarrier < bull.radius + carrier.radius * 0.8) {
-          triggerGameOver('Tacle du Taureau !');
-          return;
-        }
-
-        bull.vx = (toTargetX / distToTarget) * bull.speed;
-        bull.vy = (toTargetY / distToTarget) * bull.speed;
-        bull.x += bull.vx;
-        bull.y += bull.vy;
-        bull.angle = Math.atan2(bull.vy, bull.vx);
       } else {
         ball.x += ball.vx;
         ball.y += ball.vy;
@@ -2179,6 +2263,8 @@
             score += pointsGained;
             hudScore.textContent = score;
 
+            if (hudFreePassPill) hudFreePassPill.classList.add('hidden');
+
             hudScore.classList.add('pop');
             setTimeout(() => hudScore.classList.remove('pop'), 150);
 
@@ -2201,8 +2287,17 @@
               consecutiveCirclePasses = (dir !== 0) ? 1 : 0;
             }
 
-            bull.speed = bull.baseSpeed + Math.min(score * 0.08, 3.2);
-            carrierMaxTime = Math.max(0.65, 1.4 - score * 0.02);
+            // Courbe de difficulté progressive et gratifiante
+            if (score <= 3) {
+              carrierMaxTime = 2.8;
+              bull.speed = bull.baseSpeed * 0.75;
+            } else if (score <= 7) {
+              carrierMaxTime = 2.0;
+              bull.speed = bull.baseSpeed;
+            } else {
+              carrierMaxTime = Math.max(0.65, 1.4 - (score - 8) * 0.025);
+              bull.speed = bull.baseSpeed + Math.min((score - 7) * 0.09, 3.2);
+            }
             carrierTimeLeft = carrierMaxTime;
 
             for (let k = 0; k < 6; k++) {
@@ -2262,6 +2357,11 @@
       const linesColor = isDarkMode ? pitchCosmetic.darkLines : pitchCosmetic.lightLines;
 
       renderPitch(strokeColor, linesColor, pitchCosmetic, time);
+
+      if (score === 0 && currentState === STATE.PLAYING && !isDragging && !ball.inFlight) {
+        const carrier = players[currentCarrierIdx];
+        if (carrier) renderFirstPassTutorial(carrier, time, strokeColor);
+      }
 
       if (isDragging && !ball.inFlight && currentState === STATE.PLAYING) {
         renderAimArrow(strokeColor);
@@ -2404,6 +2504,73 @@
       ctx.stroke();
     }
 
+    // 1.5 Guide visuel tutoriel première passe
+    function renderFirstPassTutorial(carrier, time, strokeColor) {
+      if (score !== 0 || currentState !== STATE.PLAYING || ball.inFlight || isDragging) return;
+
+      const targetPlayer = players[(currentCarrierIdx + 1) % PLAYER_COUNT];
+      if (!targetPlayer) return;
+
+      // Trait pointillé dynamique pointant vers le coéquipier
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([8, 6]);
+      ctx.lineDashOffset = -(time * 0.035);
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 3;
+      ctx.moveTo(carrier.x, carrier.y);
+      ctx.lineTo(targetPlayer.x, targetPlayer.y);
+      ctx.stroke();
+      ctx.restore();
+
+      // Bulle d'indication Playful Flat
+      ctx.save();
+      const tipText = 'Glisse pour viser • Relâche pour tirer';
+      ctx.font = '900 11px Fredoka, Outfit, sans-serif';
+      const textMetrics = ctx.measureText(tipText);
+      const textW = textMetrics.width;
+      const padX = 12;
+      const boxW = textW + padX * 2;
+      const boxH = 26;
+
+      let boxX = carrier.x - boxW / 2;
+      let boxY = carrier.y - carrier.radius - 36;
+      if (boxY < 24) {
+        boxY = carrier.y + carrier.radius + 20;
+      }
+      boxX = Math.max(12, Math.min(width - boxW - 12, boxX));
+
+      // Ombre solide
+      ctx.fillStyle = strokeColor;
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(boxX + 2, boxY + 3, boxW, boxH, 8);
+      } else {
+        ctx.rect(boxX + 2, boxY + 3, boxW, boxH);
+      }
+      ctx.fill();
+
+      // Fond de la bulle
+      ctx.fillStyle = isDarkMode ? '#1e293b' : '#ffffff';
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(boxX, boxY, boxW, boxH, 8);
+      } else {
+        ctx.rect(boxX, boxY, boxW, boxH);
+      }
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = strokeColor;
+      ctx.stroke();
+
+      // Texte contrasté
+      ctx.fillStyle = isDarkMode ? '#f8fafc' : '#0f172a';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tipText, boxX + boxW / 2, boxY + boxH / 2);
+      ctx.restore();
+    }
+
     // 2. Trajectoire de visée
     function renderAimArrow(strokeColor) {
       const carrier = players[currentCarrierIdx];
@@ -2411,7 +2578,7 @@
       const dy = dragCurrent.y - dragStart.y;
       const dist = Math.hypot(dx, dy);
 
-      if (dist < 12) return;
+      if (dist < 6) return;
 
       const angle = Math.atan2(dy, dx);
       const powerPct = Math.min(dist / 110, 1.0);
@@ -2469,20 +2636,36 @@
 
       // Jauge d'urgence si porteur
       if (isCarrier) {
-        const pct = Math.max(0, carrierTimeLeft / carrierMaxTime);
-        const gaugeColor = pct > 0.4 ? '#fbbf24' : '#fb7185';
+        if (score === 0) {
+          // Premier tir libre : anneau vert apaisant qui pulse doucement au lieu de la jauge rouge stressante
+          const calmPulse = (Math.sin(time * 0.005) + 1) * 0.5;
+          ctx.beginPath();
+          ctx.arc(p.x, drawY, p.radius + 8 + calmPulse * 2, 0, Math.PI * 2);
+          ctx.strokeStyle = '#22c55e';
+          ctx.lineWidth = 4;
+          ctx.stroke();
 
-        ctx.beginPath();
-        ctx.arc(p.x, drawY, p.radius + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
-        ctx.strokeStyle = gaugeColor;
-        ctx.lineWidth = 5;
-        ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(p.x, drawY, p.radius + 8 + calmPulse * 2, 0, Math.PI * 2);
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        } else {
+          const pct = Math.max(0, carrierTimeLeft / carrierMaxTime);
+          const gaugeColor = pct > 0.4 ? '#fbbf24' : '#fb7185';
 
-        ctx.beginPath();
-        ctx.arc(p.x, drawY, p.radius + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
-        ctx.strokeStyle = strokeColor;
-        ctx.lineWidth = 2;
-        ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(p.x, drawY, p.radius + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
+          ctx.strokeStyle = gaugeColor;
+          ctx.lineWidth = 5;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(p.x, drawY, p.radius + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * pct);
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
       }
 
       // Couleur de base du maillot
@@ -2819,6 +3002,9 @@
         countdownOverlay.classList.add('hidden');
         carrierTimeLeft = carrierMaxTime;
         currentState = STATE.PLAYING;
+        if (score === 0 && hudFreePassPill) {
+          hudFreePassPill.classList.remove('hidden');
+        }
       }, 1550));
     }
 
@@ -3007,6 +3193,7 @@
     btnHome.addEventListener('click', () => {
       audio.init();
       clearCountdownTimers();
+      if (hudFreePassPill) hudFreePassPill.classList.add('hidden');
       gameoverOverlay.classList.add('hidden');
       startOverlay.classList.remove('hidden');
       currentState = STATE.MENU;
