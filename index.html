@@ -435,6 +435,22 @@
       box-shadow: var(--hard-shadow-sm);
     }
 
+    .btn-install-app {
+      background: var(--bg-panel);
+      color: var(--text-main);
+      font-size: 14px;
+      padding: 10px 16px;
+      box-shadow: var(--hard-shadow-xs);
+    }
+
+    /* Masqué automatiquement si déjà installé en mode standalone */
+    body.is-standalone .btn-install-app,
+    @media all and (display-mode: standalone) {
+      .btn-install-app {
+        display: none !important;
+      }
+    }
+
     /* GAME OVER SPECIFIC MODAL */
     .over-reason-pill {
       background: var(--player-defender-bg);
@@ -1014,7 +1030,44 @@
             <svg class="svg-icon" viewBox="0 0 24 24" style="stroke-width: 2.8;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
             <span>BOUTIQUE</span>
           </button>
+
+          <!-- Bouton Installer l'application -->
+          <button class="btn-chunky btn-action-large btn-install-app" id="btn-install-app">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="stroke-width: 2.6;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>INSTALLER L'APPLICATION</span>
+          </button>
         </div>
+      </div>
+    </div>
+
+    <!-- Overlay Instructions Installation PWA (Playful Flat) -->
+    <div class="overlay hidden" id="install-modal-overlay" style="z-index: 85;">
+      <div class="modal-box" style="max-width: 380px;">
+        <span class="modal-title-pill">Installation</span>
+        <h2 class="modal-h1" style="font-size: 22px; margin-bottom: 12px;">INSTALLER L'APPLICATION</h2>
+        <div class="how-to-card" style="font-size: 13px; line-height: 1.5; text-align: left; gap: 10px;">
+          <div class="how-row" style="align-items: flex-start;">
+            <div class="how-icon-chip blue" style="min-width: 32px; height: 32px;">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+            </div>
+            <div class="how-text">
+              <strong>Sur iPhone / iPad (Safari) :</strong><br>
+              Touchez l'icône de partage (carré avec flèche vers le haut) puis choisissez <strong>Sur l'écran d'accueil</strong>.
+            </div>
+          </div>
+          <div class="how-row" style="align-items: flex-start;">
+            <div class="how-icon-chip yellow" style="min-width: 32px; height: 32px;">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+            </div>
+            <div class="how-text">
+              <strong>Sur Android / Chrome :</strong><br>
+              Ouvrez le menu (3 points) puis sélectionnez <strong>Installer l'application</strong> ou <strong>Ajouter à l'écran d'accueil</strong>.
+            </div>
+          </div>
+        </div>
+        <button class="btn-chunky btn-action-large" id="btn-close-install" style="font-size: 16px; padding: 10px 20px; background: var(--btn-accent-bg); width: 100%;">
+          COMPRIS
+        </button>
       </div>
     </div>
 
@@ -2890,6 +2943,39 @@
       audio.init();
       shopOverlay.classList.add('hidden');
     });
+
+    // --- GESTION DE L'INSTALLATION PWA (PLAYFUL FLAT) ---
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
+
+    const btnInstallApp = document.getElementById('btn-install-app');
+    const installModal = document.getElementById('install-modal-overlay');
+    const btnCloseInstall = document.getElementById('btn-close-install');
+
+    if (btnInstallApp) {
+      btnInstallApp.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          deferredInstallPrompt.userChoice.then(() => {
+            deferredInstallPrompt = null;
+          });
+        } else {
+          if (installModal) installModal.classList.remove('hidden');
+        }
+      });
+    }
+
+    if (btnCloseInstall && installModal) {
+      btnCloseInstall.addEventListener('click', () => {
+        audio.init();
+        installModal.classList.add('hidden');
+      });
+    }
 
     // --- BOUTONS D'ACTION PRINCIPAUX ---
     btnPlay.addEventListener('click', () => {
