@@ -152,7 +152,7 @@
     /* TOP HUD */
     .hud-top {
       position: absolute;
-      top: env(safe-area-inset-top, 10px);
+      top: max(env(safe-area-inset-top, 14px), 18px);
       left: 0;
       right: 0;
       display: flex;
@@ -162,6 +162,29 @@
       pointer-events: none;
       z-index: 60;
       gap: 6px;
+    }
+
+    /* PWA Standalone Mode (Raccourci écran d'accueil iOS / Android) */
+    @media all and (display-mode: standalone), (display-mode: fullscreen) {
+      .hud-top {
+        top: max(env(safe-area-inset-top, 44px), 48px) !important;
+      }
+      .overlay {
+        padding-top: max(env(safe-area-inset-top, 46px), 52px) !important;
+      }
+      #shop-overlay {
+        padding-top: max(env(safe-area-inset-top, 48px), 56px) !important;
+      }
+    }
+
+    body.is-standalone .hud-top {
+      top: max(env(safe-area-inset-top, 44px), 48px) !important;
+    }
+    body.is-standalone .overlay {
+      padding-top: max(env(safe-area-inset-top, 46px), 52px) !important;
+    }
+    body.is-standalone #shop-overlay {
+      padding-top: max(env(safe-area-inset-top, 48px), 56px) !important;
     }
 
     .badge-card {
@@ -1062,6 +1085,11 @@
     /* ==============================================================
        RONDO RUSH - PLAYFUL FLAT ENGINE + BOUTIQUE 10 ARTICLES / ONGLET
        ============================================================== */
+
+    // Détection PWA Standalone (iOS Safari & Android écran d'accueil)
+    if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+      document.body.classList.add('is-standalone');
+    }
 
     // Helper de formattage des nombres (ex: 1 000, 4 500)
     function formatNumber(n) {
