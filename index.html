@@ -6185,11 +6185,20 @@
           return;
         }
 
-        if (typeof window.gdsdk !== 'undefined' && typeof window.gdsdk.showAd === 'function' && this.config.gdGameId) {
-          window.gdsdk.showAd()
-            .then(() => { if (typeof onComplete === 'function') onComplete(); })
-            .catch(() => { if (typeof onComplete === 'function') onComplete(); });
-          return;
+        if (typeof window.gdsdk !== 'undefined') {
+          const showFn = window.gdsdk.showAd || window.gdsdk.showBanner;
+          if (typeof showFn === 'function') {
+            try {
+              const res = showFn.call(window.gdsdk);
+              if (res && typeof res.then === 'function') {
+                res.then(() => { if (typeof onComplete === 'function') onComplete(); })
+                   .catch(() => { if (typeof onComplete === 'function') onComplete(); });
+                return;
+              }
+            } catch(e) {
+              console.warn('gdsdk ad call error:', e);
+            }
+          }
         }
 
         if (typeof onComplete === 'function') onComplete();
@@ -7504,9 +7513,7 @@
 
     btnRestart.addEventListener('click', () => {
       audio.init();
-      RondoAdManager.requestInterstitialAd(() => {
-        startLaunchCountdown();
-      });
+      startLaunchCountdown();
     });
 
     btnHome.addEventListener('click', () => {
