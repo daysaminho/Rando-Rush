@@ -6150,21 +6150,8 @@
           case "SDK_GAME_PAUSE":
             if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(0, audio.ctx.currentTime);
             break;
-          case "SDK_REWARDED_WATCH_COMPLETE":
-            this._gdRewardPending = true;
-            break;
           case "SDK_GAME_START":
             if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(audio.isMuted ? 0 : 0.45, audio.ctx.currentTime);
-            if (this._gdCallback) {
-              const cb = this._gdCallback;
-              this._gdCallback = null;
-              if (this._gdRewardPending) {
-                this._gdRewardPending = false;
-                cb();
-              } else {
-                showToast('Vidéo fermée avant la fin : aucune récompense accordée.', 'alert');
-              }
-            }
             break;
         }
       },
@@ -6225,12 +6212,11 @@
 
         // 2. GameDistribution SDK (si configuré)
         if (typeof window.gdsdk !== 'undefined' && typeof window.gdsdk.showAd === 'function' && this.config.gdGameId) {
-          this._gdRewardPending = false;
-          this._gdCallback = onComplete;
           window.gdsdk.showAd('rewarded')
+            .then(() => {
+              onComplete();
+            })
             .catch(() => {
-              this._gdCallback = null;
-              this._gdRewardPending = false;
               showRewardedVideoAd(rewardType, onComplete);
             });
           return;
