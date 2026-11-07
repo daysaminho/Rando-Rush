@@ -283,6 +283,79 @@
       stroke-width: 2.2;
     }
 
+    /* Docks HUD Modernisés (Style Esports Mobile) */
+    .hud-currencies-dock {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .hud-actions-dock {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .hud-currencies-dock .badge-card {
+      flex-direction: row;
+      gap: 6px;
+      padding: 5px 10px;
+      min-width: unset;
+    }
+
+    .hud-currencies-dock .badge-value {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .score-badge {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-panel);
+      border: var(--panel-border);
+      box-shadow: var(--hard-shadow-sm);
+      border-radius: 14px;
+      padding: 4px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: auto;
+    }
+
+    .score-badge.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) scale(0.85);
+    }
+
+    .record-badge {
+      flex-direction: row;
+      gap: 5px;
+      padding: 5px 9px;
+      min-width: unset;
+      background: #fef08a;
+      border-color: #0f172a;
+    }
+    body.dark-mode .record-badge {
+      background: #854d0e;
+      border-color: #0f172a;
+    }
+    .record-badge .badge-label {
+      display: flex;
+      align-items: center;
+    }
+    .record-badge .badge-value {
+      font-size: 14px;
+      color: #713f12;
+    }
+    body.dark-mode .record-badge .badge-value {
+      color: #fef08a;
+    }
+
     .hud-actions {
       display: flex;
       gap: 6px;
@@ -574,6 +647,246 @@
 
     .btn-patchnote-link:active {
       transform: translateY(1px);
+    }
+
+    /* ========================================================
+       LOBBY PRINCIPAL DÉCONGESTIONNÉ (STYLE MOBILE ESPORTS)
+       ======================================================== */
+    .lobby-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: max(env(safe-area-inset-top, 0px), 64px) 16px max(env(safe-area-inset-bottom, 0px), 20px) 16px;
+      background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.40) 0%,
+        rgba(15, 23, 42, 0.04) 22%,
+        rgba(15, 23, 42, 0.04) 55%,
+        rgba(15, 23, 42, 0.65) 100%
+      );
+      z-index: 50;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s;
+    }
+
+    body.dark-mode .lobby-overlay {
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.55) 0%,
+        rgba(2, 6, 23, 0.08) 22%,
+        rgba(2, 6, 23, 0.08) 55%,
+        rgba(2, 6, 23, 0.8) 100%
+      );
+    }
+
+    .lobby-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Zone Marque Haut */
+    .lobby-header-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 6px;
+      pointer-events: auto;
+      user-select: none;
+    }
+
+    .lobby-title {
+      font-family: var(--font-ui);
+      font-size: clamp(34px, 8.5vw, 46px);
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      color: #ffffff;
+      text-shadow: 0 4px 0 #0f172a, 0 6px 16px rgba(0,0,0,0.45);
+      margin: 0;
+      line-height: 1;
+    }
+
+    .lobby-title-accent {
+      color: #facc15;
+    }
+
+    .lobby-badge-subtitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      background: var(--bg-panel);
+      color: var(--text-main);
+      border: var(--panel-border);
+      box-shadow: var(--hard-shadow-xs);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    /* Espace central pour admirer l'arène de jeu */
+    .lobby-pitch-spacer {
+      flex: 1;
+      min-height: 100px;
+    }
+
+    /* Section Inférieure Actions */
+    .lobby-bottom-section {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      pointer-events: auto;
+    }
+
+    /* Bouton JOUER Ultime & Juicy */
+    .btn-lobby-play {
+      position: relative;
+      width: 100%;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+      color: #052e16;
+      border: 3.5px solid #0f172a;
+      border-radius: 20px;
+      box-shadow: 0 6px 0 #0f172a, 0 12px 20px rgba(0, 0, 0, 0.35);
+      font-family: var(--font-ui);
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      animation: playLobbyBreathe 2.4s infinite ease-in-out;
+    }
+
+    @keyframes playLobbyBreathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.025); box-shadow: 0 7px 0 #0f172a, 0 16px 26px rgba(34, 197, 94, 0.45); }
+    }
+
+    .btn-lobby-play:active {
+      transform: translateY(6px) scale(0.98);
+      box-shadow: 0 0 0 #0f172a, 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: none;
+    }
+
+    .play-icon-svg {
+      width: 26px;
+      height: 26px;
+      fill: #052e16;
+      stroke: #0f172a;
+      stroke-width: 2.2;
+    }
+
+    /* Reflet de brillance du bouton Play */
+    .play-shine {
+      position: absolute;
+      top: 0;
+      left: -60%;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transform: skewX(-25deg);
+      animation: playShineMove 3.6s infinite ease-in-out;
+    }
+
+    @keyframes playShineMove {
+      0% { left: -60%; }
+      35%, 100% { left: 140%; }
+    }
+
+    /* Dock Horizontal des Boutons Secondaires */
+    .lobby-nav-dock {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .lobby-dock-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 48px;
+      background: var(--bg-panel);
+      color: var(--text-main);
+      border: var(--panel-border);
+      box-shadow: var(--hard-shadow-sm);
+      border-radius: 14px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .lobby-dock-item:active {
+      transform: translateY(4px);
+      box-shadow: var(--hard-shadow-active);
+    }
+
+    .btn-dock-shop {
+      background: #fef08a;
+      color: #713f12;
+    }
+    body.dark-mode .btn-dock-shop {
+      background: #854d0e;
+      color: #fef08a;
+    }
+
+    .btn-dock-daily {
+      background: #bae6fd;
+      color: #0369a1;
+    }
+    body.dark-mode .btn-dock-daily {
+      background: #0369a1;
+      color: #e0f2fe;
+    }
+
+    .dock-icon-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+    }
+    .dock-icon-circle .svg-icon {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2.5;
+    }
+
+    /* Pied de page lobby */
+    .lobby-footer {
+      margin-top: 2px;
+    }
+    .lobby-footer .btn-patchnote-link {
+      font-size: 11px;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      opacity: 0.85;
+      text-decoration: none;
+    }
+    .lobby-footer .btn-patchnote-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Masquer la bannière publicitaire en mode lobby pour éliminer tout chevauchement */
+    #start-overlay:not(.hidden) ~ #bottom-ad-banner {
+      display: none !important;
     }
 
     /* GAME OVER SPECIFIC MODAL */
@@ -2028,35 +2341,62 @@
 <body>
 
   <div id="game-container">
-    <!-- Top HUD -->
-    <div class="hud-top">
-      <!-- Passes -->
-      <div class="badge-card" title="Passes réussies">
-        <span class="badge-label">Passes</span>
+    <!-- Top HUD Épuré & Contextuel -->
+    <div class="hud-top" id="main-hud">
+      <!-- Monnaies (Gauche) -->
+      <div class="hud-currencies-dock">
+        <!-- Étoiles -->
+        <div class="badge-card stars-badge" id="hud-stars-card" title="Étoiles collectées">
+          <span class="badge-label">
+            <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          </span>
+          <span class="badge-value" id="hud-stars">0</span>
+        </div>
+
+        <!-- Gemmes -->
+        <div class="badge-card gems-badge" id="hud-gems-card" title="Gemmes rares (Infinies pour test)">
+          <span class="badge-label">
+            <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+          </span>
+          <span class="badge-value" id="hud-gems">99.9K</span>
+        </div>
+      </div>
+
+      <!-- Passes En Match (Centré, masqué en mode menu) -->
+      <div class="badge-card score-badge hidden" id="hud-score-card" title="Passes réussies">
+        <span class="badge-label">PASSES</span>
         <span class="badge-value" id="hud-score">0</span>
       </div>
 
-      <!-- Solde d'Étoiles (Visible Partout) -->
-      <div class="badge-card stars-badge" id="hud-stars-card" title="Étoiles collectées">
-        <span class="badge-label">
-          <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-          Étoiles
-        </span>
-        <span class="badge-value" id="hud-stars">0</span>
-      </div>
+      <!-- Utilitaires & Actions (Droite) -->
+      <div class="hud-actions-dock">
+        <!-- Record Pill -->
+        <div class="badge-card record-badge" id="hud-best-card" title="Meilleur score">
+          <span class="badge-label">
+            <svg class="svg-icon crown-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; fill: #ca8a04; stroke: #0f172a;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"></path></svg>
+          </span>
+          <span class="badge-value" id="hud-best">0</span>
+        </div>
 
-      <!-- Solde de Gemmes (Infinies pour test) -->
-      <div class="badge-card gems-badge" id="hud-gems-card" title="Gemmes rares (Infinies pour test)">
-        <span class="badge-label">
-          <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
-          Gemmes
-        </span>
-        <span class="badge-value" id="hud-gems">99.9K</span>
-      </div>
+        <!-- Bouton Aide / Comment Jouer (?) -->
+        <button class="btn-chunky btn-icon-only" id="btn-open-tutorial" title="Comment jouer ?" aria-label="Aide">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="stroke-width: 2.8;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
 
-      <!-- Actions -->
-      <div class="hud-actions">
-        <!-- Bouton Bascule Thème Nuit / Jour -->
+        <!-- Bouton Installer PWA -->
+        <button class="btn-chunky btn-icon-only btn-install-app" id="btn-install-app" title="Installer l'application" aria-label="Installer">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="stroke-width: 2.6;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </button>
+
+        <!-- Bouton Thème -->
         <button class="btn-chunky btn-icon-only" id="btn-theme" title="Basculer Mode Jour / Nuit" aria-label="Mode Nuit">
           <svg class="svg-icon" id="icon-theme-sun" viewBox="0 0 24 24" style="display: none;">
             <circle cx="12" cy="12" r="5"></circle>
@@ -2088,12 +2428,6 @@
           </svg>
         </button>
       </div>
-
-      <!-- Record -->
-      <div class="badge-card" title="Meilleur score">
-        <span class="badge-label">Record</span>
-        <span class="badge-value" id="hud-best">0</span>
-      </div>
     </div>
 
     <!-- Indicateur Première Passe Libre -->
@@ -2113,73 +2447,97 @@
       <div class="countdown-text" id="countdown-text">3</div>
     </div>
 
-    <!-- Overlay Accueil -->
-    <div class="overlay" id="start-overlay">
-      <div class="modal-box">
+    <!-- Overlay Accueil : Aéré, Transparent, Style Lobby Mobile -->
+    <div class="lobby-overlay" id="start-overlay">
+      <!-- Zone Titre & Identité (Haut) -->
+      <div class="lobby-header-brand">
+        <h1 class="lobby-title">RONDO<span class="lobby-title-accent">RUSH</span></h1>
+        <div class="lobby-badge-subtitle">
+          <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          JEU DE PASSES EN MODE RÉFLEXE
+        </div>
+      </div>
+
+      <!-- Zone Centrale : Laisser respirer le terrain Canvas avec les joueurs en cercle ! -->
+      <div class="lobby-pitch-spacer"></div>
+
+      <!-- Zone Action Principale & Navigation Inférieure (Bas) -->
+      <div class="lobby-bottom-section">
+        <!-- Gros Bouton Juicy JOUER ! -->
+        <button class="btn-lobby-play" id="btn-play">
+          <span class="play-shine"></span>
+          <svg class="svg-icon play-icon-svg" viewBox="0 0 24 24">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          <span class="play-text">JOUER</span>
+        </button>
+
+        <!-- Dock Horizontal de Navigation Secondaire -->
+        <div class="lobby-nav-dock">
+          <!-- Onglet Boutique -->
+          <button class="lobby-dock-item btn-dock-shop" id="btn-open-shop">
+            <div class="dock-icon-circle">
+              <svg class="svg-icon" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            </div>
+            <span class="dock-label">BOUTIQUE</span>
+          </button>
+
+          <!-- Onglet Cadeau 7J -->
+          <button class="lobby-dock-item btn-dock-daily" id="btn-open-daily">
+            <span class="daily-badge-dot hidden" id="daily-notification-dot"></span>
+            <div class="dock-icon-circle">
+              <svg class="svg-icon star-filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <span class="dock-label">CADEAU 7J</span>
+          </button>
+        </div>
+
+        <!-- Pied de page ultra-discret -->
+        <div class="lobby-footer">
+          <button class="btn-patchnote-link" id="btn-open-patchnote" title="Notes de mise à jour">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; stroke-width: 2.5;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span>v1.2 • Nouveautés</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bouton fantôme masqué pour préserver le listener JS sans polluer l'écran -->
+      <button id="btn-home-free-gems" style="display: none;" aria-hidden="true"></button>
+    </div>
+
+    <!-- Modal Tutoriel "Comment Jouer" Dédié (Playful Flat) -->
+    <div class="overlay hidden" id="tutorial-modal-overlay" style="z-index: 86;">
+      <div class="modal-box" style="max-width: 380px;">
         <span class="modal-title-pill">
-          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-          Playful Flat Edition
+          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          TUTORIEL RAPIDE
         </span>
-        <h1 class="modal-h1">RONDO RUSH</h1>
-        <p class="modal-desc">Jeu de passes en mode réflexe</p>
+        <h2 class="modal-h1" style="font-size: 24px; margin-bottom: 4px;">COMMENT JOUER</h2>
+        <p class="modal-desc" style="margin-bottom: 14px;">Dominez le rondo et esquivez le Taureau !</p>
 
         <div class="how-to-card">
           <div class="how-row">
             <div class="how-icon-chip blue">
               <svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
             </div>
-            <div class="how-text"><strong>Touche le porteur</strong> et glisse pour viser un coéquipier.</div>
+            <div class="how-text"><strong>Touche le porteur</strong> et glisse le doigt vers un partenaire pour lui faire la passe.</div>
           </div>
           <div class="how-row">
             <div class="how-icon-chip yellow">
               <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
-            <div class="how-text"><strong>Gagne des étoiles</strong> : chaque passe rapporte +1 étoile pour la boutique !</div>
+            <div class="how-text"><strong>Gagne des étoiles</strong> : chaque passe réussie rapporte +1 étoile pour la boutique !</div>
           </div>
           <div class="how-row">
             <div class="how-icon-chip coral">
               <svg class="svg-icon" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
             </div>
-            <div class="how-text"><strong>Attention au Taureau !</strong> Il accélère à chaque passe.</div>
+            <div class="how-text"><strong>Attention au Taureau !</strong> Il accélère à chaque passe. Première passe libre au coup d'envoi.</div>
           </div>
         </div>
 
-        <div class="start-buttons-stack">
-          <button class="btn-chunky btn-action-large" id="btn-play">
-            <span>JOUER !</span>
-            <svg class="svg-icon" viewBox="0 0 24 24" style="stroke-width: 3;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          </button>
-
-          <!-- Bouton Cadeau Quotidien & Boutique côte à côte -->
-          <div class="start-secondary-row">
-            <button class="btn-chunky btn-daily-reward" id="btn-open-daily" title="Récupérer votre cadeau quotidien">
-              <span class="daily-badge-dot hidden" id="daily-notification-dot"></span>
-              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke-width: 2.8;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              <span>CADEAU 7J</span>
-            </button>
-            <button class="btn-chunky btn-shop-open" id="btn-open-shop">
-              <svg class="svg-icon" viewBox="0 0 24 24" style="stroke-width: 2.8; width: 16px; height: 16px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-              <span>BOUTIQUE</span>
-            </button>
-          </div>
-
-          <!-- Bouton Vidéo Gratuite (+5 Gemmes - Limite 3 / jour) -->
-          <button class="btn-chunky btn-free-gems" id="btn-home-free-gems" title="Regarder une vidéo pour gagner 5 gemmes">
-            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
-            <span id="home-free-gems-text">VIDÉO GRATUITE (+5 GEMMES) • (3/3)</span>
-          </button>
-
-          <!-- Bouton Installer l'application -->
-          <button class="btn-chunky btn-action-large btn-install-app" id="btn-install-app">
-            <svg class="svg-icon" viewBox="0 0 24 24" style="stroke-width: 2.6;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>INSTALLER L'APPLICATION</span>
-          </button>
-        </div>
-
-        <!-- Bouton Notes de Version / Nouveautés -->
-        <button class="btn-patchnote-link" id="btn-open-patchnote" title="Voir les nouveautés de la mise à jour">
-          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px; stroke-width: 2.6;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-          <span>Nouveautés v1.2</span>
+        <button class="btn-chunky btn-action-large" id="btn-close-tutorial" style="background: var(--btn-play-bg); width: 100%; font-size: 17px;">
+          J'AI COMPRIS !
         </button>
       </div>
     </div>
@@ -5578,6 +5936,7 @@
       clearCountdownTimers();
       initGame();
       currentState = STATE.COUNTDOWN;
+      setMenuHudState(false);
 
       startOverlay.classList.add('hidden');
       gameoverOverlay.classList.add('hidden');
@@ -5797,6 +6156,7 @@
 
       clearCountdownTimers();
       currentState = STATE.COUNTDOWN;
+      setMenuHudState(false);
       countdownOverlay.classList.remove('hidden');
       setCountdownNumber('3', false);
 
@@ -6470,6 +6830,46 @@
       });
     }
 
+    // --- GESTION DU MODAL TUTORIEL (?) ---
+    const btnOpenTutorial = document.getElementById('btn-open-tutorial');
+    const tutorialModal = document.getElementById('tutorial-modal-overlay');
+    const btnCloseTutorial = document.getElementById('btn-close-tutorial');
+
+    if (btnOpenTutorial && tutorialModal) {
+      btnOpenTutorial.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        tutorialModal.classList.remove('hidden');
+      });
+    }
+
+    if (btnCloseTutorial && tutorialModal) {
+      btnCloseTutorial.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        tutorialModal.classList.add('hidden');
+        localStorage.setItem('rondo_tutorial_seen', '1');
+      });
+    }
+
+    function checkFirstLaunchTutorial() {
+      if (!localStorage.getItem('rondo_tutorial_seen')) {
+        if (tutorialModal) tutorialModal.classList.remove('hidden');
+      }
+    }
+
+    // --- GESTION DE L'AFFICHAGE DU HUD SELON LE MENU / MATCH ---
+    const hudScoreCard = document.getElementById('hud-score-card');
+    function setMenuHudState(inMenu) {
+      if (hudScoreCard) {
+        if (inMenu) {
+          hudScoreCard.classList.add('hidden');
+        } else {
+          hudScoreCard.classList.remove('hidden');
+        }
+      }
+    }
+
     // --- BOUTONS D'ACTION MONÉTISATION & RÉCOMPENSES ---
     const btnAdClaim = document.getElementById('btn-ad-claim-reward');
     if (btnAdClaim) {
@@ -6645,15 +7045,18 @@
       gameoverOverlay.classList.add('hidden');
       startOverlay.classList.remove('hidden');
       currentState = STATE.MENU;
+      setMenuHudState(true);
       initGame();
     });
 
     // Lancement
     resize();
     initGame();
+    setMenuHudState(true);
     updateDailyLoginState();
     updateVideoLimitUI();
     checkPatchNote();
+    checkFirstLaunchTutorial();
     requestAnimationFrame(loop);
   </script>
 </body>
