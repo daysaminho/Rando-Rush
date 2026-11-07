@@ -2182,30 +2182,6 @@
       flex-shrink: 0;
     }
 
-    .bank-test-mode-toggle {
-      background: var(--bg-main);
-      border: 1.5px dashed #94a3b8;
-      border-radius: 12px;
-      padding: 8px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      width: 100%;
-      margin-top: 8px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .btn-toggle-demo {
-      background: #e2e8f0;
-      border: var(--panel-border);
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-size: 10px;
-      font-weight: 800;
-      cursor: pointer;
-    }
 
     .bank-restore-card {
       background: var(--bg-main);
@@ -2304,11 +2280,11 @@
         </div>
 
         <!-- Gemmes -->
-        <div class="badge-card gems-badge" id="hud-gems-card" title="Gemmes rares (Infinies pour test)">
+        <div class="badge-card gems-badge" id="hud-gems-card" title="Gemmes rares">
           <span class="badge-label">
             <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
           </span>
-          <span class="badge-value" id="hud-gems">99.9K</span>
+          <span class="badge-value" id="hud-gems">0</span>
         </div>
       </div>
 
@@ -2585,9 +2561,9 @@
                 <svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 <span id="shop-stars-count">0</span>
               </div>
-              <div class="shop-gems-badge" title="Votre solde de gemmes (Infinies pour test)">
+              <div class="shop-gems-badge" title="Votre solde de gemmes">
                 <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
-                <span id="shop-gems-count">99 999</span>
+                <span id="shop-gems-count">0</span>
               </div>
             </div>
           </div>
@@ -3515,18 +3491,19 @@
     // Migration immédiate de l'inventaire en cas d'anciens identifiants
     playerInventory = playerInventory.map(id => ID_ALIASES[id] || id);
 
-    // --- GESTION DES GEMMES (MODE TEST INFINI VS PROGRESSION RÉELLE) ---
-    let isTestGemMode = (localStorage.getItem('rondo_gem_mode') !== 'real');
-    let realGems = parseInt(localStorage.getItem('rondo_real_gems') || '50', 10);
-    if (isNaN(realGems)) realGems = 50;
-
-    let playerGems = isTestGemMode ? 99999 : realGems;
+    // --- GESTION DES GEMMES (PROGRESSION OFFICIELLE DU JOUEUR) ---
+    let playerGems = parseInt(localStorage.getItem('rondo_gems') || localStorage.getItem('rondo_real_gems') || '15', 10);
+    // Nettoyage automatique des anciens soldes de test (99 999) pour rétablir les gemmes de départ normales
+    if (isNaN(playerGems) || playerGems >= 99999) {
+      playerGems = parseInt(localStorage.getItem('rondo_real_gems') || '15', 10);
+      if (isNaN(playerGems) || playerGems >= 99999) playerGems = 15;
+    }
 
     function savePlayerData() {
       localStorage.setItem('rondo_stars', playerStars.toString());
       localStorage.setItem('rondo_gems', playerGems.toString());
-      localStorage.setItem('rondo_real_gems', realGems.toString());
-      localStorage.setItem('rondo_gem_mode', isTestGemMode ? 'test' : 'real');
+      localStorage.setItem('rondo_real_gems', playerGems.toString());
+      localStorage.removeItem('rondo_gem_mode');
       localStorage.setItem('rondo_inventory', JSON.stringify(playerInventory));
       localStorage.setItem('rondo_equipped', JSON.stringify(playerEquipped));
     }
@@ -3550,31 +3527,14 @@
     };
 
     function addGems(amount) {
-      realGems += amount;
-      if (!isTestGemMode) {
-        playerGems = realGems;
-      }
+      playerGems += amount;
       savePlayerData();
       updateStarsDisplay();
-    }
-
-    function toggleTestGemMode() {
-      isTestGemMode = !isTestGemMode;
-      if (isTestGemMode) {
-        playerGems = 99999;
-        showToast('Mode Démo : 99 999 Gemmes Illimitées', 'flask');
-      } else {
-        playerGems = realGems;
-        showToast(`Mode Réel : Solde de ${formatNumber(realGems)} Gemmes`, 'gem');
-      }
-      savePlayerData();
-      updateStarsDisplay();
-      if (typeof renderShopItems === 'function') renderShopItems();
     }
 
     function updateGemsDisplay() {
       const hudGemsEl = document.getElementById('hud-gems');
-      if (hudGemsEl) hudGemsEl.textContent = isTestGemMode ? '99.9K' : formatNumber(playerGems);
+      if (hudGemsEl) hudGemsEl.textContent = formatNumber(playerGems);
       const shopGemsEl = document.getElementById('shop-gems-count');
       if (shopGemsEl) shopGemsEl.textContent = formatNumber(playerGems);
     }
@@ -6778,20 +6738,6 @@
           wrap.appendChild(card);
         });
 
-        // Carte Commande Test Démo / Réel
-        const demoToggleCard = document.createElement('div');
-        demoToggleCard.className = 'bank-test-mode-toggle';
-        demoToggleCard.innerHTML = `
-          <div>
-            <strong>Mode Test :</strong>
-            <span>${isTestGemMode ? '99 999 Gemmes Infinies' : `${formatNumber(realGems)} Gemmes Réelles`}</span>
-          </div>
-          <button class="btn-toggle-demo" onclick="toggleTestGemMode()">
-            ${isTestGemMode ? 'PASSER EN RÉEL' : 'ACTIVER TEST (99K)'}
-          </button>
-        `;
-        wrap.appendChild(demoToggleCard);
-
         // Carte Sécurité des Achats & Restauration (Player ID & Stripe Reçu)
         const restoreCard = document.createElement('div');
         restoreCard.className = 'bank-restore-card';
@@ -7019,7 +6965,7 @@
     window.buyBundle = function(bundleId, price) {
       const bundle = SKINS_CONFIG.bundles.find(b => b.id === bundleId);
       if (!bundle) return;
-      if (!isTestGemMode && realGems < price) {
+      if (playerGems < price) {
         audio.playFail();
         showToast("Gemmes insuffisantes ! Visitez la Banque ou regardez une vidéo.", "alert");
         currentShopTab = 'bank';
@@ -7032,10 +6978,7 @@
 
       audio.init();
       audio.playPurchase();
-      if (!isTestGemMode) {
-        realGems -= price;
-        playerGems = realGems;
-      }
+      playerGems -= price;
 
       ['pitch', 'bull', 'team'].forEach(cat => {
         const itemId = bundle.items[cat];
@@ -7089,7 +7032,7 @@
 
     // Achat d'un cosmétique avec Gemmes
     window.buyCosmeticWithGems = function(category, itemId, gemPrice) {
-      if (!isTestGemMode && realGems < gemPrice) {
+      if (playerGems < gemPrice) {
         audio.playFail();
         showToast("Gemmes insuffisantes ! Visitez la Banque ou regardez une vidéo.", "alert");
         currentShopTab = 'bank';
@@ -7102,10 +7045,7 @@
 
       audio.init();
       audio.playPurchase();
-      if (!isTestGemMode) {
-        realGems -= gemPrice;
-        playerGems = realGems;
-      }
+      playerGems -= gemPrice;
       if (!playerInventory.includes(itemId)) playerInventory.push(itemId);
       playerEquipped[category] = itemId;
 
@@ -7284,19 +7224,14 @@
           resumeGameAfterAd();
         });
       } else {
-        if (isTestGemMode) {
+        if (playerGems >= 5) {
+          playerGems -= 5;
+          savePlayerData();
+          updateStarsDisplay();
           resumeGameAfterAd();
         } else {
-          if (realGems >= 5) {
-            realGems -= 5;
-            playerGems = realGems;
-            savePlayerData();
-            updateStarsDisplay();
-            resumeGameAfterAd();
-          } else {
-            audio.playFail();
-            showToast('Gemmes insuffisantes (5 requises) ! Visitez la Banque.', 'alert');
-          }
+          audio.playFail();
+          showToast('Gemmes insuffisantes (5 requises) ! Visitez la Banque.', 'alert');
         }
       }
     }
@@ -7458,9 +7393,8 @@
         if (history.length > 0) {
           let totalRestoredGems = 0;
           history.forEach(p => totalRestoredGems += (p.gems || 0));
-          if (realGems < totalRestoredGems) {
-            realGems = Math.max(realGems, totalRestoredGems);
-            playerGems = isTestGemMode ? 99999 : realGems;
+          if (playerGems < totalRestoredGems) {
+            playerGems = Math.max(playerGems, totalRestoredGems);
             savePlayerData();
             updateStarsDisplay();
           }
