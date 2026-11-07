@@ -1318,7 +1318,7 @@
       box-shadow: var(--hard-shadow-active);
     }
 
-    /* Option Seconde Chance (Game Over Continue) */
+    /* Option Seconde Chance (Game Over Continue - Rare Vidéo ou Gemmes) */
     .continue-ad-container {
       width: 100%;
       margin-bottom: 12px;
@@ -1326,7 +1326,7 @@
 
     .btn-continue-ad {
       width: 100%;
-      background: linear-gradient(135deg, #10b981, #059669);
+      background: linear-gradient(135deg, #0284c7, #0369a1);
       color: #ffffff;
       padding: 12px 14px;
       border-radius: 16px;
@@ -1336,12 +1336,25 @@
       animation: adPulse 2s infinite ease-in-out;
     }
 
+    .btn-continue-ad.is-video {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
     .btn-continue-ad:active {
       transform: translateY(4px);
       box-shadow: 0 0 0 #0f172a;
     }
 
     @keyframes adPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); box-shadow: 0 0 16px rgba(14, 165, 233, 0.5), 0 4px 0 #0f172a; }
+    }
+
+    .btn-continue-ad.is-video {
+      animation: adPulseVideo 2s infinite ease-in-out;
+    }
+
+    @keyframes adPulseVideo {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.02); box-shadow: 0 0 16px rgba(16, 185, 129, 0.6), 0 4px 0 #0f172a; }
     }
@@ -1355,7 +1368,11 @@
     }
 
     .continue-btn-icon {
-      font-size: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
       flex-shrink: 0;
     }
 
@@ -1682,21 +1699,25 @@
       opacity: 0.65;
     }
 
-    .daily-card.claimed::after {
-      content: '✓';
+    .daily-check-badge {
       position: absolute;
       top: 4px;
       right: 4px;
-      font-size: 12px;
-      font-weight: 900;
+      width: 18px;
+      height: 18px;
       background: #10b981;
       color: #ffffff;
-      width: 16px;
-      height: 16px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 1.5px solid #ffffff;
+    }
+
+    .daily-check-badge svg {
+      width: 11px;
+      height: 11px;
+      stroke-width: 3.5;
     }
 
     .daily-card.active-today {
@@ -1757,7 +1778,7 @@
       color: var(--text-main);
     }
 
-    /* Onglet Banque 💎 & Modale Achat In-App */
+    /* Onglet Banque Gemmes & Modale Achat In-App */
     .bank-section-title {
       font-size: 12px;
       font-weight: 800;
@@ -2142,10 +2163,10 @@
             </button>
           </div>
 
-          <!-- Bouton Vidéo Gratuite (+5 Gemmes) -->
+          <!-- Bouton Vidéo Gratuite (+5 Gemmes - Limite 3 / jour) -->
           <button class="btn-chunky btn-free-gems" id="btn-home-free-gems" title="Regarder une vidéo pour gagner 5 gemmes">
-            <span style="font-size: 20px;">🎬</span>
-            <span>VIDÉO GRATUITE (+5 💎)</span>
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px;"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+            <span id="home-free-gems-text">VIDÉO GRATUITE (+5 GEMMES) • (3/3)</span>
           </button>
 
           <!-- Bouton Installer l'application -->
@@ -2275,7 +2296,10 @@
           <button class="shop-tab-btn" data-tab="bull">Taureaux</button>
           <button class="shop-tab-btn" data-tab="team">Passeurs</button>
           <button class="shop-tab-btn" data-tab="pitch">Terrains</button>
-          <button class="shop-tab-btn" data-tab="bank">Banque 💎</button>
+          <button class="shop-tab-btn" data-tab="bank">
+            <span>Banque</span>
+            <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 10px; height: 10px; margin-left: 2px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+          </button>
         </div>
 
         <!-- Liste des 10 articles scrollable -->
@@ -2315,14 +2339,14 @@
           </div>
         </div>
 
-        <!-- Option Seconde Chance (Pub Vidéo) -->
+        <!-- Option Seconde Chance (Rare Pub Vidéo ou Gemmes) -->
         <div class="continue-ad-container" id="continue-ad-wrap" style="display: none;">
-          <button class="btn-continue-ad" id="btn-continue-ad">
+          <button class="btn-continue-ad" id="btn-continue-run">
             <div class="continue-btn-content">
-              <span class="continue-btn-icon">🎬</span>
+              <span class="continue-btn-icon" id="continue-btn-icon"></span>
               <div class="continue-btn-texts">
-                <span class="continue-btn-main">CONTINUER (+1 VIE • PUB)</span>
-                <span class="continue-btn-sub">Reprenez votre score • 1 fois par partie</span>
+                <span class="continue-btn-main" id="continue-btn-main">CONTINUER (5 GEMMES)</span>
+                <span class="continue-btn-sub" id="continue-btn-sub">Reprenez votre score exact • 1 fois par partie</span>
               </div>
             </div>
           </button>
@@ -2345,7 +2369,9 @@
     <div id="bottom-ad-banner" class="bottom-ad-banner">
       <div class="ad-banner-left" id="btn-banner-click" title="Voir l'offre VIP">
         <span class="ad-tag-pill">PUB</span>
-        <span class="ad-icon-flash">⚡</span>
+        <span class="ad-icon-flash">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </span>
         <div class="ad-text-wrap">
           <div class="ad-title">Pass VIP Rondo Rush</div>
           <div class="ad-sub">Débloquez tous les bundles & gemmes offertes !</div>
@@ -2353,13 +2379,15 @@
       </div>
       <div class="ad-banner-right">
         <button class="ad-btn-cta" id="btn-banner-cta">VOIR</button>
-        <button class="ad-btn-close" id="btn-banner-close" title="Masquer l'annonce">✕</button>
+        <button class="ad-btn-close" id="btn-banner-close" title="Masquer l'annonce">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 13px; height: 13px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
     </div>
 
-    <!-- Notification Toast Flottante Universelle -->
+    <!-- Notification Toast Flottante Universelle (100% SVG) -->
     <div id="rondo-toast" class="rondo-toast">
-      <span id="toast-icon">✨</span>
+      <span id="toast-icon"></span>
       <span id="toast-text">Message</span>
     </div>
 
@@ -2386,8 +2414,18 @@
         </button>
 
         <div class="daily-dev-controls">
-          <button class="btn-link-subtle" id="btn-sim-next-day" title="Avancer la date pour tester le jour suivant">🧪 Simuler jour suivant (Test)</button>
-          <button class="btn-link-subtle" id="btn-reset-daily" title="Remettre la série à zéro">🔄 Réinitialiser calendrier</button>
+          <button class="btn-link-subtle" id="btn-sim-next-day" title="Avancer la date pour tester le jour suivant">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><path d="M10 2v7.31L4.17 20.15A2 2 0 0 0 5.89 23h12.22a2 2 0 0 0 1.72-2.85L14 9.31V2"></path><line x1="8" y1="2" x2="16" y2="2"></line></svg>
+            Simuler jour suivant (Test)
+          </button>
+          <button class="btn-link-subtle" id="btn-reset-daily" title="Remettre la série à zéro">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+            Réinitialiser calendrier
+          </button>
+          <button class="btn-link-subtle" id="btn-reset-videos" title="Réinitialiser le compteur de vidéos (3/3)">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line></svg>
+            Reset vidéos (3/3)
+          </button>
         </div>
 
         <button class="btn-chunky btn-shop-close" id="btn-close-daily" style="margin-top: 8px; width: 100%;">
@@ -2405,17 +2443,29 @@
 
         <div class="rewarded-ad-header">
           <span class="ad-badge-tag">PUBLICITÉ RÉCOMPENSÉE</span>
-          <span class="ad-countdown-pill" id="ad-countdown-badge">⏳ 5s</span>
+          <span class="ad-countdown-pill" id="ad-countdown-badge">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span id="ad-countdown-sec">5s</span>
+          </span>
         </div>
 
         <div class="ad-video-mockup">
           <div class="ad-video-glow"></div>
-          <div class="ad-video-logo">⚡ RONDO RUSH VIP ⚡</div>
+          <div class="ad-video-logo">RONDO RUSH VIP</div>
           <div class="ad-video-tagline">3 Bundles Évolutifs • Animations Particules</div>
           <div class="ad-video-perks">
-            <span>💎 Gemmes Offertes</span>
-            <span>⚡ Ion Prototype</span>
-            <span>👑 Souverain</span>
+            <span>
+              <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 11px; height: 11px; vertical-align: -0.15em;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+              Gemmes Offertes
+            </span>
+            <span>
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 11px; height: 11px; vertical-align: -0.15em;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              Ion Prototype
+            </span>
+            <span>
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 11px; height: 11px; vertical-align: -0.15em;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"></path></svg>
+              Souverain
+            </span>
           </div>
         </div>
 
@@ -2424,7 +2474,7 @@
             Regardez encore <strong id="ad-seconds-left">5</strong> secondes pour débloquer votre récompense...
           </p>
           <button class="btn-chunky btn-action-large btn-ad-claim-active hidden" id="btn-ad-claim-reward">
-            <span>RÉCUPÉRER MA RÉCOMPENSE 🎁</span>
+            <span>RÉCUPÉRER MA RÉCOMPENSE</span>
           </button>
           <button class="btn-chunky btn-action-large" id="btn-ad-close" disabled style="background: #e2e8f0; color: #64748b; font-size: 15px; cursor: not-allowed; width: 100%;">
             <span>PATIENTEZ... (5s)</span>
@@ -2442,15 +2492,18 @@
         </div>
 
         <div class="iap-card-preview">
-          <div style="font-size: 32px;">💎</div>
+          <div style="display: flex; justify-content: center; margin-bottom: 4px;">
+            <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 36px; height: 36px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+          </div>
           <div id="iap-pack-name" style="font-size: 18px; font-weight: 900;">Pack Starter</div>
-          <div id="iap-pack-amount" style="font-size: 14px; font-weight: 700; color: #0284c7;">+120 💎</div>
+          <div id="iap-pack-amount" style="font-size: 14px; font-weight: 700; color: #0284c7;">+120 Gemmes</div>
           <div id="iap-pack-price" class="iap-price-hero">1,99 €</div>
           <div style="font-size: 11px; opacity: 0.7;">Taxes incluses • Déblocage instantané</div>
         </div>
 
-        <p style="font-size: 11px; color: #64748b; margin-bottom: 12px; line-height: 1.4;">
-          🔒 Transaction 100% sécurisée simulée avec succès. Vos gemmes sont créditées immédiatement.
+        <p style="font-size: 11px; color: #64748b; margin-bottom: 12px; line-height: 1.4; display: flex; align-items: center; justify-content: center; gap: 4px;">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; flex-shrink: 0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Transaction sécurisée simulée avec succès. Vos gemmes sont créditées immédiatement.
         </p>
 
         <button class="btn-chunky btn-action-large" id="btn-confirm-iap" style="background: var(--btn-play-bg); width: 100%; margin-bottom: 8px;">
@@ -3093,6 +3146,24 @@
       localStorage.setItem('rondo_equipped', JSON.stringify(playerEquipped));
     }
 
+    // --- REGISTRE DES ICÔNES SVG OFFICIELLES (0 EMOJI) ---
+    const SVG_ICONS = {
+      gem: '<svg class="svg-icon gem-icon" viewBox="0 0 24 24"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>',
+      star: '<svg class="svg-icon star-filled" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+      video: '<svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>',
+      gift: '<svg class="svg-icon" viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>',
+      zap: '<svg class="svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>',
+      timer: '<svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
+      check: '<svg class="svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+      alert: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>',
+      spark: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"></path></svg>',
+      lock: '<svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+      flask: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 2v7.31L4.17 20.15A2 2 0 0 0 5.89 23h12.22a2 2 0 0 0 1.72-2.85L14 9.31V2"></path><line x1="8" y1="2" x2="16" y2="2"></line></svg>',
+      refresh: '<svg class="svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>',
+      crown: '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"></path></svg>',
+      close: '<svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>'
+    };
+
     function addGems(amount) {
       realGems += amount;
       if (!isTestGemMode) {
@@ -3106,10 +3177,10 @@
       isTestGemMode = !isTestGemMode;
       if (isTestGemMode) {
         playerGems = 99999;
-        showToast('🧪 Mode Démo : 99 999 Gemmes Illimitées', '💎');
+        showToast('Mode Démo : 99 999 Gemmes Illimitées', 'flask');
       } else {
         playerGems = realGems;
-        showToast(`💎 Mode Réel : Solde de ${formatNumber(realGems)} Gemmes`, '💎');
+        showToast(`Mode Réel : Solde de ${formatNumber(realGems)} Gemmes`, 'gem');
       }
       savePlayerData();
       updateStarsDisplay();
@@ -3544,6 +3615,43 @@
       });
     }
 
+    let currentContinueType = 'gem'; // 'gem' ou 'video'
+
+    function setupContinueOffer() {
+      const wrap = document.getElementById('continue-ad-wrap');
+      if (!wrap) return;
+      if (hasUsedContinueThisRun || score === 0) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      // Proposer une vidéo gratuite au lieu de demander des gemmes arrive plutôt rarement (20% de probabilité)
+      // Les 80% du temps restants, continuer demande 5 Gemmes
+      const isRareVideo = (Math.random() < 0.20);
+      currentContinueType = isRareVideo ? 'video' : 'gem';
+
+      const btn = document.getElementById('btn-continue-run');
+      const iconEl = document.getElementById('continue-btn-icon');
+      const mainEl = document.getElementById('continue-btn-main');
+      const subEl = document.getElementById('continue-btn-sub');
+
+      if (btn && iconEl && mainEl && subEl) {
+        if (isRareVideo) {
+          btn.className = 'btn-continue-ad is-video';
+          iconEl.innerHTML = SVG_ICONS.video;
+          mainEl.textContent = 'OFFRE RARE : REPRENDRE (+1 VIE)';
+          subEl.textContent = '1 Vidéo Gratuite au lieu de 5 Gemmes !';
+        } else {
+          btn.className = 'btn-continue-ad is-gem';
+          iconEl.innerHTML = SVG_ICONS.gem;
+          mainEl.textContent = 'REPRENDRE LA PARTIE (5 GEMMES)';
+          subEl.textContent = 'Reprenez votre score exact • 1 fois par partie';
+        }
+      }
+
+      wrap.style.display = 'block';
+    }
+
     // --- GAME OVER & ATTRIBUTION DES ÉTOILES ---
     function triggerGameOver(reason) {
       if (currentState === STATE.GAMEOVER) return;
@@ -3590,14 +3698,7 @@
       const totalStarsEl = document.getElementById('over-total-stars');
       if (totalStarsEl) totalStarsEl.textContent = formatNumber(playerStars);
 
-      const continueWrap = document.getElementById('continue-ad-wrap');
-      if (continueWrap) {
-        if (!hasUsedContinueThisRun && score > 0) {
-          continueWrap.style.display = 'block';
-        } else {
-          continueWrap.style.display = 'none';
-        }
-      }
+      setupContinueOffer();
 
       gameoverOverlay.classList.remove('hidden');
     }
@@ -5508,7 +5609,7 @@
       }, 1550));
     }
 
-    // --- MONÉTISATION : CONFIGURATION DES PACKS DE GEMMES & CALENDRIER 7J ---
+    // --- MONÉTISATION : CONFIGURATION DES PACKS DE GEMMES & CALENDRIER 7J (0 EMOJI) ---
     const GEM_PACKS = [
       { id: 'pack_50', name: 'Pack Découverte', gems: 50, price: '0,99 €', badge: null, bonus: null },
       { id: 'pack_120', name: 'Pack Starter', gems: 120, price: '1,99 €', badge: 'POPULAIRE', bonus: '+20% OFFERT' },
@@ -5517,29 +5618,91 @@
     ];
 
     const DAILY_REWARDS = [
-      { day: 1, type: 'stars', amount: 50, label: '50 ⭐', desc: 'Étoiles de bienvenue' },
-      { day: 2, type: 'gems', amount: 5, label: '5 💎', desc: 'Gemmes Rares' },
-      { day: 3, type: 'stars', amount: 100, label: '100 ⭐', desc: 'Étoiles de fidélité' },
-      { day: 4, type: 'gems', amount: 10, label: '10 💎', desc: 'Gemmes Rares' },
-      { day: 5, type: 'stars', amount: 250, label: '250 ⭐', desc: 'Super Réserve' },
-      { day: 6, type: 'gems', amount: 20, label: '20 💎', desc: 'Gemmes Précieuses' },
-      { day: 7, type: 'both', stars: 500, gems: 50, label: '500 ⭐ + 50 💎', desc: 'Grand Coffre Hebdomadaire !' }
+      { day: 1, type: 'stars', amount: 50, label: '50 Étoiles', desc: 'Étoiles de bienvenue' },
+      { day: 2, type: 'gems', amount: 5, label: '5 Gemmes', desc: 'Gemmes Rares' },
+      { day: 3, type: 'stars', amount: 100, label: '100 Étoiles', desc: 'Étoiles de fidélité' },
+      { day: 4, type: 'gems', amount: 10, label: '10 Gemmes', desc: 'Gemmes Rares' },
+      { day: 5, type: 'stars', amount: 250, label: '250 Étoiles', desc: 'Super Réserve' },
+      { day: 6, type: 'gems', amount: 20, label: '20 Gemmes', desc: 'Gemmes Précieuses' },
+      { day: 7, type: 'both', stars: 500, gems: 50, label: '500 Étoiles + 50 Gemmes', desc: 'Grand Coffre Hebdomadaire !' }
     ];
 
-    // Notification Toast Flottante
+    // Notification Toast Flottante (100% SVG)
     let toastTimeout = null;
-    function showToast(message, icon = '✨') {
+    function showToast(message, iconType = 'spark') {
       const toastEl = document.getElementById('rondo-toast');
       const toastIcon = document.getElementById('toast-icon');
       const toastText = document.getElementById('toast-text');
       if (!toastEl || !toastIcon || !toastText) return;
-      toastIcon.textContent = icon;
+      toastIcon.innerHTML = SVG_ICONS[iconType] || SVG_ICONS.spark;
       toastText.textContent = message;
       toastEl.classList.add('show');
       if (toastTimeout) clearTimeout(toastTimeout);
       toastTimeout = setTimeout(() => {
         toastEl.classList.remove('show');
       }, 2500);
+    }
+
+    // --- LIMITE QUOTIDIENNE DES PUBS VIDÉOS (MAX 3 / 24H) ---
+    const MAX_DAILY_VIDEOS = 3;
+
+    function getDailyVideosCount() {
+      const today = getTodayString();
+      const savedDate = localStorage.getItem('rondo_video_daily_date') || '';
+      if (savedDate !== today) {
+        localStorage.setItem('rondo_video_daily_date', today);
+        localStorage.setItem('rondo_video_daily_count', '0');
+        return 0;
+      }
+      return parseInt(localStorage.getItem('rondo_video_daily_count') || '0', 10);
+    }
+
+    function incrementDailyVideosCount() {
+      const today = getTodayString();
+      const current = getDailyVideosCount();
+      localStorage.setItem('rondo_video_daily_date', today);
+      localStorage.setItem('rondo_video_daily_count', (current + 1).toString());
+      updateVideoLimitUI();
+    }
+
+    function updateVideoLimitUI() {
+      const count = getDailyVideosCount();
+      const remaining = Math.max(0, MAX_DAILY_VIDEOS - count);
+      
+      const homeText = document.getElementById('home-free-gems-text');
+      const homeBtn = document.getElementById('btn-home-free-gems');
+      if (homeText && homeBtn) {
+        if (remaining > 0) {
+          homeBtn.disabled = false;
+          homeBtn.style.opacity = '1';
+          homeBtn.style.cursor = 'pointer';
+          homeText.textContent = `VIDÉO GRATUITE (+5 GEMMES) • (${remaining}/${MAX_DAILY_VIDEOS})`;
+        } else {
+          homeBtn.disabled = true;
+          homeBtn.style.opacity = '0.6';
+          homeBtn.style.cursor = 'not-allowed';
+          homeText.textContent = `VIDÉOS DU JOUR TERMINÉES (0/${MAX_DAILY_VIDEOS})`;
+        }
+      }
+
+      const bankWatchBtn = document.getElementById('btn-bank-free-watch');
+      const bankSub = document.getElementById('bank-free-sub-text');
+      if (bankWatchBtn) {
+        if (remaining > 0) {
+          bankWatchBtn.disabled = false;
+          bankWatchBtn.style.background = '#fde047';
+          bankWatchBtn.style.cursor = 'pointer';
+          bankWatchBtn.textContent = `VOIR (+5 GEMMES) • (${remaining}/${MAX_DAILY_VIDEOS})`;
+        } else {
+          bankWatchBtn.disabled = true;
+          bankWatchBtn.style.background = '#94a3b8';
+          bankWatchBtn.style.cursor = 'not-allowed';
+          bankWatchBtn.textContent = `LIMITE ATTEINTE (0/${MAX_DAILY_VIDEOS})`;
+        }
+      }
+      if (bankSub) {
+        bankSub.textContent = `Visionnez 5s pour gagner +5 Gemmes (${remaining}/${MAX_DAILY_VIDEOS} restantes aujourd’hui)`;
+      }
     }
 
     // --- SYSTÈME DE PUBLICITÉ VIDÉO RÉCOMPENSÉE (5S INTERACTIVES) ---
@@ -5566,7 +5729,7 @@
       btnClose.disabled = true;
 
       let secondsLeft = 5;
-      countdownBadge.textContent = `⏳ ${secondsLeft}s`;
+      countdownBadge.innerHTML = `${SVG_ICONS.timer} <span>${secondsLeft}s</span>`;
       countdownBadge.style.color = '#ef4444';
       countdownBadge.style.background = '#fee2e2';
       countdownBadge.style.borderColor = '#ef4444';
@@ -5584,17 +5747,17 @@
         secondsLeft--;
         audio.playTick();
         if (secondsLeft > 0) {
-          countdownBadge.textContent = `⏳ ${secondsLeft}s`;
+          countdownBadge.innerHTML = `${SVG_ICONS.timer} <span>${secondsLeft}s</span>`;
           disclaimerText.innerHTML = `Regardez encore <strong>${secondsLeft}</strong> secondes pour débloquer votre récompense...`;
           btnClose.textContent = `PATIENTEZ... (${secondsLeft}s)`;
         } else {
           clearInterval(rewardedAdTimer);
           rewardedAdTimer = null;
-          countdownBadge.textContent = `✓ Prêt !`;
+          countdownBadge.innerHTML = `${SVG_ICONS.check} <span>Prêt !</span>`;
           countdownBadge.style.color = '#10b981';
           countdownBadge.style.background = '#d1fae5';
           countdownBadge.style.borderColor = '#10b981';
-          disclaimerText.innerHTML = `🎉 <strong>Félicitations !</strong> Récompense débloquée !`;
+          disclaimerText.innerHTML = `<strong>Félicitations !</strong> Récompense débloquée !`;
           btnClose.style.display = 'none';
           btnClaim.classList.remove('hidden');
           audio.playRewardFanfare();
@@ -5656,14 +5819,23 @@
       }, 1550));
 
       audio.playRewardFanfare();
-      showToast('✨ Deuxième chance accordée ! Score conservé !', '🎬');
+      showToast('Deuxième chance accordée ! Score conservé !', 'video');
     }
 
-    // Regarder une vidéo pour 5 gemmes gratuites
+    // Regarder une vidéo pour 5 gemmes gratuites (Limite 3 / jour)
     function watchVideoForGems() {
+      const remaining = MAX_DAILY_VIDEOS - getDailyVideosCount();
+      if (remaining <= 0) {
+        audio.playFail();
+        showToast('Limite quotidienne atteinte (3/3 vidéos). Revenez demain !', 'timer');
+        return;
+      }
+
       showRewardedVideoAd('free_gems', () => {
+        incrementDailyVideosCount();
         addGems(5);
-        showToast('💎 +5 Gemmes offertes avec succès !', '💎');
+        const left = MAX_DAILY_VIDEOS - getDailyVideosCount();
+        showToast(`+5 Gemmes offertes avec succès ! (${left}/${MAX_DAILY_VIDEOS} restantes)`, 'gem');
         if (currentShopTab === 'bank') renderShopItems();
       });
     }
@@ -5697,6 +5869,8 @@
         dot.classList.toggle('hidden', claimedToday);
       }
 
+      updateVideoLimitUI();
+
       return { today, lastLogin, streak, claimedToday };
     }
 
@@ -5724,12 +5898,13 @@
         card.innerHTML = `
           <span class="daily-day-num">Jour ${reward.day}</span>
           <div class="daily-icon-amount">
-            ${reward.type === 'stars' ? '<svg class="svg-icon star-filled" viewBox="0 0 24 24" style="width:14px;height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>' : ''}
-            ${reward.type === 'gems' ? '<svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width:14px;height:14px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>' : ''}
-            ${reward.type === 'both' ? '🎁 ' : ''}
+            ${reward.type === 'stars' ? SVG_ICONS.star : ''}
+            ${reward.type === 'gems' ? SVG_ICONS.gem : ''}
+            ${reward.type === 'both' ? SVG_ICONS.gift : ''}
             <span>${reward.label}</span>
           </div>
           <span class="daily-subtext">${reward.desc}</span>
+          ${isClaimed ? `<div class="daily-check-badge">${SVG_ICONS.check}</div>` : ''}
         `;
         grid.appendChild(card);
       });
@@ -5771,7 +5946,7 @@
       updateStarsDisplay();
       renderDailyRewardsModal();
       audio.playRewardFanfare();
-      showToast(`🎁 Jour ${nextStreak} débloqué : ${reward.label} !`, '🎉');
+      showToast(`Jour ${nextStreak} débloqué : ${reward.label} !`, 'gift');
     }
 
     // --- SYSTÈME D'ACHAT IN-APP DE GEMMES (SIMULATION SÉCURISÉE) ---
@@ -5785,7 +5960,7 @@
       selectedIapPack = pack;
       const modal = document.getElementById('iap-modal');
       document.getElementById('iap-pack-name').textContent = pack.name;
-      document.getElementById('iap-pack-amount').textContent = `+${formatNumber(pack.gems)} 💎`;
+      document.getElementById('iap-pack-amount').textContent = `+${formatNumber(pack.gems)} Gemmes`;
       document.getElementById('iap-pack-price').textContent = pack.price;
       document.getElementById('btn-confirm-iap').textContent = `CONFIRMER L'ACHAT (${pack.price})`;
       modal.classList.remove('hidden');
@@ -5797,7 +5972,7 @@
       addGems(pack.gems);
       audio.playRewardFanfare();
       document.getElementById('iap-modal').classList.add('hidden');
-      showToast(`🎉 +${formatNumber(pack.gems)} Gemmes ajoutées à votre compte !`, '💎');
+      showToast(`+${formatNumber(pack.gems)} Gemmes ajoutées à votre compte !`, 'gem');
       if (currentShopTab === 'bank') renderShopItems();
     }
 
@@ -5808,7 +5983,7 @@
       const listEl = document.getElementById('shop-items-list');
       listEl.innerHTML = '';
 
-      // 0. ONGLET BANQUE DE GEMMES (MONÉTISATION RÉELLE + PUBS GRATUITES)
+      // 0. ONGLET BANQUE DE GEMMES (MONÉTISATION RÉELLE + PUBS GRATUITES AVEC LIMITE 3/JOUR)
       if (currentShopTab === 'bank') {
         const wrap = document.createElement('div');
         wrap.style.display = 'flex';
@@ -5816,16 +5991,24 @@
         wrap.style.gap = '10px';
         wrap.style.width = '100%';
 
-        // Bannière Vidéo Gratuite (+5 Gemmes)
+        const count = getDailyVideosCount();
+        const remaining = Math.max(0, MAX_DAILY_VIDEOS - count);
+
+        // Bannière Vidéo Gratuite (+5 Gemmes - Limite 3 / jour)
         const freeCard = document.createElement('div');
         freeCard.className = 'bank-free-banner';
         freeCard.innerHTML = `
           <div class="bank-free-texts">
-            <span class="bank-free-title">🎬 Gemmes Gratuites (Pub Vidéo)</span>
-            <span class="bank-free-sub">Visionnez 5s de clip sponsorisé pour gagner +5 💎 (Illimité)</span>
+            <span class="bank-free-title" style="display: flex; align-items: center; gap: 6px;">
+              ${SVG_ICONS.video}
+              Vidéos Gratuites (3 max / jour)
+            </span>
+            <span class="bank-free-sub" id="bank-free-sub-text">
+              Visionnez 5s pour gagner +5 Gemmes (${remaining}/${MAX_DAILY_VIDEOS} restantes aujourd’hui)
+            </span>
           </div>
-          <button class="btn-bank-free-watch" onclick="watchVideoForGems()">
-            VOIR (+5 💎)
+          <button class="btn-bank-free-watch" id="btn-bank-free-watch" onclick="watchVideoForGems()" ${remaining <= 0 ? 'disabled style="background:#94a3b8;cursor:not-allowed;"' : ''}>
+            ${remaining > 0 ? `VOIR (+5 GEMMES) • (${remaining}/${MAX_DAILY_VIDEOS})` : 'LIMITE ATTEINTE (0/3)'}
           </button>
         `;
         wrap.appendChild(freeCard);
@@ -5834,7 +6017,7 @@
         const sectionTitle = document.createElement('div');
         sectionTitle.className = 'bank-section-title';
         sectionTitle.innerHTML = `
-          <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width:13px;height:13px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg>
+          ${SVG_ICONS.gem}
           Packs Officiels de Gemmes (En Euros)
         `;
         wrap.appendChild(sectionTitle);
@@ -5849,11 +6032,11 @@
           card.innerHTML = `
             ${badgeHtml}
             <div class="bank-pack-info">
-              <div class="bank-pack-icon">💎</div>
+              <div class="bank-pack-icon">${SVG_ICONS.gem}</div>
               <div class="bank-pack-titles">
                 <span class="bank-pack-name">${pack.name}</span>
                 <span class="bank-pack-amount">
-                  <strong>+${formatNumber(pack.gems)} 💎</strong>
+                  <strong>+${formatNumber(pack.gems)} Gemmes</strong>
                   ${bonusHtml}
                 </span>
               </div>
@@ -5871,7 +6054,7 @@
         demoToggleCard.innerHTML = `
           <div>
             <strong>Mode Test :</strong>
-            <span>${isTestGemMode ? '99 999 💎 Infinies' : `${formatNumber(realGems)} 💎 Réelles`}</span>
+            <span>${isTestGemMode ? '99 999 Gemmes Infinies' : `${formatNumber(realGems)} Gemmes Réelles`}</span>
           </div>
           <button class="btn-toggle-demo" onclick="toggleTestGemMode()">
             ${isTestGemMode ? 'PASSER EN RÉEL' : 'ACTIVER TEST (99K)'}
@@ -5928,7 +6111,7 @@
             } else if (isOw) {
               return `<button class="btn-single-piece owned" onclick="equipCosmetic('${category}', '${item.id}')"><span>${item.name}</span><strong>Équiper</strong></button>`;
             } else {
-              return `<button class="btn-single-piece" onclick="buyCosmeticWithGems('${category}', '${item.id}', 50)"><span>${item.name}</span><strong>50 💎</strong></button>`;
+              return `<button class="btn-single-piece" onclick="buyCosmeticWithGems('${category}', '${item.id}', 50)"><span>${item.name}</span><strong>50 <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg></strong></button>`;
             }
           }
 
@@ -6089,7 +6272,7 @@
       if (!bundle) return;
       if (!isTestGemMode && realGems < price) {
         audio.playFail();
-        showToast("Gemmes insuffisantes ! Visitez la Banque ou regardez une vidéo.", "⚠️");
+        showToast("Gemmes insuffisantes ! Visitez la Banque ou regardez une vidéo.", "alert");
         currentShopTab = 'bank';
         document.querySelectorAll('.shop-tab-btn').forEach(b => {
           b.classList.toggle('active', b.getAttribute('data-tab') === 'bank');
@@ -6115,7 +6298,7 @@
       updateGemsDisplay();
       applyEquippedPitchSkin();
       renderShopItems();
-      showToast(`👑 Bundle ${bundle.name} débloqué & équipé !`, '✨');
+      showToast(`Bundle ${bundle.name} débloqué & équipé !`, 'crown');
     };
 
     // Équiper l'ensemble d'un bundle
@@ -6132,7 +6315,7 @@
       savePlayerData();
       applyEquippedPitchSkin();
       renderShopItems();
-      showToast(`👑 Bundle ${bundle.name} équipé !`, '✨');
+      showToast(`Bundle ${bundle.name} équipé !`, 'spark');
     };
 
     // Achat d'un cosmétique avec Étoiles
@@ -6152,14 +6335,14 @@
       updateStarsDisplay();
       if (category === 'pitch') applyEquippedPitchSkin();
       renderShopItems();
-      showToast('⭐ Élément débloqué avec succès !', '✨');
+      showToast('Élément débloqué avec succès !', 'star');
     };
 
     // Achat d'un cosmétique avec Gemmes
     window.buyCosmeticWithGems = function(category, itemId, gemPrice) {
       if (!isTestGemMode && realGems < gemPrice) {
         audio.playFail();
-        showToast("Gemmes insuffisantes ! Visitez la Banque ou regardez une vidéo.", "⚠️");
+        showToast("Gemmes insuffisantes ! Visitez la Banque ou regardez une vidéo.", "alert");
         currentShopTab = 'bank';
         document.querySelectorAll('.shop-tab-btn').forEach(b => {
           b.classList.toggle('active', b.getAttribute('data-tab') === 'bank');
@@ -6181,7 +6364,7 @@
       updateGemsDisplay();
       if (category === 'pitch') applyEquippedPitchSkin();
       renderShopItems();
-      showToast('💎 Élément débloqué avec succès !', '✨');
+      showToast('Élément débloqué avec succès !', 'gem');
     };
 
     // Équiper un cosmétique possédé
@@ -6295,10 +6478,39 @@
       });
     }
 
-    const btnContinueAd = document.getElementById('btn-continue-ad');
-    if (btnContinueAd) {
-      btnContinueAd.addEventListener('click', () => {
+    const btnContinueRun = document.getElementById('btn-continue-run');
+    function handleContinueClick() {
+      if (currentContinueType === 'video') {
         showRewardedVideoAd('continue_game', () => resumeGameAfterAd());
+      } else {
+        if (isTestGemMode) {
+          resumeGameAfterAd();
+        } else {
+          if (realGems >= 5) {
+            realGems -= 5;
+            playerGems = realGems;
+            savePlayerData();
+            updateStarsDisplay();
+            resumeGameAfterAd();
+          } else {
+            audio.playFail();
+            showToast('Gemmes insuffisantes (5 requises) ! Visitez la Banque.', 'alert');
+          }
+        }
+      }
+    }
+    if (btnContinueRun) {
+      btnContinueRun.addEventListener('click', handleContinueClick);
+    }
+
+    const btnResetVideos = document.getElementById('btn-reset-videos');
+    if (btnResetVideos) {
+      btnResetVideos.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        localStorage.setItem('rondo_video_daily_count', '0');
+        updateVideoLimitUI();
+        showToast('Compteur de vidéos réinitialisé (3/3 disponibles) !', 'refresh');
       });
     }
 
@@ -6339,7 +6551,7 @@
         localStorage.setItem('rondo_last_daily_date', '2000-01-01');
         renderDailyRewardsModal();
         updateDailyLoginState();
-        showToast('🧪 Date simulée : Récompense prête !', '⏳');
+        showToast('Date simulée : Récompense prête !', 'timer');
       });
     }
 
@@ -6351,7 +6563,7 @@
         localStorage.removeItem('rondo_last_daily_date');
         renderDailyRewardsModal();
         updateDailyLoginState();
-        showToast('🔄 Calendrier réinitialisé au Jour 1.', '✨');
+        showToast('Calendrier réinitialisé au Jour 1.', 'refresh');
       });
     }
 
@@ -6395,7 +6607,7 @@
       updateStarsDisplay();
       renderShopItems();
       shopOverlay.classList.remove('hidden');
-      showToast('⚡ Pass VIP : Découvrez nos 3 Bundles Évolutifs !', '👑');
+      showToast('Pass VIP : Découvrez nos 3 Bundles Évolutifs !', 'crown');
     }
 
     if (btnBannerClick) btnBannerClick.addEventListener('click', openBannerPromo);
@@ -6440,6 +6652,7 @@
     resize();
     initGame();
     updateDailyLoginState();
+    updateVideoLimitUI();
     checkPatchNote();
     requestAnimationFrame(loop);
   </script>
