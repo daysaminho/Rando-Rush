@@ -469,6 +469,10 @@
       background: rgba(2, 6, 23, 0.65);
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     .overlay.hidden {
       opacity: 0;
       visibility: hidden;
@@ -759,48 +763,40 @@
       pointer-events: auto;
     }
 
-    /* Bouton JOUER Ultime & Juicy (Style Clean & Punchy) */
+    /* Bouton JOUER Propre & Flat Cartoon (Zéro pulsation, aucun effet 3D lourd) */
     .btn-lobby-play {
       position: relative;
       width: 100%;
-      height: 64px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      background: linear-gradient(180deg, #4ade80 0%, #22c55e 60%, #16a34a 100%);
-      color: #052e16;
-      border: 3.5px solid #0f172a;
-      border-radius: 20px;
-      box-shadow: 0 6px 0 #0f172a, 0 12px 20px rgba(34, 197, 94, 0.35);
+      background: var(--btn-play-bg);
+      color: #0f172a;
+      border: 3px solid #0f172a;
+      border-radius: 18px;
+      box-shadow: 0 5px 0 #0f172a;
       font-family: var(--font-ui);
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 900;
       letter-spacing: 1.5px;
       cursor: pointer;
       overflow: hidden;
       transition: transform 0.08s ease, box-shadow 0.08s ease;
-      animation: playLobbyBreathe 2.4s infinite ease-in-out;
-      margin-bottom: 2px;
-    }
-
-    @keyframes playLobbyBreathe {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); box-shadow: 0 7px 0 #0f172a, 0 16px 26px rgba(34, 197, 94, 0.45); }
     }
 
     .btn-lobby-play:active {
-      transform: translateY(6px) scale(0.98);
-      box-shadow: 0 0 0 #0f172a, 0 4px 10px rgba(0, 0, 0, 0.2);
-      animation: none;
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #0f172a;
     }
 
     .play-icon-svg {
-      width: 26px;
-      height: 26px;
-      fill: #052e16;
+      width: 24px;
+      height: 24px;
+      fill: #0f172a;
       stroke: #0f172a;
-      stroke-width: 2.2;
+      stroke-width: 2;
     }
 
     /* Reflet de brillance du bouton Play */
@@ -2707,9 +2703,53 @@
             <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
             Reset reprise vidéo (2/2)
           </button>
+          <button class="btn-link-subtle" id="btn-config-real-ads" title="Configurer les identifiants pour toucher de l'argent réel">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            Régie Pub Réelle (Config)
+          </button>
         </div>
 
         <button class="btn-chunky btn-shop-close" id="btn-close-daily" style="margin-top: 8px; width: 100%;">
+          FERMER
+        </button>
+      </div>
+    </div>
+
+    <!-- Overlay Configuration Régie Pub Réelle (Monétisation Web) -->
+    <div class="overlay hidden" id="real-ads-modal" style="z-index: 96;">
+      <div class="modal-box" style="max-width: 380px;">
+        <span class="modal-title-pill">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line></svg>
+          Monétisation Web
+        </span>
+        <h2 class="modal-h1" style="font-size: 20px; margin-bottom: 4px;">RÉGIE PUBS RÉELLES</h2>
+        <p class="modal-desc" style="font-size: 12px; margin-bottom: 12px;">Touchez de vrais revenus à chaque vidéo visionnée sur votre site.</p>
+
+        <div style="background: var(--bg-main); border: var(--panel-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: left; font-size: 12px;">
+          <div style="font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <span id="real-ads-status-badge" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #eab308;"></span>
+            <span id="real-ads-status-text">Simulateur 15s (Actif)</span>
+          </div>
+          <div style="font-size: 11px; opacity: 0.8; line-height: 1.4;">
+            Le jeu utilise le simulateur sécurisé en local. Dès que vous renseignez votre ID éditeur Google ou GameDistribution, les vraies publicités rémunérées se chargent automatiquement !
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; text-align: left;">
+          <div>
+            <label style="font-size: 11px; font-weight: 800; display: block; margin-bottom: 3px;">Google AdSense Jeux H5 (Client ID) :</label>
+            <input type="text" id="input-adsense-client" placeholder="ex: ca-pub-1234567890123456" style="width: 100%; padding: 8px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 12px; background: var(--bg-panel); color: var(--text-main);" />
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 800; display: block; margin-bottom: 3px;">GameDistribution (Game ID) :</label>
+            <input type="text" id="input-gd-gameid" placeholder="ex: abc123def456" style="width: 100%; padding: 8px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 12px; background: var(--bg-panel); color: var(--text-main);" />
+          </div>
+        </div>
+
+        <button class="btn-chunky btn-action-large" id="btn-save-real-ads" style="background: var(--btn-play-bg); width: 100%; font-size: 14px; margin-bottom: 8px;">
+          ENREGISTRER LA CONFIGURATION
+        </button>
+        <button class="btn-chunky btn-shop-close" id="btn-close-real-ads" style="width: 100%;">
           FERMER
         </button>
       </div>
@@ -2730,10 +2770,7 @@
               <span id="ad-countdown-sec">15s</span>
             </span>
             <button class="ad-top-close-btn" id="btn-ad-top-close" title="Fermer la vidéo" disabled>
-              <span id="ad-top-close-timer">15s</span>
-              <span id="ad-top-close-icon" class="hidden">
-                <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-              </span>
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
           </div>
         </div>
@@ -2762,7 +2799,7 @@
           <p class="ad-disclaimer" id="ad-disclaimer-text">
             Regardez la vidéo (encore <strong id="ad-seconds-left">15</strong>s) pour débloquer votre récompense...
           </p>
-          <button class="btn-chunky btn-action-large btn-ad-claim-active hidden" id="btn-ad-claim-reward">
+          <button class="btn-chunky btn-action-large btn-ad-claim-active hidden" id="btn-ad-claim-reward" style="display: none !important;">
             <span id="btn-ad-claim-text">RÉCUPÉRER MA RÉCOMPENSE</span>
           </button>
           <button class="btn-chunky btn-action-large" id="btn-ad-close" disabled style="background: #e2e8f0; color: #64748b; font-size: 15px; cursor: not-allowed; width: 100%;">
@@ -6086,6 +6123,99 @@
       }
     }
 
+    // =========================================================================
+    // --- GESTIONNAIRE DE PUBLICITÉS RÉELLES (GOOGLE AD PLACEMENT & GD SDK) ---
+    // =========================================================================
+    const RondoAdManager = {
+      config: {
+        adsenseClient: localStorage.getItem('rondo_adsense_client') || '',
+        gdGameId: localStorage.getItem('rondo_gd_gameid') || ''
+      },
+
+      init() {
+        if (this.config.adsenseClient) {
+          window.adsbygoogle = window.adsbygoogle || [];
+          window.adBreak = window.adConfig = function(o) { window.adsbygoogle.push(o); };
+          if (!document.getElementById('google-adsense-sdk')) {
+            const s = document.createElement('script');
+            s.id = 'google-adsense-sdk';
+            s.async = true;
+            s.crossOrigin = 'anonymous';
+            s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(this.config.adsenseClient)}`;
+            document.head.appendChild(s);
+          }
+        }
+
+        if (this.config.gdGameId) {
+          window["GD_OPTIONS"] = {
+            gameId: this.config.gdGameId,
+            onEvent: function(event) {
+              if (event.name === "SDK_GAME_PAUSE") {
+                if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(0, audio.ctx.currentTime);
+              } else if (event.name === "SDK_GAME_START") {
+                if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(audio.isMuted ? 0 : 0.45, audio.ctx.currentTime);
+              }
+            }
+          };
+          if (!document.getElementById('gamedistribution-jssdk')) {
+            const s = document.createElement('script');
+            s.id = 'gamedistribution-jssdk';
+            s.async = true;
+            s.src = 'https://html5.api.gamedistribution.com/main.min.js';
+            document.head.appendChild(s);
+          }
+        }
+      },
+
+      requestRewardedAd(rewardType, onComplete) {
+        // 1. Google H5 Games Ad Placement API (si configuré)
+        if (typeof window.adBreak === 'function' && this.config.adsenseClient) {
+          let rewardGranted = false;
+          window.adBreak({
+            type: 'reward',
+            name: rewardType,
+            beforeReward: (showAdFn) => {
+              showAdFn();
+            },
+            beforeAd: () => {
+              if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(0, audio.ctx.currentTime);
+            },
+            afterAd: () => {
+              if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(audio.isMuted ? 0 : 0.45, audio.ctx.currentTime);
+            },
+            adViewed: () => {
+              rewardGranted = true;
+              onComplete();
+            },
+            adDismissed: () => {
+              showToast('Vidéo fermée avant la fin : aucune récompense accordée.', 'alert');
+            },
+            adBreakDone: (placementInfo) => {
+              if (!rewardGranted && (placementInfo && (placementInfo.breakStatus === 'notReady' || placementInfo.breakStatus === 'error' || placementInfo.breakStatus === 'noFill'))) {
+                showRewardedVideoAd(rewardType, onComplete);
+              }
+            }
+          });
+          return;
+        }
+
+        // 2. GameDistribution SDK (si configuré)
+        if (typeof window.gdsdk !== 'undefined' && typeof window.gdsdk.showAd === 'function' && this.config.gdGameId) {
+          window.gdsdk.showAd('rewarded')
+            .then(() => {
+              onComplete();
+            })
+            .catch(() => {
+              showRewardedVideoAd(rewardType, onComplete);
+            });
+          return;
+        }
+
+        // 3. Fallback : Simulateur 15s interactif complet avec verrouillage strict
+        showRewardedVideoAd(rewardType, onComplete);
+      }
+    };
+
     // --- SYSTÈME DE PUBLICITÉ VIDÉO RÉCOMPENSÉE (15S INTERACTIVES) ---
     let rewardedAdTimer = null;
     let rewardedAdCallback = null;
@@ -6103,27 +6233,26 @@
       const btnClose = document.getElementById('btn-ad-close');
       const btnCloseText = document.getElementById('btn-ad-close-text');
       const btnTopClose = document.getElementById('btn-ad-top-close');
-      const topCloseTimer = document.getElementById('ad-top-close-timer');
-      const topCloseIcon = document.getElementById('ad-top-close-icon');
 
       if (!modal) return;
       modal.classList.remove('hidden');
       fillEl.style.width = '0%';
       fillEl.style.transition = 'none';
+
+      // Le bouton de réclamation est STRICTEMENT MASQUÉ jusqu'à la fin complète des 15 secondes
+      btnClaim.style.setProperty('display', 'none', 'important');
       btnClaim.classList.add('hidden');
+
+      // Le bouton inférieur indique l'attente et est désactivé
       btnClose.style.display = 'block';
       btnClose.disabled = true;
 
+      // La croix de fermeture supérieure est désactivée
       if (btnTopClose) {
         btnTopClose.disabled = true;
         btnTopClose.classList.remove('is-active');
-      }
-      if (topCloseTimer) {
-        topCloseTimer.classList.remove('hidden');
-        topCloseTimer.textContent = '15s';
-      }
-      if (topCloseIcon) {
-        topCloseIcon.classList.add('hidden');
+        btnTopClose.style.opacity = '0.35';
+        btnTopClose.style.cursor = 'not-allowed';
       }
 
       // Adapter le libellé de récupération selon le type de récompense
@@ -6167,7 +6296,6 @@
           } else {
             btnClose.textContent = `PATIENTEZ... (${secondsLeft}s)`;
           }
-          if (topCloseTimer) topCloseTimer.textContent = `${secondsLeft}s`;
         } else {
           clearInterval(rewardedAdTimer);
           rewardedAdTimer = null;
@@ -6176,15 +6304,19 @@
           countdownBadge.style.background = '#d1fae5';
           countdownBadge.style.borderColor = '#10b981';
           disclaimerText.innerHTML = `<strong style="color: #10b981;">Bravo !</strong> Récompense débloquée avec succès !`;
+
+          // Maintenant et SEULEMENT maintenant, faire apparaître le bouton de réclamation
           btnClose.style.display = 'none';
+          btnClaim.style.removeProperty('display');
+          btnClaim.style.display = 'flex';
           btnClaim.classList.remove('hidden');
 
           if (btnTopClose) {
             btnTopClose.disabled = false;
             btnTopClose.classList.add('is-active');
+            btnTopClose.style.opacity = '1';
+            btnTopClose.style.cursor = 'pointer';
           }
-          if (topCloseTimer) topCloseTimer.classList.add('hidden');
-          if (topCloseIcon) topCloseIcon.classList.remove('hidden');
 
           audio.playRewardFanfare();
         }
@@ -6260,7 +6392,7 @@
         return;
       }
 
-      showRewardedVideoAd('free_gems', () => {
+      RondoAdManager.requestRewardedAd('free_gems', () => {
         incrementDailyVideosCount();
         addGems(5);
         const left = MAX_DAILY_VIDEOS - getDailyVideosCount();
@@ -6959,7 +7091,7 @@
     const btnContinueRun = document.getElementById('btn-continue-run');
     function handleContinueClick() {
       if (currentContinueType === 'video') {
-        showRewardedVideoAd('continue_game', () => {
+        RondoAdManager.requestRewardedAd('continue_game', () => {
           recordContinueVideoUsed();
           resumeGameAfterAd();
         });
@@ -7005,6 +7137,79 @@
         showToast('Compteur reprise vidéo réinitialisé (2/2 disponibles) !', 'refresh');
       });
     }
+
+    // Modal de Configuration de Régie Pub Réelle
+    const btnConfigRealAds = document.getElementById('btn-config-real-ads');
+    const modalRealAds = document.getElementById('real-ads-modal');
+    const btnCloseRealAds = document.getElementById('btn-close-real-ads');
+    const btnSaveRealAds = document.getElementById('btn-save-real-ads');
+    const inputAdsenseClient = document.getElementById('input-adsense-client');
+    const inputGdGameId = document.getElementById('input-gd-gameid');
+    const realAdsStatusBadge = document.getElementById('real-ads-status-badge');
+    const realAdsStatusText = document.getElementById('real-ads-status-text');
+
+    function updateRealAdsStatusUI() {
+      const adsense = localStorage.getItem('rondo_adsense_client') || '';
+      const gd = localStorage.getItem('rondo_gd_gameid') || '';
+      if (inputAdsenseClient) inputAdsenseClient.value = adsense;
+      if (inputGdGameId) inputGdGameId.value = gd;
+      if (realAdsStatusBadge && realAdsStatusText) {
+        if (adsense || gd) {
+          realAdsStatusBadge.style.background = '#22c55e';
+          realAdsStatusText.textContent = adsense ? `Google AdSense Actif (${adsense.slice(0, 10)}...)` : `GameDistribution Actif (${gd})`;
+        } else {
+          realAdsStatusBadge.style.background = '#eab308';
+          realAdsStatusText.textContent = 'Simulateur 15s (Développement & Test)';
+        }
+      }
+    }
+
+    if (btnConfigRealAds && modalRealAds) {
+      btnConfigRealAds.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        updateRealAdsStatusUI();
+        modalRealAds.classList.remove('hidden');
+      });
+    }
+
+    if (btnCloseRealAds && modalRealAds) {
+      btnCloseRealAds.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        modalRealAds.classList.add('hidden');
+      });
+    }
+
+    if (btnSaveRealAds && modalRealAds) {
+      btnSaveRealAds.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        const adsenseVal = (inputAdsenseClient ? inputAdsenseClient.value.trim() : '');
+        const gdVal = (inputGdGameId ? inputGdGameId.value.trim() : '');
+        if (adsenseVal) {
+          localStorage.setItem('rondo_adsense_client', adsenseVal);
+          RondoAdManager.config.adsenseClient = adsenseVal;
+        } else {
+          localStorage.removeItem('rondo_adsense_client');
+          RondoAdManager.config.adsenseClient = '';
+        }
+        if (gdVal) {
+          localStorage.setItem('rondo_gd_gameid', gdVal);
+          RondoAdManager.config.gdGameId = gdVal;
+        } else {
+          localStorage.removeItem('rondo_gd_gameid');
+          RondoAdManager.config.gdGameId = '';
+        }
+        RondoAdManager.init();
+        updateRealAdsStatusUI();
+        modalRealAds.classList.add('hidden');
+        showToast('Configuration publicitaire enregistrée avec succès !', 'check');
+      });
+    }
+
+    // Initialiser les régies publicitaires
+    RondoAdManager.init();
 
     const btnOpenDaily = document.getElementById('btn-open-daily');
     const dailyModal = document.getElementById('daily-rewards-modal');
