@@ -7499,9 +7499,7 @@
 
     btnRestart.addEventListener('click', () => {
       audio.init();
-      RondoAdManager.requestInterstitialAd(() => {
-        startLaunchCountdown();
-      });
+      startLaunchCountdown();
     });
 
     btnHome.addEventListener('click', () => {
