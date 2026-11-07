@@ -16,6 +16,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 
+  <!-- GAMEDISTRIBUTION HTML5 SDK -->
+  <script>
+    window["GD_OPTIONS"] = {
+      gameId: "9577a699f06942cf8e7d040647563359",
+      onEvent: function(event) {
+        if (window.RondoAdManager && typeof window.RondoAdManager.handleGDEvent === 'function') {
+          window.RondoAdManager.handleGDEvent(event);
+        }
+      }
+    };
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.async = true;
+      js.src = "https://html5.api.gamedistribution.com/main.min.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'gamedistribution-jssdk'));
+  </script>
+
   <style>
     /* ==============================================================
        PLAYFUL FLAT PALETTE & TOKENS (Strictement conforme au brief)
@@ -2729,7 +2750,7 @@
           <div>
             <span style="font-size: 11px; font-weight: 900; color: #0284c7; display: block; margin-bottom: 2px;">1. GAMEDISTRIBUTION (VIDÉOS 15S)</span>
             <label style="font-size: 10px; font-weight: 700; display: block; margin-bottom: 3px;">GameDistribution (Game ID) :</label>
-            <input type="text" id="input-gd-gameid" placeholder="ex: abc123def456" style="width: 100%; padding: 7px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 11px; background: var(--bg-panel); color: var(--text-main);" />
+            <input type="text" id="input-gd-gameid" value="9577a699f06942cf8e7d040647563359" placeholder="9577a699f06942cf8e7d040647563359" style="width: 100%; padding: 7px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 11px; background: var(--bg-panel); color: var(--text-main);" />
           </div>
 
           <div>
@@ -6167,8 +6188,10 @@
     const RondoAdManager = {
       config: {
         adsenseClient: localStorage.getItem('rondo_adsense_client') || '',
-        gdGameId: localStorage.getItem('rondo_gd_gameid') || ''
+        gdGameId: localStorage.getItem('rondo_gd_gameid') || '9577a699f06942cf8e7d040647563359'
       },
+      _gdRewardPending: false,
+      _gdCallback: null,
 
       init() {
         if (this.config.adsenseClient) {
@@ -6184,24 +6207,33 @@
           }
         }
 
-        if (this.config.gdGameId) {
-          window["GD_OPTIONS"] = {
-            gameId: this.config.gdGameId,
-            onEvent: function(event) {
-              if (event.name === "SDK_GAME_PAUSE") {
-                if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(0, audio.ctx.currentTime);
-              } else if (event.name === "SDK_GAME_START") {
-                if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(audio.isMuted ? 0 : 0.45, audio.ctx.currentTime);
+        if (window["GD_OPTIONS"] && this.config.gdGameId) {
+          window["GD_OPTIONS"].gameId = this.config.gdGameId;
+        }
+      },
+
+      handleGDEvent(event) {
+        if (!event || !event.name) return;
+        switch (event.name) {
+          case "SDK_GAME_PAUSE":
+            if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(0, audio.ctx.currentTime);
+            break;
+          case "SDK_REWARDED_WATCH_COMPLETE":
+            this._gdRewardPending = true;
+            break;
+          case "SDK_GAME_START":
+            if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(audio.isMuted ? 0 : 0.45, audio.ctx.currentTime);
+            if (this._gdCallback) {
+              const cb = this._gdCallback;
+              this._gdCallback = null;
+              if (this._gdRewardPending) {
+                this._gdRewardPending = false;
+                cb();
+              } else {
+                showToast('Vidéo fermée avant la fin : aucune récompense accordée.', 'alert');
               }
             }
-          };
-          if (!document.getElementById('gamedistribution-jssdk')) {
-            const s = document.createElement('script');
-            s.id = 'gamedistribution-jssdk';
-            s.async = true;
-            s.src = 'https://html5.api.gamedistribution.com/main.min.js';
-            document.head.appendChild(s);
-          }
+            break;
         }
       },
 
@@ -6239,11 +6271,12 @@
 
         // 2. GameDistribution SDK (si configuré)
         if (typeof window.gdsdk !== 'undefined' && typeof window.gdsdk.showAd === 'function' && this.config.gdGameId) {
+          this._gdRewardPending = false;
+          this._gdCallback = onComplete;
           window.gdsdk.showAd('rewarded')
-            .then(() => {
-              onComplete();
-            })
             .catch(() => {
+              this._gdCallback = null;
+              this._gdRewardPending = false;
               showRewardedVideoAd(rewardType, onComplete);
             });
           return;
@@ -7306,7 +7339,7 @@
     const realAdsStatusText = document.getElementById('real-ads-status-text');
 
     function updateRealAdsStatusUI() {
-      const gd = localStorage.getItem('rondo_gd_gameid') || '';
+      const gd = localStorage.getItem('rondo_gd_gameid') || '9577a699f06942cf8e7d040647563359';
       const s120 = localStorage.getItem('rondo_stripe_url_pack_120') || '';
       const s350 = localStorage.getItem('rondo_stripe_url_pack_350') || '';
       const s800 = localStorage.getItem('rondo_stripe_url_pack_800') || '';
@@ -7319,7 +7352,7 @@
       if (realAdsStatusBadge && realAdsStatusText) {
         if (gd) {
           realAdsStatusBadge.style.background = '#22c55e';
-          realAdsStatusText.textContent = `GameDistribution Actif (${gd})`;
+          realAdsStatusText.textContent = `GameDistribution Connecté (${gd.substring(0, 12)}...)`;
         } else {
           realAdsStatusBadge.style.background = '#eab308';
           realAdsStatusText.textContent = 'Simulateur 15s (Développement & Test)';
