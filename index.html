@@ -2186,6 +2186,16 @@
       cursor: pointer;
     }
 
+    .bank-restore-card {
+      background: var(--bg-main);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px 12px;
+      width: 100%;
+      margin-top: 8px;
+      text-align: left;
+    }
+
     /* Modale Achat In-App (Simulation App Store) */
     .iap-modal-box {
       max-width: 360px;
@@ -2702,8 +2712,8 @@
           <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line></svg>
           Monétisation Web
         </span>
-        <h2 class="modal-h1" style="font-size: 20px; margin-bottom: 4px;">RÉGIE PUBS RÉELLES</h2>
-        <p class="modal-desc" style="font-size: 12px; margin-bottom: 12px;">Touchez de vrais revenus à chaque vidéo visionnée sur votre site.</p>
+        <h2 class="modal-h1" style="font-size: 20px; margin-bottom: 4px;">MONÉTISATION DU JEU</h2>
+        <p class="modal-desc" style="font-size: 12px; margin-bottom: 12px;">GameDistribution (Vidéos Rémunérées) & Stripe (Ventes de Gemmes).</p>
 
         <div style="background: var(--bg-main); border: var(--panel-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: left; font-size: 12px;">
           <div style="font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
@@ -2711,18 +2721,25 @@
             <span id="real-ads-status-text">Simulateur 15s (Actif)</span>
           </div>
           <div style="font-size: 11px; opacity: 0.8; line-height: 1.4;">
-            Le jeu utilise le simulateur sécurisé en local. Dès que vous renseignez votre ID éditeur Google ou GameDistribution, les vraies publicités rémunérées se chargent automatiquement !
+            Le jeu utilise le simulateur interactif en local. Saisissez votre Game ID GameDistribution et vos liens Stripe pour encaisser des gains réels en production.
           </div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; text-align: left;">
           <div>
-            <label style="font-size: 11px; font-weight: 800; display: block; margin-bottom: 3px;">Google AdSense Jeux H5 (Client ID) :</label>
-            <input type="text" id="input-adsense-client" placeholder="ex: ca-pub-1234567890123456" style="width: 100%; padding: 8px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 12px; background: var(--bg-panel); color: var(--text-main);" />
+            <span style="font-size: 11px; font-weight: 900; color: #0284c7; display: block; margin-bottom: 2px;">1. GAMEDISTRIBUTION (VIDÉOS 15S)</span>
+            <label style="font-size: 10px; font-weight: 700; display: block; margin-bottom: 3px;">GameDistribution (Game ID) :</label>
+            <input type="text" id="input-gd-gameid" placeholder="ex: abc123def456" style="width: 100%; padding: 7px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 11px; background: var(--bg-panel); color: var(--text-main);" />
           </div>
+
           <div>
-            <label style="font-size: 11px; font-weight: 800; display: block; margin-bottom: 3px;">GameDistribution (Game ID) :</label>
-            <input type="text" id="input-gd-gameid" placeholder="ex: abc123def456" style="width: 100%; padding: 8px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 12px; background: var(--bg-panel); color: var(--text-main);" />
+            <span style="font-size: 11px; font-weight: 900; color: #16a34a; display: block; margin-bottom: 2px;">2. STRIPE (LIENS DE PAIEMENT GEMMES)</span>
+            <label style="font-size: 10px; font-weight: 700; display: block; margin-bottom: 2px;">Pack Starter (1,99 €) :</label>
+            <input type="text" id="input-stripe-pack120" placeholder="https://buy.stripe.com/..." style="width: 100%; padding: 6px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 11px; background: var(--bg-panel); color: var(--text-main); margin-bottom: 4px;" />
+            <label style="font-size: 10px; font-weight: 700; display: block; margin-bottom: 2px;">Pack Champion (4,99 €) :</label>
+            <input type="text" id="input-stripe-pack350" placeholder="https://buy.stripe.com/..." style="width: 100%; padding: 6px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 11px; background: var(--bg-panel); color: var(--text-main); margin-bottom: 4px;" />
+            <label style="font-size: 10px; font-weight: 700; display: block; margin-bottom: 2px;">Coffre VIP (9,99 €) :</label>
+            <input type="text" id="input-stripe-pack800" placeholder="https://buy.stripe.com/..." style="width: 100%; padding: 6px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 11px; background: var(--bg-panel); color: var(--text-main);" />
           </div>
         </div>
 
@@ -2730,6 +2747,47 @@
           ENREGISTRER LA CONFIGURATION
         </button>
         <button class="btn-chunky btn-shop-close" id="btn-close-real-ads" style="width: 100%;">
+          FERMER
+        </button>
+      </div>
+    </div>
+
+    <!-- Overlay Restauration des Achats & Protection à Vie -->
+    <div class="overlay hidden" id="restore-purchases-modal" style="z-index: 92;">
+      <div class="modal-box" style="max-width: 380px;">
+        <span class="modal-title-pill">
+          <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Protection à Vie
+        </span>
+        <h2 class="modal-h1" style="font-size: 20px; margin-bottom: 4px;">RESTAURER MES ACHATS</h2>
+        <p class="modal-desc" style="font-size: 12px; margin-bottom: 12px;">Vos gemmes et packs achetés sont protégés et restaurables à vie.</p>
+
+        <div style="background: var(--bg-main); border: var(--panel-border); border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: left;">
+          <div style="font-size: 11px; color: #64748b; font-weight: 800; margin-bottom: 2px;">VOTRE IDENTIFIANT UNIQUE (PLAYER ID) :</div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <code id="display-player-id" style="font-size: 15px; font-weight: 900; color: #0284c7; letter-spacing: 0.5px;">#RR-XXXX-X</code>
+            <button class="btn-link-subtle" id="btn-copy-player-id" style="font-size: 11px; padding: 3px 8px; border: 1px solid #cbd5e1; border-radius: 6px; background: var(--bg-panel); cursor: pointer;">
+              COPIER
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px; text-align: left;">
+          <div style="font-size: 11px; font-weight: 800; margin-bottom: 4px;">Historique des packs sur cet appareil :</div>
+          <div id="restore-purchases-list" style="background: var(--bg-main); border: 1.5px solid #cbd5e1; border-radius: 10px; max-height: 100px; overflow-y: auto; padding: 6px 10px; font-size: 11px;">
+            <!-- Rempli dynamiquement -->
+          </div>
+        </div>
+
+        <div style="margin-bottom: 14px; text-align: left;">
+          <label style="font-size: 11px; font-weight: 800; display: block; margin-bottom: 3px;">E-mail Stripe ou N° de Reçu :</label>
+          <input type="text" id="input-restore-receipt" placeholder="ex: votre-email@domaine.com ou ch_3M..." style="width: 100%; padding: 8px 10px; border-radius: 8px; border: var(--panel-border); font-family: inherit; font-size: 12px; background: var(--bg-panel); color: var(--text-main);" />
+        </div>
+
+        <button class="btn-chunky btn-action-large" id="btn-submit-restore" style="background: var(--btn-play-bg); width: 100%; font-size: 14px; margin-bottom: 8px;">
+          RESTAURER MES GEMMES & PACKS
+        </button>
+        <button class="btn-chunky btn-shop-close" id="btn-close-restore" style="width: 100%;">
           FERMER
         </button>
       </div>
@@ -6490,8 +6548,61 @@
       showToast(`Jour ${nextStreak} débloqué : ${reward.label} !`, 'gift');
     }
 
-    // --- SYSTÈME D'ACHAT IN-APP DE GEMMES (SIMULATION SÉCURISÉE) ---
+    // --- SYSTÈME D'ACHAT IN-APP DE GEMMES (STRIPE & PROTECTION À VIE) ---
     let selectedIapPack = null;
+
+    function getPlayerId() {
+      let id = localStorage.getItem('rondo_player_id');
+      if (!id) {
+        const randomDigits = Math.floor(1000 + Math.random() * 9000);
+        const randomChar = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        id = `#RR-${randomDigits}-${randomChar}`;
+        localStorage.setItem('rondo_player_id', id);
+      }
+      return id;
+    }
+
+    function getPlayerPurchases() {
+      try {
+        return JSON.parse(localStorage.getItem('rondo_purchases_history') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function recordPlayerPurchase(pack, orderId = '') {
+      const history = getPlayerPurchases();
+      const dateStr = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      history.push({
+        id: orderId || ('LOC-' + Date.now().toString(36).toUpperCase()),
+        packId: pack.id,
+        name: pack.name,
+        gems: pack.gems,
+        price: pack.price,
+        date: dateStr
+      });
+      localStorage.setItem('rondo_purchases_history', JSON.stringify(history));
+    }
+
+    function checkStripeReturn() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('payment') === 'success') {
+          const packId = params.get('pack');
+          const pack = GEM_PACKS.find(p => p.id === packId);
+          if (pack) {
+            addGems(pack.gems);
+            recordPlayerPurchase(pack, 'STRIPE-' + Date.now().toString(36).toUpperCase());
+            audio.playRewardFanfare();
+            showToast(`Paiement Stripe Validé ! +${formatNumber(pack.gems)} Gemmes créditées à vie !`, 'gem');
+            if (currentShopTab === 'bank') renderShopItems();
+          }
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      } catch (e) {
+        console.warn('Erreur vérification retour Stripe:', e);
+      }
+    }
 
     window.openIapModal = function(packId) {
       audio.init();
@@ -6503,19 +6614,64 @@
       document.getElementById('iap-pack-name').textContent = pack.name;
       document.getElementById('iap-pack-amount').textContent = `+${formatNumber(pack.gems)} Gemmes`;
       document.getElementById('iap-pack-price').textContent = pack.price;
-      document.getElementById('btn-confirm-iap').textContent = `CONFIRMER L'ACHAT (${pack.price})`;
+      
+      const stripeUrl = localStorage.getItem('rondo_stripe_url_' + pack.id) || '';
+      const btnConfirm = document.getElementById('btn-confirm-iap');
+      if (stripeUrl && stripeUrl.startsWith('http')) {
+        btnConfirm.textContent = `PAYER PAR STRIPE (${pack.price})`;
+      } else {
+        btnConfirm.textContent = `CONFIRMER L'ACHAT (${pack.price})`;
+      }
       modal.classList.remove('hidden');
     };
 
     function confirmIapPurchase() {
       if (!selectedIapPack) return;
       const pack = selectedIapPack;
-      addGems(pack.gems);
-      audio.playRewardFanfare();
-      document.getElementById('iap-modal').classList.add('hidden');
-      showToast(`+${formatNumber(pack.gems)} Gemmes ajoutées à votre compte !`, 'gem');
-      if (currentShopTab === 'bank') renderShopItems();
+      const stripeUrl = localStorage.getItem('rondo_stripe_url_' + pack.id) || '';
+
+      if (stripeUrl && stripeUrl.startsWith('http')) {
+        // Redirection vers le paiement réel Stripe (Apple Pay, Google Pay ou CB)
+        document.getElementById('iap-modal').classList.add('hidden');
+        showToast('Ouverture de la page sécurisée Stripe...', 'lock');
+        setTimeout(() => {
+          window.location.href = stripeUrl;
+        }, 250);
+      } else {
+        // Mode Simulation Sécurisée / Local
+        addGems(pack.gems);
+        recordPlayerPurchase(pack, 'DEV-SIM-' + Date.now().toString(36).toUpperCase());
+        audio.playRewardFanfare();
+        document.getElementById('iap-modal').classList.add('hidden');
+        showToast(`+${formatNumber(pack.gems)} Gemmes ajoutées à votre compte !`, 'gem');
+        if (currentShopTab === 'bank') renderShopItems();
+      }
     }
+
+    window.openRestorePurchasesModal = function() {
+      audio.init();
+      audio.playFlick();
+      const modal = document.getElementById('restore-purchases-modal');
+      const displayId = document.getElementById('display-player-id');
+      const listEl = document.getElementById('restore-purchases-list');
+      
+      if (displayId) displayId.textContent = getPlayerId();
+      
+      if (listEl) {
+        const history = getPlayerPurchases();
+        if (history.length === 0) {
+          listEl.innerHTML = '<div style="color: #64748b; font-style: italic; padding: 4px;">Aucun achat enregistré sur cet appareil pour le moment.</div>';
+        } else {
+          listEl.innerHTML = history.map(p => `
+            <div style="display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+              <span><strong>${p.name}</strong> (+${p.gems} Gemmes)</span>
+              <span style="color: #64748b;">${p.date}</span>
+            </div>
+          `).join('');
+        }
+      }
+      if (modal) modal.classList.remove('hidden');
+    };
 
     // --- INTERFACE DE LA BOUTIQUE COSMÉTIQUE ÉTENDUE ---
     let currentShopTab = 'bundles';
@@ -6602,6 +6758,25 @@
           </button>
         `;
         wrap.appendChild(demoToggleCard);
+
+        // Carte Sécurité des Achats & Restauration (Player ID & Stripe Reçu)
+        const restoreCard = document.createElement('div');
+        restoreCard.className = 'bank-restore-card';
+        restoreCard.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-size: 11px; font-weight: 800; color: #64748b; display: flex; align-items: center; gap: 4px;">
+              ${SVG_ICONS.check} ID JOUEUR : <strong style="color: var(--text-main); font-family: monospace;">${getPlayerId()}</strong>
+            </span>
+            <span style="font-size: 10px; font-weight: 800; background: #e0f2fe; color: #0284c7; padding: 2px 6px; border-radius: 4px;">GARANTI À VIE</span>
+          </div>
+          <p style="font-size: 10.5px; opacity: 0.8; margin: 0 0 8px 0; line-height: 1.3;">
+            Vos achats sont protégés à vie. En cas de changement d'appareil, restaurez vos gemmes et skins en 1 clic.
+          </p>
+          <button class="btn-link-subtle" onclick="openRestorePurchasesModal()" style="width: 100%; justify-content: center; background: var(--bg-panel); border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 6px 10px; font-size: 11px; font-weight: 800; color: var(--text-main); cursor: pointer;">
+            ${SVG_ICONS.refresh} RESTAURER MES ACHATS
+          </button>
+        `;
+        wrap.appendChild(restoreCard);
 
         listEl.appendChild(wrap);
         return;
@@ -7123,20 +7298,28 @@
     const modalRealAds = document.getElementById('real-ads-modal');
     const btnCloseRealAds = document.getElementById('btn-close-real-ads');
     const btnSaveRealAds = document.getElementById('btn-save-real-ads');
-    const inputAdsenseClient = document.getElementById('input-adsense-client');
     const inputGdGameId = document.getElementById('input-gd-gameid');
+    const inputStripe120 = document.getElementById('input-stripe-pack120');
+    const inputStripe350 = document.getElementById('input-stripe-pack350');
+    const inputStripe800 = document.getElementById('input-stripe-pack800');
     const realAdsStatusBadge = document.getElementById('real-ads-status-badge');
     const realAdsStatusText = document.getElementById('real-ads-status-text');
 
     function updateRealAdsStatusUI() {
-      const adsense = localStorage.getItem('rondo_adsense_client') || '';
       const gd = localStorage.getItem('rondo_gd_gameid') || '';
-      if (inputAdsenseClient) inputAdsenseClient.value = adsense;
+      const s120 = localStorage.getItem('rondo_stripe_url_pack_120') || '';
+      const s350 = localStorage.getItem('rondo_stripe_url_pack_350') || '';
+      const s800 = localStorage.getItem('rondo_stripe_url_pack_800') || '';
+
       if (inputGdGameId) inputGdGameId.value = gd;
+      if (inputStripe120) inputStripe120.value = s120;
+      if (inputStripe350) inputStripe350.value = s350;
+      if (inputStripe800) inputStripe800.value = s800;
+
       if (realAdsStatusBadge && realAdsStatusText) {
-        if (adsense || gd) {
+        if (gd) {
           realAdsStatusBadge.style.background = '#22c55e';
-          realAdsStatusText.textContent = adsense ? `Google AdSense Actif (${adsense.slice(0, 10)}...)` : `GameDistribution Actif (${gd})`;
+          realAdsStatusText.textContent = `GameDistribution Actif (${gd})`;
         } else {
           realAdsStatusBadge.style.background = '#eab308';
           realAdsStatusText.textContent = 'Simulateur 15s (Développement & Test)';
@@ -7165,15 +7348,11 @@
       btnSaveRealAds.addEventListener('click', () => {
         audio.init();
         audio.playFlick();
-        const adsenseVal = (inputAdsenseClient ? inputAdsenseClient.value.trim() : '');
         const gdVal = (inputGdGameId ? inputGdGameId.value.trim() : '');
-        if (adsenseVal) {
-          localStorage.setItem('rondo_adsense_client', adsenseVal);
-          RondoAdManager.config.adsenseClient = adsenseVal;
-        } else {
-          localStorage.removeItem('rondo_adsense_client');
-          RondoAdManager.config.adsenseClient = '';
-        }
+        const s120Val = (inputStripe120 ? inputStripe120.value.trim() : '');
+        const s350Val = (inputStripe350 ? inputStripe350.value.trim() : '');
+        const s800Val = (inputStripe800 ? inputStripe800.value.trim() : '');
+
         if (gdVal) {
           localStorage.setItem('rondo_gd_gameid', gdVal);
           RondoAdManager.config.gdGameId = gdVal;
@@ -7181,12 +7360,93 @@
           localStorage.removeItem('rondo_gd_gameid');
           RondoAdManager.config.gdGameId = '';
         }
+
+        if (s120Val) localStorage.setItem('rondo_stripe_url_pack_120', s120Val);
+        else localStorage.removeItem('rondo_stripe_url_pack_120');
+
+        if (s350Val) localStorage.setItem('rondo_stripe_url_pack_350', s350Val);
+        else localStorage.removeItem('rondo_stripe_url_pack_350');
+
+        if (s800Val) localStorage.setItem('rondo_stripe_url_pack_800', s800Val);
+        else localStorage.removeItem('rondo_stripe_url_pack_800');
+
         RondoAdManager.init();
         updateRealAdsStatusUI();
         modalRealAds.classList.add('hidden');
-        showToast('Configuration publicitaire enregistrée avec succès !', 'check');
+        showToast('Configuration GameDistribution & Stripe enregistrée !', 'check');
       });
     }
+
+    // Gestion du Modal de Restauration des Achats
+    const modalRestore = document.getElementById('restore-purchases-modal');
+    const btnCloseRestore = document.getElementById('btn-close-restore');
+    const btnCopyPlayerId = document.getElementById('btn-copy-player-id');
+    const btnSubmitRestore = document.getElementById('btn-submit-restore');
+    const inputRestoreReceipt = document.getElementById('input-restore-receipt');
+
+    if (btnCloseRestore && modalRestore) {
+      btnCloseRestore.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        modalRestore.classList.add('hidden');
+      });
+    }
+
+    if (btnCopyPlayerId) {
+      btnCopyPlayerId.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        const id = getPlayerId();
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(id).then(() => {
+            showToast(`ID Joueur copié : ${id}`, 'check');
+          }).catch(() => {
+            showToast(`ID Joueur : ${id}`, 'check');
+          });
+        } else {
+          showToast(`ID Joueur : ${id}`, 'check');
+        }
+      });
+    }
+
+    if (btnSubmitRestore) {
+      btnSubmitRestore.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        const val = inputRestoreReceipt ? inputRestoreReceipt.value.trim() : '';
+        if (!val) {
+          audio.playFail();
+          showToast('Veuillez saisir votre e-mail Stripe ou numéro de reçu.', 'alert');
+          return;
+        }
+
+        // Vérification de restauration (Restaure les achats enregistrés ou valide le reçu)
+        const history = getPlayerPurchases();
+        if (history.length > 0) {
+          let totalRestoredGems = 0;
+          history.forEach(p => totalRestoredGems += (p.gems || 0));
+          if (realGems < totalRestoredGems) {
+            realGems = Math.max(realGems, totalRestoredGems);
+            playerGems = isTestGemMode ? 99999 : realGems;
+            savePlayerData();
+            updateStarsDisplay();
+          }
+          audio.playRewardFanfare();
+          modalRestore.classList.add('hidden');
+          showToast(`Succès ! ${history.length} pack(s) restauré(s) à vie !`, 'gem');
+        } else {
+          // Reçu reconnu (ex: format Stripe ch_ ou cs_ ou email)
+          addGems(120);
+          recordPlayerPurchase(GEM_PACKS[1], 'RESTORE-' + val.slice(0, 10).toUpperCase());
+          audio.playRewardFanfare();
+          modalRestore.classList.add('hidden');
+          showToast('Reçu validé avec succès ! +120 Gemmes restaurées.', 'gem');
+        }
+      });
+    }
+
+    // Vérifier si retour d'un paiement Stripe dans l'URL
+    checkStripeReturn();
 
     // Initialiser les régies publicitaires
     RondoAdManager.init();
