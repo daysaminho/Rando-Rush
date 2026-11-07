@@ -2069,8 +2069,8 @@
           bundleId: 'bundle_sovereign',
           lightBg: '#fef3c7',
           darkBg: '#fde047',
-          lightLines: '#78350f',
-          darkLines: '#92400e',
+          lightLines: '#d97706',
+          darkLines: '#b45309',
           lightBorder: '#f59e0b',
           darkBorder: '#d97706',
           sub: 'Arène Céleste Lumineuse • Rayons Divins & Runes d’Or',
@@ -3158,8 +3158,8 @@
         const rot = time * 0.00045 * speedMult;
         ctx.rotate(rot);
 
-        ctx.strokeStyle = 'rgba(120, 53, 15, 0.45)';
-        ctx.lineWidth = tier >= 3 ? 2.5 : 1.8;
+        ctx.strokeStyle = 'rgba(217, 119, 6, 0.55)';
+        ctx.lineWidth = tier >= 3 ? 2.5 : 2.0;
         ctx.beginPath();
         ctx.arc(0, 0, rondoRadius * 0.45, 0, Math.PI * 2);
         ctx.stroke();
@@ -3169,12 +3169,12 @@
           const r1 = rondoRadius * 0.45;
           ctx.beginPath();
           ctx.arc(Math.cos(ang) * r1, Math.sin(ang) * r1, 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = '#78350f';
+          ctx.fillStyle = '#b45309';
           ctx.fill();
         }
 
         ctx.rotate(-rot * 2.2);
-        ctx.strokeStyle = 'rgba(146, 64, 14, 0.4)';
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
         ctx.setLineDash([8, 10]);
         ctx.beginPath();
         ctx.arc(0, 0, rondoRadius * 0.75, 0, Math.PI * 2);
@@ -3709,45 +3709,54 @@
       }
 
       // B.4 team_sovereign (Chevaliers Célestes - Sovereign Inspired)
-      // Évolution par passes : Plastron d'or, auréole céleste (score >= 5), ailes de lumière sur le porteur (score >= 10)
+      // Corps blanc pur, liséré d'or ciselé, épaulettes royales, visière divine, auréole flottante & ailes célestes
       if (teamCosmetic.id === 'team_sovereign') {
         const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
         ctx.save();
-        ctx.beginPath();
-        ctx.arc(p.x, drawY, p.radius - 2, 0, Math.PI * 2);
-        ctx.clip();
-        // Plastron chevron doré royal
-        ctx.beginPath();
-        ctx.arc(p.x, drawY, p.radius - 2, 0, Math.PI * 2);
-        ctx.clip();
-        ctx.beginPath();
-        ctx.moveTo(p.x - 12, drawY - 8);
-        ctx.lineTo(p.x, drawY + 4);
-        ctx.lineTo(p.x + 12, drawY - 8);
-        ctx.strokeStyle = '#fbbf24';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        ctx.restore();
 
-        // Visière de chevalier céleste : regard doré
+        // 1. Corps blanc pur avec bordure royale or
+        ctx.beginPath();
+        ctx.arc(p.x, drawY, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fill();
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#fbbf24';
+        ctx.stroke();
+
+        // 2. Épaulettes d'armure or latérales
         [-1, 1].forEach(dir => {
           ctx.beginPath();
-          ctx.moveTo(p.x + dir * 3, drawY - 3);
-          ctx.lineTo(p.x + dir * 8, drawY - 4);
-          ctx.lineTo(p.x + dir * 6, drawY - 1);
-          ctx.closePath();
+          ctx.arc(p.x + dir * (p.radius - 2), drawY - 2, 4.5, 0, Math.PI * 2);
           ctx.fillStyle = '#fbbf24';
           ctx.fill();
         });
+
+        // 3. Visière de chevalier céleste (regard divin)
+        [-1, 1].forEach(dir => {
+          ctx.beginPath();
+          ctx.moveTo(p.x + dir * 2.5, drawY - 4);
+          ctx.lineTo(p.x + dir * 8, drawY - 6);
+          ctx.lineTo(p.x + dir * 6, drawY - 2);
+          ctx.closePath();
+          ctx.fillStyle = '#f59e0b';
+          ctx.fill();
+        });
+
+        // 4. Numéro de maillot céleste midnight navy
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '900 13px "Fredoka", "Varela Round", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText((p.id + 1).toString(), p.x, drawY + 7);
 
         // Tier 2 : Auréole divine dorée flottant au-dessus du joueur
         if (tier >= 2) {
           ctx.save();
           const haloFloat = Math.sin(time * 0.006 + p.id) * 2;
-          ctx.strokeStyle = 'rgba(251, 191, 36, 0.75)';
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#f59e0b';
+          ctx.lineWidth = 2.5;
           ctx.beginPath();
-          ctx.ellipse(p.x, drawY - p.radius - 6 + haloFloat, 11, 4, 0, 0, Math.PI * 2);
+          ctx.ellipse(p.x, drawY - p.radius - 7 + haloFloat, 12, 4, 0, 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
         }
@@ -3770,6 +3779,8 @@
           ctx.stroke();
           ctx.restore();
         }
+
+        ctx.restore();
       }
 
       // B.5 team_ion (Unité Prototype - Ion Prototype Inspired)
@@ -3887,6 +3898,13 @@
           ctx.fill();
         });
 
+        // Numéro ninja blanc éclatant
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 12px "Fredoka", "Varela Round", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText((p.id + 1).toString(), p.x, drawY + 8);
+
         // Ondulation d'eau sous les pieds
         const rippleR = 6 + (Math.sin(time * 0.006 + p.id) + 1) * 3;
         ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
@@ -3942,12 +3960,14 @@
         ctx.fill();
       }
 
-      // Numéro de maillot
-      ctx.fillStyle = teamCosmetic.numberColor || '#ffffff';
-      ctx.font = '800 13px "Varela Round", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText((p.id + 1).toString(), p.x, drawY + 8);
+      // Numéro de maillot (uniquement pour les skins classiques hors bundles)
+      if (!teamCosmetic.isBundlePiece) {
+        ctx.fillStyle = teamCosmetic.numberColor || '#ffffff';
+        ctx.font = '800 13px "Varela Round", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText((p.id + 1).toString(), p.x, drawY + 8);
+      }
     }
 
     // 4. Le Taureau Playful Flat + Skins de Taureau Animés
@@ -3955,7 +3975,7 @@
       ctx.save();
       ctx.translate(bull.x, bull.y);
 
-      // A.1 bull_ghost (Spectre) : Opacité sinusoïdale 0.5 + Math.sin(time * 0.004) * 0.25
+      // A.1 bull_ghost (Spectre) : Opacité sinusoïdale
       if (bullCosmetic.id === 'bull_ghost') {
         ctx.globalAlpha = 0.5 + Math.sin(time * 0.004) * 0.25;
       }
@@ -3966,7 +3986,7 @@
       ctx.fillStyle = strokeColor;
       ctx.fill();
 
-      // A.4 bull_solar (Démiurge Solaire) : Dessiner 8 rayons triangulaires d'or autour du taureau tournant en continu (ctx.rotate(now * 0.0015))
+      // --- EFFETS SOUS LE CORPS (Auras arrières, propulseurs, rayons solaires) ---
       if (bullCosmetic.id === 'bull_solar') {
         ctx.save();
         ctx.rotate(time * 0.0015);
@@ -3993,19 +4013,14 @@
         ctx.restore();
       }
 
-      // A.3 bull_blackhole (Trou Noir) : Disque noir pur entouré d'un anneau violet en rotation avec 2 micro-satellites
       if (bullCosmetic.id === 'bull_blackhole') {
         ctx.save();
         ctx.rotate(time * 0.002);
-
-        // Anneau violet
         ctx.beginPath();
         ctx.arc(0, 0, bull.radius + 6, 0, Math.PI * 2);
         ctx.strokeStyle = '#a855f7';
         ctx.lineWidth = 3;
         ctx.stroke();
-
-        // 2 micro-satellites orbitant à vitesse constante
         for (let k = 0; k < 2; k++) {
           const pAngle = k * Math.PI;
           const px = Math.cos(pAngle) * (bull.radius + 6);
@@ -4021,87 +4036,9 @@
         ctx.restore();
       }
 
-      // A.5 bull_sovereign (Spectre Obscur - Sovereign Inspired)
-      // Évolution par passes : Halo spectral violet, 6 braises en orbite (score >= 5), couronne d'ombre & éclairs (score >= 10)
-      if (bullCosmetic.id === 'bull_sovereign') {
-        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
-        ctx.save();
-        const osc = Math.sin(time * 0.005) * 4;
-        ctx.beginPath();
-        ctx.arc(0, 0, bull.radius + 6 + osc, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(192, 132, 252, 0.4)';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-
-        // Cornes spectrales violettes incurvées
-        [-1, 1].forEach(dir => {
-          ctx.beginPath();
-          ctx.moveTo(dir * 7, -bull.radius * 0.4);
-          ctx.quadraticCurveTo(dir * 20, -bull.radius * 0.8, dir * 18, -bull.radius * 1.25);
-          ctx.lineTo(dir * 12, -bull.radius * 1.25);
-          ctx.quadraticCurveTo(dir * 14, -bull.radius * 0.7, dir * 3, -bull.radius * 0.55);
-          ctx.closePath();
-          ctx.fillStyle = '#c084fc';
-          ctx.fill();
-          ctx.strokeStyle = strokeColor;
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        });
-
-        // Visage guerrier spectral : yeux prédateurs lilas
-        [-1, 1].forEach(dir => {
-          ctx.beginPath();
-          ctx.moveTo(dir * 4, -2);
-          ctx.lineTo(dir * 10, -5);
-          ctx.lineTo(dir * 7, 0);
-          ctx.closePath();
-          ctx.fillStyle = '#f5d0fe';
-          ctx.fill();
-        });
-
-        // Diadème royal d'or sur le front
-        ctx.beginPath();
-        ctx.moveTo(-6, -bull.radius * 0.5);
-        ctx.lineTo(0, -bull.radius * 0.85);
-        ctx.lineTo(6, -bull.radius * 0.5);
-        ctx.strokeStyle = '#fbbf24';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-
-        // Tier 2 : 6 braises spectrales violettes en orbite
-        if (tier >= 2) {
-          const orbSpeed = time * 0.003;
-          for (let k = 0; k < 6; k++) {
-            const a = orbSpeed + (k * Math.PI * 2) / 6;
-            const ex = Math.cos(a) * (bull.radius + 12);
-            const ey = Math.sin(a) * (bull.radius + 12);
-            ctx.beginPath();
-            ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
-            ctx.fillStyle = '#c084fc';
-            ctx.fill();
-          }
-        }
-
-        // Tier 3 : Couronne d'ombre violette et éclairs du vide
-        if (tier >= 3) {
-          ctx.strokeStyle = 'rgba(232, 121, 249, 0.85)';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(-14, -bull.radius - 8);
-          ctx.lineTo(0, -bull.radius - 20);
-          ctx.lineTo(14, -bull.radius - 8);
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
-
-      // A.6 bull_ion (Titan Mecha Chasseur - Ion Prototype Inspired)
-      // Châssis titane lourd, cornes profilées laser rouge, visière optique prédatrice angulaire, doubles tuyères plasma & cœur hexagonal
+      // Flammes arrière Mecha Titan (sous le corps)
       if (bullCosmetic.id === 'bull_ion') {
         const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
-        ctx.save();
-
-        // 1. Tuyères de propulsion et flammes de réacteurs arrières
         const flamePulse = (Math.sin(time * 0.015) + 1) * 0.5;
         const flameLen = 10 + (tier >= 2 ? 8 : 0) + flamePulse * 8;
         [-9, 9].forEach(ox => {
@@ -4112,7 +4049,6 @@
           ctx.closePath();
           ctx.fillStyle = tier >= 2 ? '#ef4444' : '#f97316';
           ctx.fill();
-          // Cœur jaune de flamme
           ctx.beginPath();
           ctx.moveTo(ox - 1.5, bull.radius * 0.7);
           ctx.lineTo(ox, bull.radius * 0.7 + flameLen * 0.6);
@@ -4121,13 +4057,168 @@
           ctx.fillStyle = '#fef08a';
           ctx.fill();
         });
+      }
 
-        // 2. Cornes Mecha profilées aérodynamiques en titane avec tranchant plasma rouge
+      // Sillage d'encre sombre sous le taureau (Kuronami)
+      if (bullCosmetic.id === 'bull_kuronami') {
+        const inkOsc = Math.sin(time * 0.008) * 3;
+        ctx.fillStyle = 'rgba(2, 6, 23, 0.65)';
+        ctx.beginPath();
+        ctx.ellipse(0, bull.radius + 2, 14 + inkOsc, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Halo spectral Souverain (sous le corps)
+      if (bullCosmetic.id === 'bull_sovereign') {
+        const osc = Math.sin(time * 0.005) * 4;
+        ctx.beginPath();
+        ctx.arc(0, 0, bull.radius + 6 + osc, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(192, 132, 252, 0.55)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      // Couleur du corps
+      let bodyFill = bullCosmetic.bodyColor;
+      if (bullCosmetic.id === 'bull_magma') {
+        const t = (Math.sin(time * 0.004) + 1) * 0.5;
+        const r = Math.round(127 + (234 - 127) * t);
+        const g = Math.round(29 + (88 - 29) * t);
+        const b = Math.round(29 + (12 - 29) * t);
+        bodyFill = `rgb(${r},${g},${b})`;
+      } else if (bullCosmetic.id === 'bull_blackhole') {
+        bodyFill = '#000000';
+      }
+
+      // 1. CORPS DU TAUREAU DESSINÉ EN PREMIER (Base solide)
+      ctx.beginPath();
+      ctx.arc(0, 0, bull.radius, 0, Math.PI * 2);
+      ctx.fillStyle = bodyFill;
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = strokeColor;
+      ctx.stroke();
+
+      // 2. ÉLÉMENTS DE SURFACE DESSINÉS AU-DESSUS DU CORPS :
+
+      // BUNDLE SOUVERAIN (Spectre Obscur - Sovereign Inspired)
+      if (bullCosmetic.id === 'bull_sovereign') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
+        ctx.save();
+
+        // Cornes spectrales violettes incurvées majestueuses
+        [-1, 1].forEach(dir => {
+          ctx.beginPath();
+          ctx.moveTo(dir * 7, -bull.radius * 0.35);
+          ctx.quadraticCurveTo(dir * 22, -bull.radius * 0.8, dir * 18, -bull.radius * 1.35);
+          ctx.lineTo(dir * 11, -bull.radius * 1.35);
+          ctx.quadraticCurveTo(dir * 13, -bull.radius * 0.7, dir * 3, -bull.radius * 0.55);
+          ctx.closePath();
+          ctx.fillStyle = '#c084fc';
+          ctx.fill();
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Tranchant lilas lumineux sur la corne
+          ctx.beginPath();
+          ctx.moveTo(dir * 7, -bull.radius * 0.35);
+          ctx.quadraticCurveTo(dir * 20, -bull.radius * 0.8, dir * 17, -bull.radius * 1.3);
+          ctx.strokeStyle = '#f5d0fe';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        });
+
+        // Diadème royal d'or ciselé sur le front
+        ctx.beginPath();
+        ctx.moveTo(-7, -bull.radius * 0.45);
+        ctx.lineTo(0, -bull.radius * 0.88);
+        ctx.lineTo(7, -bull.radius * 0.45);
+        ctx.lineTo(4, -bull.radius * 0.4);
+        ctx.lineTo(0, -bull.radius * 0.6);
+        ctx.lineTo(-4, -bull.radius * 0.4);
+        ctx.closePath();
+        ctx.fillStyle = '#fbbf24';
+        ctx.fill();
+        ctx.strokeStyle = '#78350f';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Gemme d'améthyste au centre du diadème
+        ctx.beginPath();
+        ctx.arc(0, -bull.radius * 0.55, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#c084fc';
+        ctx.fill();
+
+        // Yeux prédateurs lilas incandescents bien visibles
+        [-1, 1].forEach(dir => {
+          ctx.beginPath();
+          ctx.moveTo(dir * 3.5, -2);
+          ctx.lineTo(dir * 11, -6);
+          ctx.lineTo(dir * 8.5, 0);
+          ctx.closePath();
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+          ctx.strokeStyle = '#c084fc';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Pupille fente violette
+          ctx.beginPath();
+          ctx.moveTo(dir * 6, -3.5);
+          ctx.lineTo(dir * 6.5, -1);
+          ctx.strokeStyle = '#6b21a8';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        });
+
+        // Mentonnière aiguisée / masque spectral
+        ctx.beginPath();
+        ctx.moveTo(-5, 9);
+        ctx.lineTo(0, 14);
+        ctx.lineTo(5, 9);
+        ctx.strokeStyle = '#c084fc';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Tier 2 : 6 braises spectrales violettes en orbite
+        if (tier >= 2) {
+          const orbSpeed = time * 0.003;
+          for (let k = 0; k < 6; k++) {
+            const a = orbSpeed + (k * Math.PI * 2) / 6;
+            const ex = Math.cos(a) * (bull.radius + 12);
+            const ey = Math.sin(a) * (bull.radius + 12);
+            ctx.beginPath();
+            ctx.arc(ex, ey, 3, 0, Math.PI * 2);
+            ctx.fillStyle = '#f5d0fe';
+            ctx.fill();
+          }
+        }
+
+        // Tier 3 : Couronne d'ombre violette et éclairs du vide
+        if (tier >= 3) {
+          ctx.strokeStyle = '#f5d0fe';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(-14, -bull.radius - 8);
+          ctx.lineTo(0, -bull.radius - 22);
+          ctx.lineTo(14, -bull.radius - 8);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // BUNDLE ION (Titan Mecha Chasseur - Ion Prototype Inspired)
+      else if (bullCosmetic.id === 'bull_ion') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
+        ctx.save();
+
+        // Cornes Mecha profilées aérodynamiques en titane avec tranchant plasma rouge
         [-1, 1].forEach(dir => {
           ctx.beginPath();
           ctx.moveTo(dir * 8, -bull.radius * 0.3);
-          ctx.lineTo(dir * 22, -bull.radius * 1.15);
-          ctx.lineTo(dir * 14, -bull.radius * 1.25);
+          ctx.lineTo(dir * 22, -bull.radius * 1.2);
+          ctx.lineTo(dir * 14, -bull.radius * 1.3);
           ctx.lineTo(dir * 3, -bull.radius * 0.6);
           ctx.closePath();
           ctx.fillStyle = '#1e293b';
@@ -4139,14 +4230,14 @@
           // Lame laser tranchante rouge sur la corne
           ctx.beginPath();
           ctx.moveTo(dir * 8, -bull.radius * 0.3);
-          ctx.lineTo(dir * 22, -bull.radius * 1.15);
+          ctx.lineTo(dir * 22, -bull.radius * 1.2);
           ctx.strokeStyle = '#ef4444';
           ctx.lineWidth = 2.5;
           ctx.stroke();
         });
 
-        // 3. Visage Mecha : Visière optique angulaire agressive rouge néon
-        const eyePulse = 0.8 + 0.2 * Math.sin(time * 0.008);
+        // Visage Mecha : Visière optique angulaire agressive rouge néon
+        const eyePulse = 0.85 + 0.15 * Math.sin(time * 0.008);
         [-1, 1].forEach(dir => {
           ctx.beginPath();
           ctx.moveTo(dir * 3, -3);
@@ -4161,7 +4252,7 @@
           ctx.stroke();
         });
 
-        // 4. Cœur réacteur hexagonal au centre de la poitrine
+        // Cœur réacteur hexagonal au centre de la poitrine
         ctx.beginPath();
         for (let a = 0; a < 6; a++) {
           const ang = (a * Math.PI) / 3;
@@ -4177,7 +4268,7 @@
         ctx.lineWidth = 1.2;
         ctx.stroke();
 
-        // 5. Grille de ventilation mecha (menton agressif au lieu de sourire cartoon)
+        // Grille de ventilation mecha
         ctx.strokeStyle = '#64748b';
         ctx.lineWidth = 1.5;
         for (let g = 0; g < 3; g++) {
@@ -4220,16 +4311,10 @@
         ctx.restore();
       }
 
-      // A.7 bull_kuronami (Oni des Abysses - Kuronami Inspired)
-      // Masque Oni féroce, cornes rubis dentelées, fentes d'yeux écarlates, mâchoire de démon et sillage d'encre
-      if (bullCosmetic.id === 'bull_kuronami') {
+      // BUNDLE KURONAMI (Oni des Abysses - Kuronami Inspired)
+      else if (bullCosmetic.id === 'bull_kuronami') {
         const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
         ctx.save();
-        const inkOsc = Math.sin(time * 0.008) * 3;
-        ctx.fillStyle = 'rgba(2, 6, 23, 0.65)';
-        ctx.beginPath();
-        ctx.ellipse(0, bull.radius + 2, 14 + inkOsc, 6, 0, 0, Math.PI * 2);
-        ctx.fill();
 
         // Cornes Oni dentelées rouge rubis
         [-1, 1].forEach(dir => {
@@ -4301,34 +4386,10 @@
         ctx.restore();
       }
 
-      // Couleur du corps du taureau
-      let bodyFill = bullCosmetic.bodyColor;
-
-      // A.2 bull_magma (Magma) : Impulsion de couleur cyclique entre rouge sombre #7f1d1d et orange lave #ea580c
-      if (bullCosmetic.id === 'bull_magma') {
-        const t = (Math.sin(time * 0.004) + 1) * 0.5; // 0 à 1
-        const r = Math.round(127 + (234 - 127) * t);
-        const g = Math.round(29 + (88 - 29) * t);
-        const b = Math.round(29 + (12 - 29) * t);
-        bodyFill = `rgb(${r},${g},${b})`;
-      } else if (bullCosmetic.id === 'bull_blackhole') {
-        bodyFill = '#000000'; // Disque noir pur
-      }
-
-      // Corps du taureau
-      ctx.beginPath();
-      ctx.arc(0, 0, bull.radius, 0, Math.PI * 2);
-      ctx.fillStyle = bodyFill;
-      ctx.fill();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = strokeColor;
-      ctx.stroke();
-
-      // Éléments visuels classiques réservés uniquement aux skins standards hors bundle
-      if (!bullCosmetic.isBundlePiece) {
+      // SKINS CLASSIQUES HORS BUNDLE (visage cartoon standard)
+      else {
         // Cornes géométriques standard
         ctx.fillStyle = bullCosmetic.hornColor;
-        // Corne gauche
         ctx.beginPath();
         ctx.moveTo(-8, -bull.radius * 0.4);
         ctx.lineTo(-18, -bull.radius * 0.9);
@@ -4339,7 +4400,6 @@
         ctx.strokeStyle = strokeColor;
         ctx.stroke();
 
-        // Corne droite
         ctx.beginPath();
         ctx.moveTo(8, -bull.radius * 0.4);
         ctx.lineTo(18, -bull.radius * 0.9);
