@@ -6169,6 +6169,28 @@
         }
       },
 
+      requestInterstitialAd(onComplete) {
+        if (typeof window.adBreak === 'function' && this.config.adsenseClient) {
+          window.adBreak({
+            type: 'next',
+            name: 'interstitial',
+            beforeAd: () => { if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(0, audio.ctx.currentTime); },
+            afterAd: () => { if (audio && audio.masterGain && audio.ctx) audio.masterGain.gain.setValueAtTime(audio.isMuted ? 0 : 0.45, audio.ctx.currentTime); if (typeof onComplete === 'function') onComplete(); },
+            adBreakDone: () => { if (typeof onComplete === 'function') onComplete(); }
+          });
+          return;
+        }
+
+        if (typeof window.gdsdk !== 'undefined' && typeof window.gdsdk.showAd === 'function' && this.config.gdGameId) {
+          window.gdsdk.showAd()
+            .then(() => { if (typeof onComplete === 'function') onComplete(); })
+            .catch(() => { if (typeof onComplete === 'function') onComplete(); });
+          return;
+        }
+
+        if (typeof onComplete === 'function') onComplete();
+      },
+
       requestRewardedAd(rewardType, onComplete) {
         // 1. Google H5 Games Ad Placement API (si configuré)
         if (typeof window.adBreak === 'function' && this.config.adsenseClient) {
@@ -6218,6 +6240,7 @@
         showRewardedVideoAd(rewardType, onComplete);
       }
     };
+    window.RondoAdManager = RondoAdManager;
 
     // --- SYSTÈME DE PUBLICITÉ VIDÉO RÉCOMPENSÉE (15S INTERACTIVES) ---
     let rewardedAdTimer = null;
