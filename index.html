@@ -17,12 +17,30 @@
   <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 
   <!-- GAMEDISTRIBUTION HTML5 SDK -->
-  <script>
+  <script type="text/javascript">
     window["GD_OPTIONS"] = {
-      gameId: "9577a699f06942cf8e7d040647563359",
-      onEvent: function(event) {
-        if (window.RondoAdManager && typeof window.RondoAdManager.handleGDEvent === 'function') {
-          window.RondoAdManager.handleGDEvent(event);
+      "gameId": "9577a699f06942cf8e7d040647563359",
+      "onEvent": function(event) {
+        switch (event.name) {
+          case "SDK_GAME_START":
+            if (window.RondoAdManager && typeof window.RondoAdManager.handleGDEvent === 'function') {
+              window.RondoAdManager.handleGDEvent(event);
+            }
+            break;
+          case "SDK_GAME_PAUSE":
+            if (window.RondoAdManager && typeof window.RondoAdManager.handleGDEvent === 'function') {
+              window.RondoAdManager.handleGDEvent(event);
+            }
+            break;
+          case "SDK_GDPR_TRACKING":
+            break;
+          case "SDK_GDPR_TARGETING":
+            break;
+          case "SDK_REWARDED_WATCH_COMPLETE":
+            if (window.RondoAdManager && typeof window.RondoAdManager.handleGDEvent === 'function') {
+              window.RondoAdManager.handleGDEvent(event);
+            }
+            break;
         }
       }
     };
