@@ -1743,12 +1743,41 @@
       opacity: 0.92;
     }
 
-    /* Modal Vidéo Récompensée (5s Countdown) */
+    /* Modal Vidéo Récompensée (15s Countdown) */
     .rewarded-ad-box {
       max-width: 380px;
       background: var(--bg-panel);
       position: relative;
       padding: 16px;
+    }
+
+    .ad-top-close-btn {
+      background: rgba(15, 23, 42, 0.08);
+      border: 1.5px solid rgba(15, 23, 42, 0.2);
+      border-radius: 999px;
+      min-width: 30px;
+      height: 30px;
+      padding: 0 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #64748b;
+      cursor: not-allowed;
+      transition: all 0.2s ease;
+    }
+
+    .ad-top-close-btn.is-active {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
+    }
+
+    .ad-top-close-btn.is-active:hover {
+      transform: scale(1.08);
     }
 
     .ad-progress-bar-container {
@@ -2682,6 +2711,10 @@
             <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line></svg>
             Reset vidéos (3/3)
           </button>
+          <button class="btn-link-subtle" id="btn-reset-continue-video" title="Réinitialiser la pub reprise Game Over (2/2)">
+            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            Reset reprise vidéo (2/2)
+          </button>
         </div>
 
         <button class="btn-chunky btn-shop-close" id="btn-close-daily" style="margin-top: 8px; width: 100%;">
@@ -2690,7 +2723,7 @@
       </div>
     </div>
 
-    <!-- Overlay Vidéo Récompensée (Simulation 5s Rewarded Ad) -->
+    <!-- Overlay Vidéo Récompensée (Simulation 15s Rewarded Ad) -->
     <div class="overlay hidden" id="rewarded-ad-modal" style="z-index: 95;">
       <div class="modal-box rewarded-ad-box">
         <div class="ad-progress-bar-container">
@@ -2699,10 +2732,18 @@
 
         <div class="rewarded-ad-header">
           <span class="ad-badge-tag">PUBLICITÉ RÉCOMPENSÉE</span>
-          <span class="ad-countdown-pill" id="ad-countdown-badge">
-            <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span id="ad-countdown-sec">5s</span>
-          </span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="ad-countdown-pill" id="ad-countdown-badge">
+              <svg class="svg-icon" viewBox="0 0 24 24" style="width: 12px; height: 12px; vertical-align: -0.15em;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span id="ad-countdown-sec">15s</span>
+            </span>
+            <button class="ad-top-close-btn" id="btn-ad-top-close" title="Fermer la vidéo" disabled>
+              <span id="ad-top-close-timer">15s</span>
+              <span id="ad-top-close-icon" class="hidden">
+                <svg class="svg-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </span>
+            </button>
+          </div>
         </div>
 
         <div class="ad-video-mockup">
@@ -2727,13 +2768,13 @@
 
         <div class="ad-footer">
           <p class="ad-disclaimer" id="ad-disclaimer-text">
-            Regardez encore <strong id="ad-seconds-left">5</strong> secondes pour débloquer votre récompense...
+            Regardez la vidéo (encore <strong id="ad-seconds-left">15</strong>s) pour débloquer votre récompense...
           </p>
           <button class="btn-chunky btn-action-large btn-ad-claim-active hidden" id="btn-ad-claim-reward">
-            <span>RÉCUPÉRER MA RÉCOMPENSE</span>
+            <span id="btn-ad-claim-text">RÉCUPÉRER MA RÉCOMPENSE</span>
           </button>
           <button class="btn-chunky btn-action-large" id="btn-ad-close" disabled style="background: #e2e8f0; color: #64748b; font-size: 15px; cursor: not-allowed; width: 100%;">
-            <span>PATIENTEZ... (5s)</span>
+            <span id="btn-ad-close-text">PATIENTEZ... (15s)</span>
           </button>
         </div>
       </div>
@@ -3889,6 +3930,54 @@
     }
 
     let currentContinueType = 'gem'; // 'gem' ou 'video'
+    const MAX_DAILY_CONTINUE_VIDEOS = 2; // 2 reprises par vidéo max par 24h
+    const CONTINUE_VIDEO_COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes d'intervalle minimum entre 2 offres vidéo
+
+    function getDailyContinueVideosCount() {
+      const today = getTodayString();
+      const savedDate = localStorage.getItem('rondo_continue_video_date') || '';
+      if (savedDate !== today) {
+        localStorage.setItem('rondo_continue_video_date', today);
+        localStorage.setItem('rondo_continue_video_count', '0');
+        return 0;
+      }
+      return parseInt(localStorage.getItem('rondo_continue_video_count') || '0', 10);
+    }
+
+    function getLastContinueVideoTimestamp() {
+      return parseInt(localStorage.getItem('rondo_continue_video_last_ts') || '0', 10);
+    }
+
+    function recordContinueVideoUsed() {
+      const today = getTodayString();
+      const current = getDailyContinueVideosCount();
+      localStorage.setItem('rondo_continue_video_date', today);
+      localStorage.setItem('rondo_continue_video_count', (current + 1).toString());
+      localStorage.setItem('rondo_continue_video_last_ts', Date.now().toString());
+    }
+
+    function getContinueVideoAvailability() {
+      const count = getDailyContinueVideosCount();
+      if (count >= MAX_DAILY_CONTINUE_VIDEOS) {
+        return { available: false, reason: 'daily_limit', remaining: 0 };
+      }
+      const lastTs = getLastContinueVideoTimestamp();
+      const elapsed = Date.now() - lastTs;
+      if (lastTs > 0 && elapsed < CONTINUE_VIDEO_COOLDOWN_MS) {
+        const remainingMs = CONTINUE_VIDEO_COOLDOWN_MS - elapsed;
+        const remainingMin = Math.ceil(remainingMs / 60000);
+        return { 
+          available: false, 
+          reason: 'cooldown', 
+          remainingMin: remainingMin, 
+          remaining: Math.max(0, MAX_DAILY_CONTINUE_VIDEOS - count) 
+        };
+      }
+      return { 
+        available: true, 
+        remaining: Math.max(0, MAX_DAILY_CONTINUE_VIDEOS - count) 
+      };
+    }
 
     function setupContinueOffer() {
       const wrap = document.getElementById('continue-ad-wrap');
@@ -3898,27 +3987,34 @@
         return;
       }
 
-      // Proposer une vidéo gratuite au lieu de demander des gemmes arrive plutôt rarement (20% de probabilité)
-      // Les 80% du temps restants, continuer demande 5 Gemmes
-      const isRareVideo = (Math.random() < 0.20);
-      currentContinueType = isRareVideo ? 'video' : 'gem';
-
+      // Proposer une vidéo selon la limite sur 24h et l'intervalle de cooldown
+      const status = getContinueVideoAvailability();
       const btn = document.getElementById('btn-continue-run');
       const iconEl = document.getElementById('continue-btn-icon');
       const mainEl = document.getElementById('continue-btn-main');
       const subEl = document.getElementById('continue-btn-sub');
 
-      if (btn && iconEl && mainEl && subEl) {
-        if (isRareVideo) {
+      if (status.available) {
+        currentContinueType = 'video';
+        if (btn && iconEl && mainEl && subEl) {
           btn.className = 'btn-continue-ad is-video';
           iconEl.innerHTML = SVG_ICONS.video;
-          mainEl.textContent = 'OFFRE RARE : REPRENDRE (+1 VIE)';
-          subEl.textContent = '1 Vidéo Gratuite au lieu de 5 Gemmes !';
-        } else {
+          mainEl.textContent = 'OFFRE VIDÉO : REPRENDRE (+1 VIE)';
+          subEl.textContent = `Vidéo 15s • (${status.remaining}/${MAX_DAILY_CONTINUE_VIDEOS} restantes aujourd’hui)`;
+        }
+      } else {
+        currentContinueType = 'gem';
+        if (btn && iconEl && mainEl && subEl) {
           btn.className = 'btn-continue-ad is-gem';
           iconEl.innerHTML = SVG_ICONS.gem;
           mainEl.textContent = 'REPRENDRE LA PARTIE (5 GEMMES)';
-          subEl.textContent = 'Reprenez votre score exact • 1 fois par partie';
+          if (status.reason === 'daily_limit') {
+            subEl.textContent = `Limite vidéo atteinte (0/${MAX_DAILY_CONTINUE_VIDEOS}) • 5 Gemmes pour reprendre`;
+          } else if (status.reason === 'cooldown') {
+            subEl.textContent = `Offre vidéo en recharge (${status.remainingMin} min) • 5 Gemmes pour reprendre`;
+          } else {
+            subEl.textContent = 'Reprenez votre score exact • 1 fois par partie';
+          }
         }
       }
 
@@ -5994,11 +6090,11 @@
         }
       }
       if (bankSub) {
-        bankSub.textContent = `Visionnez 5s pour gagner +5 Gemmes (${remaining}/${MAX_DAILY_VIDEOS} restantes aujourd’hui)`;
+        bankSub.textContent = `Visionnez 15s pour gagner +5 Gemmes (${remaining}/${MAX_DAILY_VIDEOS} restantes aujourd’hui)`;
       }
     }
 
-    // --- SYSTÈME DE PUBLICITÉ VIDÉO RÉCOMPENSÉE (5S INTERACTIVES) ---
+    // --- SYSTÈME DE PUBLICITÉ VIDÉO RÉCOMPENSÉE (15S INTERACTIVES) ---
     let rewardedAdTimer = null;
     let rewardedAdCallback = null;
 
@@ -6011,7 +6107,12 @@
       const countdownBadge = document.getElementById('ad-countdown-badge');
       const disclaimerText = document.getElementById('ad-disclaimer-text');
       const btnClaim = document.getElementById('btn-ad-claim-reward');
+      const btnClaimText = document.getElementById('btn-ad-claim-text');
       const btnClose = document.getElementById('btn-ad-close');
+      const btnCloseText = document.getElementById('btn-ad-close-text');
+      const btnTopClose = document.getElementById('btn-ad-top-close');
+      const topCloseTimer = document.getElementById('ad-top-close-timer');
+      const topCloseIcon = document.getElementById('ad-top-close-icon');
 
       if (!modal) return;
       modal.classList.remove('hidden');
@@ -6021,16 +6122,43 @@
       btnClose.style.display = 'block';
       btnClose.disabled = true;
 
-      let secondsLeft = 5;
-      countdownBadge.innerHTML = `${SVG_ICONS.timer} <span>${secondsLeft}s</span>`;
+      if (btnTopClose) {
+        btnTopClose.disabled = true;
+        btnTopClose.classList.remove('is-active');
+      }
+      if (topCloseTimer) {
+        topCloseTimer.classList.remove('hidden');
+        topCloseTimer.textContent = '15s';
+      }
+      if (topCloseIcon) {
+        topCloseIcon.classList.add('hidden');
+      }
+
+      // Adapter le libellé de récupération selon le type de récompense
+      if (btnClaimText) {
+        if (rewardType === 'continue_game') {
+          btnClaimText.innerHTML = `<span style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">${SVG_ICONS.zap} REPRENDRE LA PARTIE (+1 VIE)</span>`;
+        } else if (rewardType === 'free_gems') {
+          btnClaimText.innerHTML = `<span style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">${SVG_ICONS.gem} RÉCUPÉRER MES 5 GEMMES</span>`;
+        } else {
+          btnClaimText.innerHTML = `<span style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">${SVG_ICONS.check} RÉCUPÉRER MA RÉCOMPENSE</span>`;
+        }
+      }
+
+      let secondsLeft = 15;
+      countdownBadge.innerHTML = `${SVG_ICONS.timer} <span id="ad-countdown-sec">${secondsLeft}s</span>`;
       countdownBadge.style.color = '#ef4444';
       countdownBadge.style.background = '#fee2e2';
       countdownBadge.style.borderColor = '#ef4444';
-      disclaimerText.innerHTML = `Regardez encore <strong>${secondsLeft}</strong> secondes pour débloquer votre récompense...`;
-      btnClose.textContent = `PATIENTEZ... (${secondsLeft}s)`;
+      disclaimerText.innerHTML = `Regardez la vidéo (encore <strong id="ad-seconds-left">${secondsLeft}</strong>s) pour débloquer votre récompense...`;
+      if (btnCloseText) {
+        btnCloseText.textContent = `PATIENTEZ... (${secondsLeft}s)`;
+      } else {
+        btnClose.textContent = `PATIENTEZ... (${secondsLeft}s)`;
+      }
 
       setTimeout(() => {
-        fillEl.style.transition = 'width 5s linear';
+        fillEl.style.transition = 'width 15s linear';
         fillEl.style.width = '100%';
       }, 50);
 
@@ -6040,19 +6168,32 @@
         secondsLeft--;
         audio.playTick();
         if (secondsLeft > 0) {
-          countdownBadge.innerHTML = `${SVG_ICONS.timer} <span>${secondsLeft}s</span>`;
-          disclaimerText.innerHTML = `Regardez encore <strong>${secondsLeft}</strong> secondes pour débloquer votre récompense...`;
-          btnClose.textContent = `PATIENTEZ... (${secondsLeft}s)`;
+          countdownBadge.innerHTML = `${SVG_ICONS.timer} <span id="ad-countdown-sec">${secondsLeft}s</span>`;
+          disclaimerText.innerHTML = `Regardez la vidéo (encore <strong id="ad-seconds-left">${secondsLeft}</strong>s) pour débloquer votre récompense...`;
+          if (btnCloseText) {
+            btnCloseText.textContent = `PATIENTEZ... (${secondsLeft}s)`;
+          } else {
+            btnClose.textContent = `PATIENTEZ... (${secondsLeft}s)`;
+          }
+          if (topCloseTimer) topCloseTimer.textContent = `${secondsLeft}s`;
         } else {
           clearInterval(rewardedAdTimer);
           rewardedAdTimer = null;
-          countdownBadge.innerHTML = `${SVG_ICONS.check} <span>Prêt !</span>`;
+          countdownBadge.innerHTML = `${SVG_ICONS.check} <span>Bravo !</span>`;
           countdownBadge.style.color = '#10b981';
           countdownBadge.style.background = '#d1fae5';
           countdownBadge.style.borderColor = '#10b981';
-          disclaimerText.innerHTML = `<strong>Félicitations !</strong> Récompense débloquée !`;
+          disclaimerText.innerHTML = `<strong style="color: #10b981;">Bravo !</strong> Récompense débloquée avec succès !`;
           btnClose.style.display = 'none';
           btnClaim.classList.remove('hidden');
+
+          if (btnTopClose) {
+            btnTopClose.disabled = false;
+            btnTopClose.classList.add('is-active');
+          }
+          if (topCloseTimer) topCloseTimer.classList.add('hidden');
+          if (topCloseIcon) topCloseIcon.classList.remove('hidden');
+
           audio.playRewardFanfare();
         }
       }, 1000);
@@ -6300,7 +6441,7 @@
               Vidéos Gratuites (3 max / jour)
             </span>
             <span class="bank-free-sub" id="bank-free-sub-text">
-              Visionnez 5s pour gagner +5 Gemmes (${remaining}/${MAX_DAILY_VIDEOS} restantes aujourd’hui)
+              Visionnez 15s pour gagner +5 Gemmes (${remaining}/${MAX_DAILY_VIDEOS} restantes aujourd’hui)
             </span>
           </div>
           <button class="btn-bank-free-watch" id="btn-bank-free-watch" onclick="watchVideoForGems()" ${remaining <= 0 ? 'disabled style="background:#94a3b8;cursor:not-allowed;"' : ''}>
@@ -6814,10 +6955,22 @@
       });
     }
 
+    const btnAdTopClose = document.getElementById('btn-ad-top-close');
+    if (btnAdTopClose) {
+      btnAdTopClose.addEventListener('click', () => {
+        if (!btnAdTopClose.disabled) {
+          completeRewardedAd();
+        }
+      });
+    }
+
     const btnContinueRun = document.getElementById('btn-continue-run');
     function handleContinueClick() {
       if (currentContinueType === 'video') {
-        showRewardedVideoAd('continue_game', () => resumeGameAfterAd());
+        showRewardedVideoAd('continue_game', () => {
+          recordContinueVideoUsed();
+          resumeGameAfterAd();
+        });
       } else {
         if (isTestGemMode) {
           resumeGameAfterAd();
@@ -6847,6 +7000,17 @@
         localStorage.setItem('rondo_video_daily_count', '0');
         updateVideoLimitUI();
         showToast('Compteur de vidéos réinitialisé (3/3 disponibles) !', 'refresh');
+      });
+    }
+
+    const btnResetContinueVideo = document.getElementById('btn-reset-continue-video');
+    if (btnResetContinueVideo) {
+      btnResetContinueVideo.addEventListener('click', () => {
+        audio.init();
+        audio.playFlick();
+        localStorage.setItem('rondo_continue_video_count', '0');
+        localStorage.removeItem('rondo_continue_video_last_ts');
+        showToast('Compteur reprise vidéo réinitialisé (2/2 disponibles) !', 'refresh');
       });
     }
 
