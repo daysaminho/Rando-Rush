@@ -604,12 +604,24 @@
       box-shadow: var(--hard-shadow-sm);
     }
 
-    .btn-install-app {
+    .btn-icon-only.btn-install-app {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: var(--bg-panel);
       color: var(--text-main);
-      font-size: 14px;
-      padding: 10px 16px;
-      box-shadow: var(--hard-shadow-xs);
+      border: var(--panel-border);
+      border-radius: 12px;
+      box-shadow: var(--hard-shadow-sm);
+    }
+
+    .btn-icon-only.btn-install-app svg {
+      width: 19px;
+      height: 19px;
+      stroke-width: 2.6;
     }
 
     /* Masqué automatiquement si déjà installé en mode standalone */
@@ -746,24 +758,25 @@
       pointer-events: auto;
     }
 
-    /* Bouton JOUER Ultime & Juicy */
+    /* Bouton JOUER Ultime & Juicy (Style Supercell / Brawl Stars) */
     .btn-lobby-play {
       position: relative;
       width: 100%;
-      height: 62px;
+      height: 66px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
-      color: #052e16;
+      background: linear-gradient(180deg, #4ade80 0%, #22c55e 55%, #15803d 100%);
+      color: #ffffff;
       border: 3.5px solid #0f172a;
-      border-radius: 20px;
-      box-shadow: 0 6px 0 #0f172a, 0 12px 20px rgba(0, 0, 0, 0.35);
+      border-radius: 22px;
+      box-shadow: 0 7px 0 #14532d, 0 10px 0 #0f172a, 0 16px 26px rgba(34, 197, 94, 0.4);
       font-family: var(--font-ui);
       font-size: 26px;
       font-weight: 900;
       letter-spacing: 1.5px;
+      text-shadow: 0 2px 0 #14532d, 0 3px 6px rgba(0, 0, 0, 0.45);
       cursor: pointer;
       overflow: hidden;
       transition: transform 0.08s ease, box-shadow 0.08s ease;
@@ -772,21 +785,22 @@
 
     @keyframes playLobbyBreathe {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.025); box-shadow: 0 7px 0 #0f172a, 0 16px 26px rgba(34, 197, 94, 0.45); }
+      50% { transform: scale(1.025); box-shadow: 0 8px 0 #14532d, 0 11px 0 #0f172a, 0 20px 30px rgba(34, 197, 94, 0.5); }
     }
 
     .btn-lobby-play:active {
-      transform: translateY(6px) scale(0.98);
-      box-shadow: 0 0 0 #0f172a, 0 4px 10px rgba(0, 0, 0, 0.2);
+      transform: translateY(7px) scale(0.98);
+      box-shadow: 0 0 0 #14532d, 0 2px 0 #0f172a, 0 4px 10px rgba(0, 0, 0, 0.2);
       animation: none;
     }
 
     .play-icon-svg {
       width: 26px;
       height: 26px;
-      fill: #052e16;
+      fill: #ffffff;
       stroke: #0f172a;
       stroke-width: 2.2;
+      filter: drop-shadow(0 2px 0 #14532d);
     }
 
     /* Reflet de brillance du bouton Play */
@@ -821,39 +835,64 @@
       justify-content: center;
       gap: 8px;
       height: 48px;
-      background: var(--bg-panel);
-      color: var(--text-main);
-      border: var(--panel-border);
-      box-shadow: var(--hard-shadow-sm);
-      border-radius: 14px;
       font-family: var(--font-ui);
       font-size: 14px;
       font-weight: 800;
+      letter-spacing: 0.5px;
       cursor: pointer;
       transition: transform 0.08s ease, box-shadow 0.08s ease;
     }
 
-    .lobby-dock-item:active {
-      transform: translateY(4px);
-      box-shadow: var(--hard-shadow-active);
-    }
-
     .btn-dock-shop {
-      background: #fef08a;
-      color: #713f12;
+      background: linear-gradient(180deg, #fde047 0%, #eab308 100%);
+      color: #451a03;
+      border: 3px solid #0f172a;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #78350f, 0 7px 0 #0f172a, 0 10px 16px rgba(0, 0, 0, 0.25);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .btn-dock-shop:active {
+      transform: translateY(5px);
+      box-shadow: 0 0 0 #78350f, 0 2px 0 #0f172a;
     }
     body.dark-mode .btn-dock-shop {
-      background: #854d0e;
-      color: #fef08a;
+      background: linear-gradient(180deg, #facc15 0%, #ca8a04 100%);
+      color: #451a03;
     }
 
     .btn-dock-daily {
-      background: #bae6fd;
-      color: #0369a1;
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+      color: #ffffff;
+      border: 3px solid #0f172a;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #0369a1, 0 7px 0 #0f172a, 0 10px 16px rgba(0, 0, 0, 0.25);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+    }
+    .btn-dock-daily:active {
+      transform: translateY(5px);
+      box-shadow: 0 0 0 #0369a1, 0 2px 0 #0f172a;
     }
     body.dark-mode .btn-dock-daily {
-      background: #0369a1;
-      color: #e0f2fe;
+      background: linear-gradient(180deg, #0ea5e9 0%, #0369a1 100%);
+      color: #ffffff;
+    }
+
+    .daily-badge-dot {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 14px;
+      height: 14px;
+      background: #ef4444;
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.65);
+      border-radius: 50%;
+      z-index: 5;
+      animation: badgePulse 1.6s infinite;
+    }
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.18); }
     }
 
     .dock-icon-circle {
@@ -3838,6 +3877,21 @@
     let centerY = 0;
     let rondoRadius = 140;
 
+    function updateDimensions() {
+      const isMenu = (currentState === STATE.MENU);
+      centerX = width / 2;
+      if (isMenu) {
+        // En mode lobby/accueil, centrer le rondo dans l'espace disponible
+        // entre le titre du haut et le gros bouton JOUER du bas (zéro chevauchement !)
+        centerY = height * 0.43;
+        rondoRadius = Math.min(width * 0.33, height * 0.17, 132);
+      } else {
+        // En match / compte à rebours : arène centrée pour un confort maximal de tir
+        centerY = height * 0.50;
+        rondoRadius = Math.min(width * 0.38, 165);
+      }
+    }
+
     function resize() {
       const rect = container.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -3847,10 +3901,11 @@
       canvas.height = height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      centerX = width / 2;
-      centerY = height / 2 + 25;
-      rondoRadius = Math.min(width * 0.38, 165);
+      updateDimensions();
       applyEquippedPitchSkin();
+      if (players && players.length > 0) {
+        updatePlayerPositions(performance.now());
+      }
     }
     window.addEventListener('resize', resize);
     window.addEventListener('orientationchange', () => setTimeout(resize, 100));
@@ -3902,6 +3957,7 @@
     let hasUsedContinueThisRun = false;
 
     function initGame() {
+      updateDimensions();
       score = 0;
       hudScore.textContent = '0';
       carrierMaxTime = 2.8;
@@ -4162,6 +4218,25 @@
     }
 
     function update(time, dt) {
+      if (currentState === STATE.MENU) {
+        // Animation Idle Vivante en mode Lobby (Lévitation douce, respiration, taureau animé)
+        updatePlayerPositions(time);
+        if (players && players.length > 0) {
+          players.forEach((p, i) => {
+            p.bounceY = Math.sin(time * 0.0025 + i * 1.25) * 3.5;
+          });
+        }
+        bull.x = centerX;
+        bull.y = centerY + Math.sin(time * 0.002) * 3;
+        bull.angle = Math.sin(time * 0.0012) * 0.22;
+        const carrier = players[currentCarrierIdx];
+        if (carrier) {
+          ball.x = carrier.x;
+          ball.y = carrier.y + (carrier.bounceY || 0);
+        }
+        return;
+      }
+
       if (currentState !== STATE.PLAYING) return;
 
       updatePlayerPositions(time);
@@ -5934,9 +6009,9 @@
 
     function startLaunchCountdown() {
       clearCountdownTimers();
-      initGame();
       currentState = STATE.COUNTDOWN;
       setMenuHudState(false);
+      initGame();
 
       startOverlay.classList.add('hidden');
       gameoverOverlay.classList.add('hidden');
@@ -6157,6 +6232,8 @@
       clearCountdownTimers();
       currentState = STATE.COUNTDOWN;
       setMenuHudState(false);
+      updateDimensions();
+      updatePlayerPositions(performance.now());
       countdownOverlay.classList.remove('hidden');
       setCountdownNumber('3', false);
 
@@ -7046,6 +7123,7 @@
       startOverlay.classList.remove('hidden');
       currentState = STATE.MENU;
       setMenuHudState(true);
+      updateDimensions();
       initGame();
     });
 
