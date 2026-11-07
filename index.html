@@ -2873,8 +2873,8 @@
           sub: 'Lumière Céleste & Orfèvrerie',
           tagline: 'Sanctuaire Sacré • Évolution Par Passes',
           badgeText: '-33% (1 OFFERT)',
-          bundlePrice: 100,
-          originalPrice: 150,
+          bundlePrice: 2000,
+          originalPrice: 3000,
           items: {
             pitch: 'pitch_sovereign',
             bull: 'bull_sovereign',
@@ -2887,8 +2887,8 @@
           sub: 'Aérodynamisme & Noyau Plasma',
           tagline: 'Accélérateur de Particules • Évolution Par Passes',
           badgeText: '-33% (1 OFFERT)',
-          bundlePrice: 100,
-          originalPrice: 150,
+          bundlePrice: 2000,
+          originalPrice: 3000,
           items: {
             pitch: 'pitch_ion',
             bull: 'bull_ion',
@@ -2901,8 +2901,8 @@
           sub: 'Océan Turquoise & Lames d’Encre',
           tagline: 'Lames des Marées • Évolution Par Passes',
           badgeText: '-33% (1 OFFERT)',
-          bundlePrice: 100,
-          originalPrice: 150,
+          bundlePrice: 2000,
+          originalPrice: 3000,
           items: {
             pitch: 'pitch_kuronami',
             bull: 'bull_kuronami',
@@ -3463,12 +3463,11 @@
     // Migration immédiate de l'inventaire en cas d'anciens identifiants
     playerInventory = playerInventory.map(id => ID_ALIASES[id] || id);
 
-    // --- GESTION DES GEMMES (PROGRESSION OFFICIELLE DU JOUEUR) ---
-    let playerGems = parseInt(localStorage.getItem('rondo_gems') || localStorage.getItem('rondo_real_gems') || '15', 10);
-    // Nettoyage automatique des anciens soldes de test (99 999) pour rétablir les gemmes de départ normales
+    // --- GESTION DES GEMMES (PROGRESSION OFFICIELLE DU JOUEUR - DÉPART À 0 GEMME) ---
+    let playerGems = parseInt(localStorage.getItem('rondo_gems') || '0', 10);
+    // Nettoyage automatique des anciens soldes de test (99 999) pour remettre le solde normal
     if (isNaN(playerGems) || playerGems >= 99999) {
-      playerGems = parseInt(localStorage.getItem('rondo_real_gems') || '15', 10);
-      if (isNaN(playerGems) || playerGems >= 99999) playerGems = 15;
+      playerGems = 0;
     }
 
     function savePlayerData() {
@@ -6787,7 +6786,7 @@
             } else if (isOw) {
               return `<button class="btn-single-piece owned" onclick="equipCosmetic('${category}', '${item.id}')"><span>${item.name}</span><strong>Équiper</strong></button>`;
             } else {
-              return `<button class="btn-single-piece" onclick="buyCosmeticWithGems('${category}', '${item.id}', 50)"><span>${item.name}</span><strong>50 <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg></strong></button>`;
+              return `<button class="btn-single-piece" onclick="buyCosmeticWithGems('${category}', '${item.id}', 1000)"><span>${item.name}</span><strong>1 000 <svg class="svg-icon gem-icon" viewBox="0 0 24 24" style="width: 11px; height: 11px;"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"></polygon><line x1="2" y1="9" x2="22" y2="9"></line><line x1="12" y1="22" x2="8.5" y2="9"></line><line x1="12" y1="22" x2="15.5" y2="9"></line></svg></strong></button>`;
             }
           }
 
@@ -6826,7 +6825,7 @@
 
             ${mainCtaHtml}
 
-            <div class="bundle-single-items-title">Ou acheter individuellement (50 Gemmes / pièce) :</div>
+            <div class="bundle-single-items-title">Ou acheter individuellement (1 000 Gemmes / pièce) :</div>
             <div class="bundle-single-row">
               ${getPieceBtn('pitch', pitchItem)}
               ${getPieceBtn('bull', bullItem)}
