@@ -1568,49 +1568,49 @@
       return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
 
-    // --- REGISTRE CENTRAL DES SKINS (SKINS_CONFIG - 30 SKINS + 3 BUNDLES HAUT DE GAMME) ---
+    // --- REGISTRE CENTRAL DES SKINS (SKINS_CONFIG - 30 SKINS + 3 BUNDLES HAUT DE GAMME INSPIRÉS VALORANT) ---
     const SKINS_CONFIG = {
       bundles: [
         {
-          id: 'bundle_royal',
-          name: 'Dynastie Royale',
-          sub: 'Luxe & Or Ciselé',
-          tagline: 'Édition Haute Horlogerie',
+          id: 'bundle_sovereign',
+          name: 'Souverain',
+          sub: 'Lumière Céleste & Orfèvrerie',
+          tagline: 'Sanctuaire Sacré • Évolution Par Passes',
           badgeText: '-33% (1 OFFERT)',
           bundlePrice: 100,
           originalPrice: 150,
           items: {
-            pitch: 'pitch_royal',
-            bull: 'bull_royal',
-            team: 'team_royal'
+            pitch: 'pitch_sovereign',
+            bull: 'bull_sovereign',
+            team: 'team_sovereign'
           }
         },
         {
-          id: 'bundle_synthwave',
-          name: 'Matrix Synthwave',
-          sub: 'Néo-Arcade Cyber 1984',
-          tagline: 'Néons Fuchsia & Glitch Rétro',
+          id: 'bundle_ion',
+          name: 'Ion Prototype',
+          sub: 'Aérodynamisme & Noyau Plasma',
+          tagline: 'Accélérateur de Particules • Évolution Par Passes',
           badgeText: '-33% (1 OFFERT)',
           bundlePrice: 100,
           originalPrice: 150,
           items: {
-            pitch: 'pitch_synthwave',
-            bull: 'bull_synthwave',
-            team: 'team_synthwave'
+            pitch: 'pitch_ion',
+            bull: 'bull_ion',
+            team: 'team_ion'
           }
         },
         {
-          id: 'bundle_biohazard',
-          name: 'Bio-Hazard',
-          sub: 'Laboratoire & Plasma Vert',
-          tagline: 'Acier Trempé & Réacteur Nucléaire',
+          id: 'bundle_kuronami',
+          name: 'Kuronami',
+          sub: 'Tempête d’Encre & Océan Sombre',
+          tagline: 'Lames des Marées • Évolution Par Passes',
           badgeText: '-33% (1 OFFERT)',
           bundlePrice: 100,
           originalPrice: 150,
           items: {
-            pitch: 'pitch_biohazard',
-            bull: 'bull_biohazard',
-            team: 'team_biohazard'
+            pitch: 'pitch_kuronami',
+            bull: 'bull_kuronami',
+            team: 'team_kuronami'
           }
         }
       ],
@@ -1720,41 +1720,41 @@
           isAnimated: true
         },
         {
-          id: 'bull_royal',
-          name: 'Minotaure Midas',
+          id: 'bull_sovereign',
+          name: 'Spectre Obscur',
           category: 'bull',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_royal',
-          bodyColor: '#0f172a',
-          hornColor: '#fbbf24',
-          sub: 'Or Brossé & Sillage Midas',
+          bundleId: 'bundle_sovereign',
+          bodyColor: '#170b2c',
+          hornColor: '#c084fc',
+          sub: 'Nébuleuse Obscure & Cornes Améthyste',
           isAnimated: true,
           isBundlePiece: true
         },
         {
-          id: 'bull_synthwave',
-          name: 'Glitch Runner',
+          id: 'bull_ion',
+          name: 'Titan Mecha',
           category: 'bull',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_synthwave',
-          bodyColor: '#06b6d4',
-          hornColor: '#f43f5e',
-          sub: 'Hologramme Cyan & Glitch 84',
+          bundleId: 'bundle_ion',
+          bodyColor: '#1e293b',
+          hornColor: '#ef4444',
+          sub: 'Châssis Titane & Réacteurs Alerte',
           isAnimated: true,
           isBundlePiece: true
         },
         {
-          id: 'bull_biohazard',
-          name: 'Béhémoth Mutant',
+          id: 'bull_kuronami',
+          name: 'Oni des Abysses',
           category: 'bull',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_biohazard',
-          bodyColor: '#334155',
-          hornColor: '#22c55e',
-          sub: 'Acier & Plasma Vert Toxique',
+          bundleId: 'bundle_kuronami',
+          bodyColor: '#020617',
+          hornColor: '#dc2626',
+          sub: 'Armure Laquée Noire & Cornes Rubis',
           isAnimated: true,
           isBundlePiece: true
         }
@@ -1874,44 +1874,44 @@
           isAnimated: true
         },
         {
-          id: 'team_royal',
-          name: 'Garde Impériale',
+          id: 'team_sovereign',
+          name: 'Chevaliers Célestes',
           category: 'team',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_royal',
-          primaryColor: '#0f172a',
+          bundleId: 'bundle_sovereign',
+          primaryColor: '#f8fafc',
           accentColor: '#fbbf24',
-          numberColor: '#facc15',
-          sub: 'Armure Noire & Liséré Doré',
+          numberColor: '#0f172a',
+          sub: 'Blanc Pur & Plastron d’Or Céleste',
           isAnimated: true,
           isBundlePiece: true
         },
         {
-          id: 'team_synthwave',
-          name: 'Neon Riders',
+          id: 'team_ion',
+          name: 'Unité Prototype',
           category: 'team',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_synthwave',
-          primaryColor: '#06b6d4',
-          accentColor: '#ec4899',
+          bundleId: 'bundle_ion',
+          primaryColor: '#ffffff',
+          accentColor: '#00f0ff',
+          numberColor: '#0f172a',
+          sub: 'Polymère Blanc & Visière Cyan Plasma',
+          isAnimated: true,
+          isBundlePiece: true
+        },
+        {
+          id: 'team_kuronami',
+          name: 'Ninjas des Marées',
+          category: 'team',
+          price: null,
+          gemPrice: 50,
+          bundleId: 'bundle_kuronami',
+          primaryColor: '#0284c7',
+          accentColor: '#f8fafc',
           numberColor: '#ffffff',
-          sub: 'Dégradé Synthwave & Visière',
-          isAnimated: true,
-          isBundlePiece: true
-        },
-        {
-          id: 'team_biohazard',
-          name: 'Hazmat Squad',
-          category: 'team',
-          price: null,
-          gemPrice: 50,
-          bundleId: 'bundle_biohazard',
-          primaryColor: '#eab308',
-          accentColor: '#0f172a',
-          numberColor: '#22c55e',
-          sub: 'Combinaison Jaune & Logo Nucléaire',
+          sub: 'Bleu Océan & Lames Argent Fluide',
           isAnimated: true,
           isBundlePiece: true
         }
@@ -2061,53 +2061,53 @@
           isAnimated: true
         },
         {
-          id: 'pitch_royal',
-          name: 'Sanctuaire Doré',
+          id: 'pitch_sovereign',
+          name: 'Sanctuaire Céleste',
           category: 'pitch',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_royal',
-          lightBg: '#18181b',
-          darkBg: '#09090b',
+          bundleId: 'bundle_sovereign',
+          lightBg: '#0f0c1b',
+          darkBg: '#090712',
           lightLines: '#fbbf24',
           darkLines: '#f59e0b',
-          lightBorder: '#713f12',
+          lightBorder: '#78350f',
           darkBorder: '#451a03',
-          sub: 'Engrenages d’Or Concentriques',
+          sub: 'Runes d’Or Rotatives & Poussière Stellaire',
           isAnimated: true,
           isBundlePiece: true
         },
         {
-          id: 'pitch_synthwave',
-          name: 'Grille Synthwave',
+          id: 'pitch_ion',
+          name: 'Accélérateur Vectoriel',
           category: 'pitch',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_synthwave',
-          lightBg: '#050510',
-          darkBg: '#020208',
-          lightLines: '#f43f5e',
-          darkLines: '#e11d48',
-          lightBorder: '#06b6d4',
-          darkBorder: '#0891b2',
-          sub: 'Perspective & Scanlines CRT',
+          bundleId: 'bundle_ion',
+          lightBg: '#0b1120',
+          darkBg: '#050811',
+          lightLines: '#00f0ff',
+          darkLines: '#0284c7',
+          lightBorder: '#0369a1',
+          darkBorder: '#082f49',
+          sub: 'Grille Laser Défilante & Noyau Plasma',
           isAnimated: true,
           isBundlePiece: true
         },
         {
-          id: 'pitch_biohazard',
-          name: 'Réacteur Nucléaire',
+          id: 'pitch_kuronami',
+          name: 'Jardin des Tempêtes',
           category: 'pitch',
           price: null,
           gemPrice: 50,
-          bundleId: 'bundle_biohazard',
-          lightBg: '#1e293b',
-          darkBg: '#0f172a',
-          lightLines: '#22c55e',
-          darkLines: '#16a34a',
-          lightBorder: '#15803d',
-          darkBorder: '#14532d',
-          sub: 'Dalles Acier & Cuve Plasma',
+          bundleId: 'bundle_kuronami',
+          lightBg: '#0a0f1d',
+          darkBg: '#030712',
+          lightLines: '#38bdf8',
+          darkLines: '#0284c7',
+          lightBorder: '#075985',
+          darkBorder: '#0c4a6e',
+          sub: 'Ondulations Pluie & Vortex d’Encre Réactif',
           isAnimated: true,
           isBundlePiece: true
         }
@@ -2121,7 +2121,19 @@
       bull_solardemiurge: 'bull_solar',
       pitch_cybergrid: 'pitch_grid',
       pitch_magma: 'pitch_volcano',
-      pitch_void: 'pitch_space'
+      pitch_void: 'pitch_space',
+      bull_royal: 'bull_sovereign',
+      bull_synthwave: 'bull_ion',
+      bull_biohazard: 'bull_kuronami',
+      team_royal: 'team_sovereign',
+      team_synthwave: 'team_ion',
+      team_biohazard: 'team_kuronami',
+      pitch_royal: 'pitch_sovereign',
+      pitch_synthwave: 'pitch_ion',
+      pitch_biohazard: 'pitch_kuronami',
+      bundle_royal: 'bundle_sovereign',
+      bundle_synthwave: 'bundle_ion',
+      bundle_biohazard: 'bundle_kuronami'
     };
 
     // --- GESTION DE LA PERSISTANCE (ÉTOILES, INVENTAIRE & ÉQUIPEMENT) ---
@@ -2131,6 +2143,7 @@
     let playerInventory = [];
     try {
       playerInventory = JSON.parse(localStorage.getItem('rondo_inventory') || '[]');
+      playerInventory = playerInventory.map(id => ID_ALIASES[id] || id);
     } catch(e) {
       playerInventory = [];
     }
@@ -2911,6 +2924,40 @@
       [{ x: 0, y: 0 }, { x: 20, y: -60 }, { x: 35, y: -110 }, { x: 40, y: -140 }]
     ];
 
+    // Particules bundles Valorant (Souverain stardust & Kuronami pluie / ondes)
+    const SOVEREIGN_MOTES = [];
+    for (let i = 0; i < 24; i++) {
+      SOVEREIGN_MOTES.push({
+        xRatio: ((i * 41 + 17) % 100) / 100,
+        yBase: (i * 37) % 800,
+        size: 1.2 + (i % 3) * 0.8,
+        speed: 0.2 + (i % 4) * 0.1,
+        phase: i * 1.3
+      });
+    }
+
+    const KURONAMI_DROPS = [];
+    for (let i = 0; i < 28; i++) {
+      KURONAMI_DROPS.push({
+        xRatio: ((i * 29 + 11) % 100) / 100,
+        yBase: (i * 43) % 800,
+        len: 12 + (i % 4) * 6,
+        speed: 0.7 + (i % 3) * 0.25,
+        alpha: 0.22 + (i % 4) * 0.1
+      });
+    }
+
+    const KURONAMI_RIPPLES = [];
+    for (let i = 0; i < 6; i++) {
+      KURONAMI_RIPPLES.push({
+        xRatio: 0.2 + ((i * 31) % 60) / 100,
+        yRatio: 0.25 + ((i * 47) % 50) / 100,
+        maxRadius: 28 + (i % 3) * 12,
+        speed: 0.0018 + (i % 3) * 0.0006,
+        phase: i * 0.35
+      });
+    }
+
     // --- RENDERING CANVAS STRICTEMENT PLAYFUL FLAT & MOTEUR PROCÉDURAL ---
     function render(time) {
       time = time || performance.now();
@@ -3047,89 +3094,260 @@
         ctx.restore();
       }
 
-      // D.1 pitch_royal (Sanctuaire Doré) : Engrenages d'or ciselé et cercles concentriques rotatifs
-      if (pitchCosmetic.id === 'pitch_royal') {
+      // D.1 pitch_sovereign (Sanctuaire Céleste - Valorant Sovereign Inspired)
+      // Fond animé réactif au score : Poussières d'or flottantes, sceaux sacrés en rotation accélérée, halos divins
+      if (pitchCosmetic.id === 'pitch_sovereign') {
         ctx.save();
-        ctx.fillStyle = isDarkMode ? '#09090b' : '#18181b';
+        ctx.fillStyle = isDarkMode ? '#080611' : '#0f0c1b';
         ctx.fillRect(0, 0, width, height);
 
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
+        const speedMult = 1 + score * 0.09;
+
+        // Poussières d'or célestes flottantes en continu
+        ctx.fillStyle = '#fbbf24';
+        for (let i = 0; i < SOVEREIGN_MOTES.length; i++) {
+          const m = SOVEREIGN_MOTES[i];
+          const mx = m.xRatio * width;
+          const my = (m.yBase - time * 0.03 * m.speed * speedMult) % height;
+          const adjY = my < 0 ? my + height : my;
+          const shimmer = 0.25 + 0.35 * Math.sin(time * 0.004 + m.phase);
+          ctx.globalAlpha = tier >= 2 ? shimmer * 1.3 : shimmer;
+          ctx.beginPath();
+          ctx.arc(mx, adjY, m.size * (tier >= 3 ? 1.4 : 1), 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1.0;
+
+        // Cercle runique sacré en rotation
         ctx.save();
         ctx.translate(centerX, centerY);
-        ctx.rotate(time * 0.0006);
-        ctx.strokeStyle = 'rgba(251, 191, 36, 0.32)';
-        ctx.lineWidth = 1.8;
-        for (let g = 0; g < 3; g++) {
-          const gr = rondoRadius * (0.42 + g * 0.28);
+        const rot = time * 0.00045 * speedMult;
+        ctx.rotate(rot);
+
+        // Anneau 1 : Sceau sacré interne
+        ctx.strokeStyle = tier >= 2 ? 'rgba(251, 191, 36, 0.45)' : 'rgba(251, 191, 36, 0.28)';
+        ctx.lineWidth = tier >= 3 ? 2.5 : 1.8;
+        ctx.beginPath();
+        ctx.arc(0, 0, rondoRadius * 0.45, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 8 glyphes sacrés le long de l'anneau interne
+        for (let a = 0; a < 8; a++) {
+          const ang = (a * Math.PI) / 4;
+          const r1 = rondoRadius * 0.45;
           ctx.beginPath();
-          ctx.arc(0, 0, gr, 0, Math.PI * 2);
-          ctx.stroke();
-          for (let a = 0; a < 8; a++) {
-            const ang = (a * Math.PI) / 4;
+          ctx.arc(Math.cos(ang) * r1, Math.sin(ang) * r1, 3.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#fbbf24';
+          ctx.fill();
+        }
+
+        // Anneau 2 : Contre-rotation
+        ctx.rotate(-rot * 2.2);
+        ctx.strokeStyle = tier >= 3 ? 'rgba(254, 240, 138, 0.6)' : 'rgba(245, 158, 11, 0.25)';
+        ctx.setLineDash([8, 10]);
+        ctx.beginPath();
+        ctx.arc(0, 0, rondoRadius * 0.72, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Rayons divins à partir de score >= 5
+        if (tier >= 2) {
+          const rayPulse = (Math.sin(time * 0.005) + 1) * 0.5;
+          ctx.strokeStyle = `rgba(251, 191, 36, ${0.15 + rayPulse * 0.15})`;
+          ctx.lineWidth = 2;
+          for (let r = 0; r < 12; r++) {
+            const rAng = (r * Math.PI) / 6;
             ctx.beginPath();
-            ctx.moveTo(Math.cos(ang) * (gr - 6), Math.sin(ang) * (gr - 6));
-            ctx.lineTo(Math.cos(ang) * (gr + 6), Math.sin(ang) * (gr + 6));
+            ctx.moveTo(Math.cos(rAng) * 35, Math.sin(rAng) * 35);
+            ctx.lineTo(Math.cos(rAng) * (rondoRadius * 0.95), Math.sin(rAng) * (rondoRadius * 0.95));
             ctx.stroke();
           }
         }
         ctx.restore();
+
+        // Tier 3 : Rayon divin connectant le centre au porteur
+        if (tier >= 3 && players[currentCarrierIdx]) {
+          const carrier = players[currentCarrierIdx];
+          ctx.save();
+          const beamPulse = (Math.sin(time * 0.01) + 1) * 0.5;
+          ctx.strokeStyle = `rgba(254, 240, 138, ${0.4 + beamPulse * 0.35})`;
+          ctx.lineWidth = 3 + beamPulse * 3;
+          ctx.beginPath();
+          ctx.moveTo(centerX, centerY);
+          ctx.lineTo(carrier.x, carrier.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+
         ctx.restore();
       }
 
-      // D.2 pitch_synthwave (Grille Synthwave) : Perspective 80s fuchsia & scanlines CRT
-      if (pitchCosmetic.id === 'pitch_synthwave') {
+      // D.2 pitch_ion (Accélérateur Vectoriel - Valorant Ion Prototype Inspired)
+      // Fond animé réactif au score : Grille laser défilante en continu, anneaux de plasma accélérant en RPM
+      if (pitchCosmetic.id === 'pitch_ion') {
         ctx.save();
-        ctx.fillStyle = '#050510';
+        ctx.fillStyle = '#050811';
         ctx.fillRect(0, 0, width, height);
 
-        ctx.strokeStyle = 'rgba(244, 63, 94, 0.3)';
-        ctx.lineWidth = 1.5;
-        const horizonY = centerY - rondoRadius * 0.85;
-        for (let x = 0; x <= width; x += 32) {
-          ctx.beginPath();
-          ctx.moveTo(width / 2 + (x - width / 2) * 0.18, horizonY);
-          ctx.lineTo(x, height);
-          ctx.stroke();
-        }
-        for (let y = horizonY; y <= height; y += 22) {
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(width, y);
-          ctx.stroke();
-        }
-        const scanY = (time * 0.12) % height;
-        ctx.fillStyle = 'rgba(6, 182, 212, 0.08)';
-        ctx.fillRect(0, scanY - 8, width, 16);
-        ctx.restore();
-      }
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
+        const gridSpeed = (time * (0.04 + score * 0.008)) % 28;
 
-      // D.3 pitch_biohazard (Réacteur Nucléaire) : Dalles acier & réacteur plasma vert bouillonnant
-      if (pitchCosmetic.id === 'pitch_biohazard') {
+        // Grille perspective défilante vers l'avant
         ctx.save();
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(0, 0, width, height);
-
-        const toxicPulse = (Math.sin(time * 0.005) + 1) * 0.5;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 42 + toxicPulse * 8, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(34, 197, 94, 0.22)';
-        ctx.fill();
+        ctx.arc(centerX, centerY, rondoRadius + 28, 0, Math.PI * 2);
+        ctx.clip();
 
+        ctx.strokeStyle = tier >= 2 ? 'rgba(0, 240, 255, 0.28)' : 'rgba(0, 240, 255, 0.16)';
+        ctx.lineWidth = 1.4;
+
+        // Lignes verticales perspective
+        for (let gx = centerX - rondoRadius - 30; gx <= centerX + rondoRadius + 30; gx += 28) {
+          ctx.beginPath();
+          ctx.moveTo(gx, centerY - rondoRadius - 30);
+          ctx.lineTo(gx, centerY + rondoRadius + 30);
+          ctx.stroke();
+        }
+
+        // Lignes horizontales défilantes animées
+        for (let gy = centerY - rondoRadius - 30 + gridSpeed; gy <= centerY + rondoRadius + 30; gy += 28) {
+          ctx.beginPath();
+          ctx.moveTo(centerX - rondoRadius - 30, gy);
+          ctx.lineTo(centerX + rondoRadius + 30, gy);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // Cœur central : Accélérateur de particules à double anneau
         ctx.save();
         ctx.translate(centerX, centerY);
-        ctx.rotate(time * 0.001);
-        ctx.fillStyle = '#22c55e';
-        for (let b = 0; b < 3; b++) {
+
+        const r1Speed = time * (0.002 + score * 0.0005);
+        ctx.save();
+        ctx.rotate(r1Speed);
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.5)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, 36, 0, Math.PI * 2);
+        ctx.stroke();
+        for (let n = 0; n < 3; n++) {
+          const nAng = (n * Math.PI * 2) / 3;
           ctx.beginPath();
-          ctx.rotate((Math.PI * 2) / 3);
-          ctx.arc(0, -18, 11, -Math.PI / 3, Math.PI / 3);
-          ctx.lineTo(0, 0);
-          ctx.closePath();
+          ctx.arc(Math.cos(nAng) * 36, Math.sin(nAng) * 36, 4, 0, Math.PI * 2);
+          ctx.fillStyle = '#00f0ff';
           ctx.fill();
         }
+        ctx.restore();
+
+        // Anneau 2 : Contre-rotation
+        const r2Speed = -time * (0.0016 + score * 0.0004);
+        ctx.save();
+        ctx.rotate(r2Speed);
+        ctx.strokeStyle = tier >= 2 ? 'rgba(56, 189, 248, 0.45)' : 'rgba(56, 189, 248, 0.22)';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(0, 0, 7, 0, Math.PI * 2);
-        ctx.fillStyle = '#0f172a';
-        ctx.fill();
+        ctx.arc(0, 0, 56, 0, Math.PI * 2);
+        ctx.stroke();
+        for (let n = 0; n < 4; n++) {
+          const nAng = (n * Math.PI * 2) / 4;
+          ctx.beginPath();
+          ctx.arc(Math.cos(nAng) * 56, Math.sin(nAng) * 56, 3, 0, Math.PI * 2);
+          ctx.fillStyle = '#38bdf8';
+          ctx.fill();
+        }
+        ctx.restore();
+
+        // Tier 3 : Décharges électriques et arcs jitter
+        if (tier >= 3) {
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.75)';
+          ctx.lineWidth = 2;
+          for (let e = 0; e < 3; e++) {
+            const eAng = (time * 0.005 + e * 2.1) % (Math.PI * 2);
+            const midR = rondoRadius * 0.65;
+            const midX = Math.cos(eAng) * midR + (Math.sin(time * 0.02 + e) * 12);
+            const midY = Math.sin(eAng) * midR + (Math.cos(time * 0.02 + e) * 12);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(midX, midY);
+            ctx.lineTo(Math.cos(eAng) * rondoRadius, Math.sin(eAng) * rondoRadius);
+            ctx.stroke();
+          }
+        }
+
+        ctx.restore();
+        ctx.restore();
+      }
+
+      // D.3 pitch_kuronami (Jardin des Tempêtes - Valorant Kuronami Inspired)
+      // Fond animé réactif au score : Pluie continue, ondes concentriques d'impacts, vortex central d'eau et d'encre
+      if (pitchCosmetic.id === 'pitch_kuronami') {
+        ctx.save();
+        ctx.fillStyle = '#030712';
+        ctx.fillRect(0, 0, width, height);
+
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
+        const stormSpeed = 1 + score * 0.1;
+
+        // Pluie torrentielle animée
+        ctx.strokeStyle = tier >= 2 ? 'rgba(56, 189, 248, 0.4)' : 'rgba(56, 189, 248, 0.22)';
+        ctx.lineWidth = 1.2;
+        for (let i = 0; i < KURONAMI_DROPS.length; i++) {
+          const drop = KURONAMI_DROPS[i];
+          const dx = drop.xRatio * width;
+          const dy = (drop.yBase + time * drop.speed * stormSpeed) % height;
+          ctx.beginPath();
+          ctx.moveTo(dx, dy);
+          ctx.lineTo(dx - 4, dy + drop.len);
+          ctx.stroke();
+        }
+
+        // Ondulations d'eau concentriques (Ripples)
+        for (let r = 0; r < KURONAMI_RIPPLES.length; r++) {
+          const rip = KURONAMI_RIPPLES[r];
+          const rx = rip.xRatio * width;
+          const ry = rip.yRatio * height;
+          const progress = ((time * rip.speed + rip.phase) % 1);
+          const currentR = progress * rip.maxRadius;
+          const ripAlpha = (1 - progress) * (tier >= 2 ? 0.45 : 0.25);
+          ctx.strokeStyle = `rgba(147, 197, 253, ${ripAlpha})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(rx, ry, currentR, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Vortex central d'eau et d'encre sombre tourbillonnant (rayon grandissant avec les passes)
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        const vortexRot = time * (0.0012 + score * 0.0006);
+        ctx.rotate(vortexRot);
+
+        const vortexRadius = 45 + Math.min(score * 3.5, 50);
+        ctx.lineWidth = 2.2;
+        for (let s = 0; s < 4; s++) {
+          const baseAng = (s * Math.PI) / 2;
+          ctx.strokeStyle = s % 2 === 0 ? 'rgba(2, 132, 199, 0.45)' : 'rgba(14, 165, 233, 0.3)';
+          ctx.beginPath();
+          for (let step = 0; step < 18; step++) {
+            const radius = (step / 18) * vortexRadius;
+            const angle = baseAng + step * 0.22;
+            const px = Math.cos(angle) * radius;
+            const py = Math.sin(angle) * radius;
+            if (step === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        }
+
+        // Éclair subtil à partir de tier >= 2
+        if (tier >= 2 && Math.sin(time * 0.0035) > 0.94) {
+          ctx.fillStyle = 'rgba(224, 242, 254, 0.12)';
+          ctx.beginPath();
+          ctx.arc(0, 0, rondoRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
         ctx.restore();
         ctx.restore();
       }
@@ -3396,8 +3614,10 @@
         ctx.restore();
       }
 
-      // B.4 team_royal (Garde Impériale) : Plastron d'armure or en V
-      if (teamCosmetic.id === 'team_royal') {
+      // B.4 team_sovereign (Chevaliers Célestes - Sovereign Inspired)
+      // Évolution par passes : Plastron d'or, auréole céleste (score >= 5), ailes de lumière sur le porteur (score >= 10)
+      if (teamCosmetic.id === 'team_sovereign') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
         ctx.save();
         ctx.beginPath();
         ctx.arc(p.x, drawY, p.radius - 2, 0, Math.PI * 2);
@@ -3410,36 +3630,129 @@
         ctx.lineWidth = 3;
         ctx.stroke();
         ctx.restore();
+
+        // Tier 2 : Auréole divine dorée flottant au-dessus du joueur
+        if (tier >= 2) {
+          ctx.save();
+          const haloFloat = Math.sin(time * 0.006 + p.id) * 2;
+          ctx.strokeStyle = 'rgba(251, 191, 36, 0.75)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.ellipse(p.x, drawY - p.radius - 6 + haloFloat, 11, 4, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Tier 3 : Ailes célestes étincelantes sur le porteur du ballon
+        if (tier >= 3 && isCarrier) {
+          ctx.save();
+          const wingSpread = 8 + Math.sin(time * 0.01) * 3;
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 2.5;
+          // Aile gauche
+          ctx.beginPath();
+          ctx.moveTo(p.x - p.radius + 2, drawY - 2);
+          ctx.quadraticCurveTo(p.x - p.radius - wingSpread, drawY - 14, p.x - p.radius - wingSpread - 6, drawY - 4);
+          ctx.stroke();
+          // Aile droite
+          ctx.beginPath();
+          ctx.moveTo(p.x + p.radius - 2, drawY - 2);
+          ctx.quadraticCurveTo(p.x + p.radius + wingSpread, drawY - 14, p.x + p.radius + wingSpread + 6, drawY - 4);
+          ctx.stroke();
+          ctx.restore();
+        }
       }
 
-      // B.5 team_synthwave (Neon Riders) : Visière rétro fuchsia
-      if (teamCosmetic.id === 'team_synthwave') {
+      // B.5 team_ion (Unité Prototype - Ion Prototype Inspired)
+      // Évolution par passes : Visière cyan, réticule holographique rotatif (score >= 5), bouclier hexagonal (score >= 10)
+      if (teamCosmetic.id === 'team_ion') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
         ctx.save();
-        ctx.fillStyle = '#f43f5e';
-        ctx.fillRect(p.x - 10, drawY - 6, 20, 5);
+        // Visière aérodynamique cyan incurvée
+        ctx.fillStyle = '#00f0ff';
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(p.x - 10, drawY - 7, 20, 6, 3);
+        } else {
+          ctx.rect(p.x - 10, drawY - 7, 20, 6);
+        }
+        ctx.fill();
         ctx.strokeStyle = strokeColor;
         ctx.lineWidth = 1.5;
-        ctx.strokeRect(p.x - 10, drawY - 6, 20, 5);
+        ctx.stroke();
+
+        // Reflet dynamique balayant
+        const visorSweep = (Math.sin(time * 0.005) + 1) * 0.5 * 14;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.fillRect(p.x - 7 + visorSweep, drawY - 6, 3, 4);
+
+        // Tier 2 : Réticule de visée holographique HUD en rotation
+        if (tier >= 2) {
+          const retRot = time * 0.003 + p.id * 1.5;
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.6)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3, 5]);
+          ctx.beginPath();
+          ctx.arc(p.x, drawY, p.radius + 6, retRot, retRot + Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Tier 3 : Bouclier de force hexagonal
+        if (tier >= 3) {
+          const shieldPulse = (Math.sin(time * 0.008 + p.id) + 1) * 0.5;
+          ctx.strokeStyle = `rgba(0, 240, 255, ${0.4 + shieldPulse * 0.4})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for (let h = 0; h < 6; h++) {
+            const hAng = (h * Math.PI) / 3;
+            const hx = p.x + Math.cos(hAng) * (p.radius + 9);
+            const hy = drawY + Math.sin(hAng) * (p.radius + 9);
+            if (h === 0) ctx.moveTo(hx, hy);
+            else ctx.lineTo(hx, hy);
+          }
+          ctx.closePath();
+          ctx.stroke();
+        }
         ctx.restore();
       }
 
-      // B.6 team_biohazard (Hazmat Squad) : Symbole radioactif sur la poitrine
-      if (teamCosmetic.id === 'team_biohazard') {
+      // B.6 team_kuronami (Ninjas des Marées - Kuronami Inspired)
+      // Évolution par passes : Bandeau argenté & ride d'eau, ruban d'eau tourbillonnant (score >= 5), clone d'ombre (score >= 10)
+      if (teamCosmetic.id === 'team_kuronami') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
         ctx.save();
-        ctx.fillStyle = '#0f172a';
+        // Bandeau ninja argenté
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(p.x - 11, drawY - 9, 22, 5);
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(p.x - 11, drawY - 9, 22, 5);
+
+        // Ondulation d'eau sous les pieds
+        const rippleR = 6 + (Math.sin(time * 0.006 + p.id) + 1) * 3;
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.arc(p.x, drawY - 3, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-        for (let a = 0; a < 3; a++) {
-          ctx.save();
-          ctx.translate(p.x, drawY - 3);
-          ctx.rotate((a * Math.PI * 2) / 3);
+        ctx.ellipse(p.x, drawY + p.radius + 2, rippleR, rippleR * 0.4, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Tier 2 : Ruban d'eau tourbillonnant autour du joueur
+        if (tier >= 2) {
+          const waterAng = time * 0.004 + p.id;
+          ctx.strokeStyle = 'rgba(14, 165, 233, 0.7)';
+          ctx.lineWidth = 2;
           ctx.beginPath();
-          ctx.arc(0, -6, 3, -Math.PI / 3, Math.PI / 3);
-          ctx.lineTo(0, 0);
-          ctx.closePath();
+          ctx.arc(p.x, drawY, p.radius + 6, waterAng, waterAng + Math.PI);
+          ctx.stroke();
+        }
+
+        // Tier 3 : Clone d'ombre / décalage liquide sur le porteur
+        if (tier >= 3 && isCarrier) {
+          ctx.fillStyle = 'rgba(2, 132, 199, 0.3)';
+          ctx.beginPath();
+          ctx.arc(p.x - 5, drawY + 2, p.radius * 0.9, 0, Math.PI * 2);
           ctx.fill();
-          ctx.restore();
         }
         ctx.restore();
       }
@@ -3548,41 +3861,127 @@
         ctx.restore();
       }
 
-      // A.5 bull_royal (Minotaure Midas) : Halo doré rotatif en pointillé
-      if (bullCosmetic.id === 'bull_royal') {
+      // A.5 bull_sovereign (Spectre Obscur - Sovereign Inspired)
+      // Évolution par passes : Halo spectral violet, 6 braises en orbite (score >= 5), couronne d'ombre & éclairs (score >= 10)
+      if (bullCosmetic.id === 'bull_sovereign') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
         ctx.save();
+        const osc = Math.sin(time * 0.005) * 4;
         ctx.beginPath();
-        ctx.arc(0, 0, bull.radius + 6, 0, Math.PI * 2);
-        ctx.strokeStyle = '#fbbf24';
+        ctx.arc(0, 0, bull.radius + 6 + osc, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(192, 132, 252, 0.4)';
         ctx.lineWidth = 2.5;
-        ctx.setLineDash([6, 6]);
-        ctx.lineDashOffset = -(time * 0.02);
         ctx.stroke();
+
+        // Tier 2 : 6 braises spectrales violettes en orbite
+        if (tier >= 2) {
+          const orbSpeed = time * 0.003;
+          for (let k = 0; k < 6; k++) {
+            const a = orbSpeed + (k * Math.PI * 2) / 6;
+            const ex = Math.cos(a) * (bull.radius + 12);
+            const ey = Math.sin(a) * (bull.radius + 12);
+            ctx.beginPath();
+            ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#c084fc';
+            ctx.fill();
+          }
+        }
+
+        // Tier 3 : Couronne d'ombre violette et éclairs du vide
+        if (tier >= 3) {
+          ctx.strokeStyle = 'rgba(232, 121, 249, 0.75)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(-12, -bull.radius - 8);
+          ctx.lineTo(0, -bull.radius - 18);
+          ctx.lineTo(12, -bull.radius - 8);
+          ctx.stroke();
+        }
         ctx.restore();
       }
 
-      // A.6 bull_synthwave (Glitch Runner) : Décalage glitch néon
-      if (bullCosmetic.id === 'bull_synthwave') {
-        if (Math.sin(time * 0.02) > 0.75) {
-          ctx.save();
-          ctx.translate((Math.random() - 0.5) * 6, (Math.random() - 0.5) * 2);
+      // A.6 bull_ion (Titan Mecha Chasseur - Ion Prototype Inspired)
+      // Évolution par passes : Tuyères de propulsion rouges, barrière d'alerte (score >= 5), laser frontal traquant (score >= 10)
+      if (bullCosmetic.id === 'bull_ion') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
+        ctx.save();
+        const exhaustPulse = (Math.sin(time * 0.012) + 1) * 0.5;
+        const flameLen = 8 + (tier >= 2 ? 10 : 0) + exhaustPulse * 6;
+
+        ctx.fillStyle = tier >= 2 ? '#ef4444' : '#f97316';
+        ctx.beginPath();
+        ctx.moveTo(-8, bull.radius * 0.6);
+        ctx.lineTo(-4, bull.radius * 0.6 + flameLen);
+        ctx.lineTo(0, bull.radius * 0.6);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(0, bull.radius * 0.6);
+        ctx.lineTo(4, bull.radius * 0.6 + flameLen);
+        ctx.lineTo(8, bull.radius * 0.6);
+        ctx.closePath();
+        ctx.fill();
+
+        // Tier 2 : Barrière cyber d'alerte rouge
+        if (tier >= 2) {
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.45)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([4, 4]);
           ctx.beginPath();
-          ctx.arc(0, 0, bull.radius, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(244, 63, 94, 0.45)';
-          ctx.fill();
-          ctx.restore();
+          ctx.arc(0, 0, bull.radius + 8, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
         }
+
+        // Tier 3 : Viseur laser frontal traquant
+        if (tier >= 3) {
+          ctx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0, -bull.radius);
+          ctx.lineTo(0, -bull.radius - 24);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, -bull.radius - 24, 4, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
       }
 
-      // A.7 bull_biohazard (Béhémoth Mutant) : Pulsation toxique radioactive
-      if (bullCosmetic.id === 'bull_biohazard') {
-        const toxPulse = (Math.sin(time * 0.006) + 1) * 0.5;
+      // A.7 bull_kuronami (Oni des Abysses - Kuronami Inspired)
+      // Évolution par passes : Sillage d'encre sombre, ruban d'eau sanglant (score >= 5), flammes Oni démoniaques (score >= 10)
+      if (bullCosmetic.id === 'bull_kuronami') {
+        const tier = score >= 10 ? 3 : (score >= 5 ? 2 : 1);
         ctx.save();
+        const inkOsc = Math.sin(time * 0.008) * 3;
+        ctx.fillStyle = 'rgba(2, 6, 23, 0.6)';
         ctx.beginPath();
-        ctx.arc(0, 0, bull.radius + 4 + toxPulse * 3, 0, Math.PI * 2);
-        ctx.strokeStyle = '#22c55e';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
+        ctx.ellipse(0, bull.radius + 2, 14 + inkOsc, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tier 2 : Brume d'eau et ruban d'encre écarlate
+        if (tier >= 2) {
+          ctx.strokeStyle = 'rgba(220, 38, 38, 0.5)';
+          ctx.lineWidth = 2;
+          const swirl = time * 0.004;
+          ctx.beginPath();
+          ctx.arc(0, 0, bull.radius + 7, swirl, swirl + Math.PI * 1.2);
+          ctx.stroke();
+        }
+
+        // Tier 3 : Flammes de sang et aura Oni démoniaque
+        if (tier >= 3) {
+          ctx.fillStyle = 'rgba(220, 38, 38, 0.35)';
+          for (let f = 0; f < 5; f++) {
+            const fAngle = (f * Math.PI * 2) / 5 + time * 0.005;
+            const fx = Math.cos(fAngle) * (bull.radius + 9);
+            const fy = Math.sin(fAngle) * (bull.radius + 9);
+            ctx.beginPath();
+            ctx.arc(fx, fy, 4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
         ctx.restore();
       }
 
